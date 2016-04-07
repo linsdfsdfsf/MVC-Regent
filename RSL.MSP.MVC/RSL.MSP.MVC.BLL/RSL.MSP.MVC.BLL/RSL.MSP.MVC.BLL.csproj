@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{70FE3FF3-BF7E-464B-A8C0-EDCF8153F774}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RSL.MSP.MVC.BLL</RootNamespace>
+    <AssemblyName>RSL.MSP.MVC.BLL</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="RSL.MSP.MVC.DAO.Common">
+      <HintPath>..\..\..\RefDLL\RSL.MSP.MVC.DAO.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="RSL.MSP.MVC.DAO.Framework">
+      <HintPath>..\..\..\RefDLL\RSL.MSP.MVC.DAO.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="RSL.MSP.MVC.Model.Common">
+      <HintPath>..\..\..\RefDLL\RSL.MSP.MVC.Model.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="RSL.MSP.MVC.Model.Enums">
+      <HintPath>..\..\..\RefDLL\RSL.MSP.MVC.Model.Enums.dll</HintPath>
+    </Reference>
+    <Reference Include="RSL.MSP.MVC.Model.Framework">
+      <HintPath>..\..\..\RefDLL\RSL.MSP.MVC.Model.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="EinvBLL\EinvB2CBLL .cs" />
+    <Compile Include="EinvBLL\EinvBLL.cs" />
+    <Compile Include="EinvBLL\EinvCompanyBLL.cs" />
+    <Compile Include="EinvBLL\EinvRollBLL.cs" />
+    <Compile Include="EinvBLL\EinvSalesBLL.cs" />
+    <Compile Include="EinvBLL\EinvUploadBLL.cs" />
+    <Compile Include="EinvBLL\EinvUtilBLL.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegentBLL\OrderBLL.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RSL.MSP.MVC.DAO\RSL.MSP.MVC.DAO\RSL.MSP.MVC.DAO.csproj">
+      <Project>{4f0716b9-8814-453f-afa0-9380301bd347}</Project>
+      <Name>RSL.MSP.MVC.DAO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RSL.MSP.MVC.Model.Base\RSL.MSP.MVC.Model.Base.csproj">
+      <Project>{049112f7-4b1e-41b4-9585-cff63165b711}</Project>
+      <Name>RSL.MSP.MVC.Model.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RSL.MSP.MVC.Model\RSL.MSP.MVC.Model\RSL.MSP.MVC.Model.csproj">
+      <Project>{0347fe58-3a1f-4dd7-9db0-e67c08708eec}</Project>
+      <Name>RSL.MSP.MVC.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

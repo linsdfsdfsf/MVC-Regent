@@ -1,0 +1,11 @@
+C:\Asp.net\FB_MVC\FirstBank\RSL.MSP.MVC\RSL.MSP.MVC.Model\RSL.MSP.MVC.Model\bin\Release\RSL.MSP.MVC.Model.dll
+C:\Asp.net\FB_MVC\FirstBank\RSL.MSP.MVC\RSL.MSP.MVC.Model\RSL.MSP.MVC.Model\bin\Release\RSL.MSP.MVC.Model.pdb
+C:\Asp.net\FB_MVC\FirstBank\RSL.MSP.MVC\RSL.MSP.MVC.Model\RSL.MSP.MVC.Model\bin\Release\Application.Framework.Data.dll
+C:\Asp.net\FB_MVC\FirstBank\RSL.MSP.MVC\RSL.MSP.MVC.Model\RSL.MSP.MVC.Model\bin\Release\RSL.MSP.MVC.Model.Common.dll
+C:\Asp.net\FB_MVC\FirstBank\RSL.MSP.MVC\RSL.MSP.MVC.Model\RSL.MSP.MVC.Model\bin\Release\Microsoft.Practices.EnterpriseLibrary.Data.dll
+C:\Asp.net\FB_MVC\FirstBank\RSL.MSP.MVC\RSL.MSP.MVC.Model\RSL.MSP.MVC.Model\bin\Release\Microsoft.Practices.EnterpriseLibrary.Common.dll
+C:\Asp.net\FB_MVC\FirstBank\RSL.MSP.MVC\RSL.MSP.MVC.Model\RSL.MSP.MVC.Model\bin\Release\Microsoft.Practices.ObjectBuilder.dll
+C:\Asp.net\FB_MVC\FirstBank\RSL.MSP.MVC\RSL.MSP.MVC.Model\RSL.MSP.MVC.Model\bin\Release\RSL.MSP.MVC.Model.Common.pdb
+C:\Asp.net\FB_MVC\FirstBank\RSL.MSP.MVC\RSL.MSP.MVC.Model\RSL.MSP.MVC.Model\obj\Release\RSL.MSP.MVC.Model.csprojResolveAssemblyReference.cache
+C:\Asp.net\FB_MVC\FirstBank\RSL.MSP.MVC\RSL.MSP.MVC.Model\RSL.MSP.MVC.Model\obj\Release\RSL.MSP.MVC.Model.dll
+C:\Asp.net\FB_MVC\FirstBank\RSL.MSP.MVC\RSL.MSP.MVC.Model\RSL.MSP.MVC.Model\obj\Release\RSL.MSP.MVC.Model.pdb

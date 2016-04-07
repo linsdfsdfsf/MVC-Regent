@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "系统异常日志";
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+}
+
+
+<div class="form-group">
+    <div class="input-group">
+        <input id="txtSearchKey" type="text" class="input form-control" placeholder="搜索关键字" />
+        <span class="input-group-btn">
+            <button id="btnSearch" class="btn btn btn-primary" type="button"> <i class="fa fa-search"></i> 搜索</button>
+        </span>
+    </div>
+</div>
+
+
+<div class="jqGrid_wrapper">
+    <table id="jqGridList"></table>
+    <div id="jqGridPager"></div>
+</div>
+
+@section Script{
+    @Scripts.Render("~/js/adm/base")
+}
+@section PageScript {
+    <script>
+        function searchData() {
+            var json = {
+                SearchKey: $("#txtSearchKey").val()
+            };
+            XPage.Search(json);
+        }
+        function showChildGrid(parentRowID, parentRowKey) {
+            var data = $('#jqGridList').jqGrid("getRowData", parentRowKey);
+            $("#" + parentRowID).append(data.Contents);
+        }
+        $(document).ready(function () {
+            var config = {
+                title: '異常日誌列表',
+                url: '@Url.Action("GetList")',
+                subGrid: true,
+                subGridRowExpanded: showChildGrid,
+                colNames: ["Id", "報錯Action", "错误", "异常栈堆信息", "寫入時間"],
+                colModel: [
+                    { name: 'Id', index: 'Id', width: 60, key: true, hidden: true },
+                    { name: 'E_URL', index: 'E_URL', width: 60 },
+                    { name: 'E_TYPE', index: 'E_TYPE' },
+                    { name: 'E_CONTENTS', index: 'E_CONTENTS', hidden: true, width: 6000 },
+                    { name: 'CREATE_DATE', index: 'CREATE_DATE', width: 60, formatter: "date", formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }, width: 60 }
+
+                ]
+            };
+            RSLO2O.InitTable(config, false);
+            $("#btnSearch").click(searchData);
+        });
+    </script>
+}

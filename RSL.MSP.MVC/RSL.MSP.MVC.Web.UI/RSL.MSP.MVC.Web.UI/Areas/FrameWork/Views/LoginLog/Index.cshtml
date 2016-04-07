@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "系统登录日志";
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+}
+<div class="form-group">
+    <div class="input-group">
+        <input id="txtSearchKey" type="text" class="input form-control" placeholder="搜索关键字" />
+        <span class="input-group-btn">
+            <button id="btnSearch" class="btn btn btn-primary" type="button"> <i class="fa fa-search"></i> 搜索</button>
+        </span>
+    </div>
+</div>
+
+
+<div class="jqGrid_wrapper">
+    <table id="jqGridList"></table>
+    <div id="jqGridPager"></div>
+</div>
+
+
+@section Script{
+    @Scripts.Render("~/js/adm/base")
+}
+@section PageScript {
+    <script>
+        function searchData() {
+            var json = {
+                SearchKey: $("#txtSearchKey").val()
+            };
+            XPage.Search(json);
+        }
+        $(document).ready(function () {
+            var config = {
+                title: '系统登录日志列表',
+                url: '@Url.Action("GetList")',
+                colNames: [
+                    "Id",
+                    "用户帐号",
+                    "登录时间",
+                    "登录IP",
+                    "主机名",
+                    "瀏覽器版本",
+                    "瀏覽器語系",
+                    "瀏覽器位數",
+                    "登入裝置"
+                ],
+                colModel: [
+                    { name: 'LOG_ID', index: 'LOG_ID', key: true, hidden: true },
+                    { name: 'USER_ACCOUNT', index: 'USER_ACCOUNT' },
+                    { name: 'LOGIN_TIME', index: 'LOGIN_TIME', formatter: "date", formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                    { name: 'LOGIN_IP', index: 'LOGIN_IP' },
+                    { name: 'HOST_NAME', index: 'HOST_NAME' },
+                    { name: 'BROWSER_INFO', index: 'BROWSER_INFO' },
+                    { name: 'BROWSER_LANGUAGE', index: 'BROWSER_LANGUAGE' },
+                    { name: 'BROWSER_BYTE', index: 'BROWSER_BYTE' },
+                    { name: 'LOGIN_EQUIPMENT', index: 'LOGIN_EQUIPMENT' }
+
+                ]
+            };
+            RSLO2O.InitTable(config, false);
+            $("#btnSearch").click(searchData);
+        });
+    </script>
+}

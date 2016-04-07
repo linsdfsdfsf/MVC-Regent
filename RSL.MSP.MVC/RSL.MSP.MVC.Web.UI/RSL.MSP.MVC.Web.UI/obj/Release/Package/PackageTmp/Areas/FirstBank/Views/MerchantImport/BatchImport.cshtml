@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "特店資料批次建檔";
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+}
+
+<div class="ibox-content m-b-sm border-bottom">
+    
+    <h3>
+        @Html.ActionLink("【下載批次檔案格式】", "Download")
+    </h3>
+
+    <br />
+
+    <div class="row">
+        @using (Html.BeginForm("BatchImport", "MerchantImport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <input type="file" name="upFile" />
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <input type="submit" id="btnUpload" value="上傳" class="btn btn btn-primary" />
+                </div>
+            </div>
+        }
+    </div>
+
+    <br />
+
+    <h3>@ViewBag.Message</h3>
+</div>
+
+

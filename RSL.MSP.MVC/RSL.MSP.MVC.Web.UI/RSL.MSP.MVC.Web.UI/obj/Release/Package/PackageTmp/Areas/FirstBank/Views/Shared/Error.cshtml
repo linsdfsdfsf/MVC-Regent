@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>錯誤!</title>
+    @Styles.Render("~/css/adm/control")
+</head>
+
+<body class="gray-bg">
+    <div class="middle-box text-center loginscreen animated fadeInDown">
+        <div>
+            <h3>@Model.title</h3>
+            <p>@Model.message</p>
+        </div>
+    </div>
+    @Scripts.Render("~/js/adm/jqueryWithBootStrap")
+</body>
+</html>

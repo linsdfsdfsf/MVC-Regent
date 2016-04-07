@@ -1,0 +1,68 @@
+﻿@*******************************************************************************
+    * Copyright (C) RSL.Com
+    *
+    * Author: jichaoliu
+    * Create Date: 2015/9/23 16:13:05
+    * Description: Automated building by service@RSL.com
+    *
+    * Revision History:
+    * Date         Author               Description
+    *
+    *********************************************************************************@
+
+@{
+    ViewBag.Title = "系统操作日志";
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+}
+
+<div class="form-group">
+    <div class="input-group">
+        <input id="txtSearchKey" type="text" class="input form-control" placeholder="搜索关键字" />
+        <span class="input-group-btn">
+            <button id="btnSearch" class="btn btn btn-primary" type="button"> <i class="fa fa-search"></i> 搜索</button>
+        </span>
+    </div>
+</div>
+
+
+<div class="jqGrid_wrapper">
+    <table id="jqGridList"></table>
+    <div id="jqGridPager"></div>
+</div>
+
+@section Script{
+    @Scripts.Render("~/js/adm/base")
+}
+@section PageScript {
+    <script>
+    function searchData() {
+        var json = {
+            SearchKey: $("#txtSearchKey").val()
+        };
+        XPage.Search(json);
+    }
+    function showChildGrid(parentRowID, parentRowKey) {
+        var data = $('#jqGridList').jqGrid("getRowData", parentRowKey);
+        $("#" + parentRowID).append(data.Contents);
+    }
+    $(document).ready(function () {
+        var config = {
+            title: '操作日志列表',
+            url: '@Url.Action("GetList")',
+            subGrid: true,
+            subGridRowExpanded: showChildGrid,
+            colNames: ["Id", "用户ID", "用户名", "类型", "对象名", "内容"],
+            colModel: [
+                { name: 'Id', index: 'Id', key: true, hidden: true },
+				{ name: 'USER_ID', index: 'USER_ID' },
+				{ name: 'User_Name', index: 'User_Name' },
+				{ name: 'LOG_Type', index: 'LOG_Type' },
+				{ name: 'LOG_OBJNAME', index: 'LOG_OBJNAME' },
+				{ name: 'LOG_CONTENTS', index: 'LOG_CONTENTS' }
+            ]
+        };
+        RSLO2O.InitTable(config,false);
+        $("#btnSearch").click(searchData);
+    });
+    </script>
+}

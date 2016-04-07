@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "客户管理";
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+}
+
+
+@{Html.RenderPartial("_UserActionList");}
+
+<div class="form-group">
+    <div class="input-group">
+        <input id="txtSearchKey" type="text" class="input form-control" placeholder="搜索关键字" />
+        <span class="input-group-btn">
+            <button id="btnSearch" class="btn btn btn-primary" type="button"> <i class="fa fa-search"></i> 搜索</button>
+        </span>
+    </div>
+</div>
+
+<div class="jqGrid_wrapper">
+    <table id="jqGridList"></table>
+    <div id="jqGridPager"></div>
+</div>
+
+@section Script{
+    <!-- Validate JavaScript -->
+    @Scripts.Render("~/js/adm/validate", "~/js/adm/base", "~/js/adm/json")
+}
+
+@section PageScript {
+    <script>
+        function addModel() {
+            $("#btnAdd").button("loading");
+            window.location.href = "@Url.Action("Add")";
+        }
+        //编辑
+        function editModel() {
+            var row = RSLO2O.GetDataTableEditeData();
+
+            if (row != null) {
+                $("#btnEdit").button("loading");
+                window.location.href = "@Url.Action("Edit")/" + row.CUSTOMER_ID;
+            } else {
+                alert("请选择要编辑的数据");
+            }
+        }
+        //删除
+        function delData() {
+            XPage.DelData("@Url.Action("DeleteModel")");
+        }
+        function searchData() {
+            var json = {
+                SearchKey: $("#txtSearchKey").val()
+            };
+            XPage.Search(json);
+        }
+
+
+        $(document).ready(function () {
+
+            var config = {
+                title: '客户列表',
+                url: '@Url.Action("GetList")',
+                colNames: ['主键', '特店名称', '特店备注', 'DB_NAME', "状态", "创建时间", "创建人"],
+                colModel: [
+                    { name: 'CUSTOMER_ID', index: 'CUSTOMER_ID', width: 60, key: true, hidden: true },
+
+                    { name: 'CUSTOMER_NAME', index: 'CUSTOMER_NAME', width: 120 },
+                    { name: 'CUSTOMER_REMARK', index: 'CUSTOMER_REMARK', width: 150 },
+                    { name: 'DB_NAME', index: 'DB_NAME', width: 200 },
+
+                    {
+                        name: 'IS_VALID',
+                        index: 'IS_VALID',
+                        width: 100,
+                        formatter: function (cellValue, options, rowObject) {
+                            return cellValue == "1" ? "有效" : "无效";
+                        }
+                    },
+                    { name: 'CREATE_DATE', index: 'CREATE_DATE', width: 200, formatter: "date", formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                    { name: 'CREATE_BY', index: 'CREATE_BY', width: 120 }
+                ]
+            };
+
+            RSLO2O.InitTable(config, true);
+            $("#btnSearch").click(searchData);
+        });
+    </script>
+}

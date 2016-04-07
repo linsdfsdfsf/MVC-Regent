@@ -1,0 +1,152 @@
+﻿@*******************************************************************************
+    * Copyright (C) RSL.Com
+    *
+    * Author: jichaoliu
+    * Create Date: 2015/9/4 16:10:36
+    * Description: Automated building by service@RSL.com
+    *
+    * Revision History:
+    * Date         Author               Description
+    *
+    *********************************************************************************@
+
+@{
+    ViewBag.Title = "用户角色分配管理";
+    Layout = "~/Views/Shared/_Layout_blank.cshtml";
+
+}
+
+
+<div class="row animated fadeInRight">
+    <div class="col-sm-5 full-height">
+        <div class="jqGrid_wrapper">
+            <table id="jqGridList"></table>
+            <div id="jqGridPager"></div>
+        </div>
+    </div>
+    <div class="col-sm-2 text-center full-height">
+        <div class="form-group">
+            <button id="btnSetRole" class="btn btn-primary toast-top-full-width" type="button">
+                分配角色&nbsp;<i class="fa fa-chevron-right"></i>
+            </button>
+        </div>
+        <div class="form-group">
+            <button id="btnReSetRole" class="btn btn-danger toast-bottom-full-width" type="button">
+                <i class="fa fa-chevron-left"></i>&nbsp;取消角色
+            </button>
+        </div>
+    </div>
+    <div class="col-sm-5 full-height">
+        <div class="jqGrid_wrapper">
+            <table id="jqGrid_MyRole"></table>
+            <div id="jqGridPager_MyRole"></div>
+        </div>
+
+    </div>
+</div>
+
+
+@section Script{
+    @Scripts.Render("~/js/adm/base", "~/js/adm/json")
+}
+@section PageScript{
+    <script>
+        var userId = "@ViewContext.RouteData.Values["id"]";
+        function saveData() {
+            var roleIds = RSLO2O.GetAllSelected("jqGridList");
+            if (roleIds.Len == 0) {
+                alert("请选择左边要分配的角色");
+                return false;
+            }
+            var postData = {
+                id: userId,
+                datas: []
+            };
+            for (var i = 0, roleId; roleId = roleIds.Data[i]; i++) {
+                postData.datas.push({ USER_ID: userId, ROLE_ID: roleId });
+            }
+            var btn = $("#btnSetRole");
+            btn.button('loading');
+            var loading = top.layer.load();
+            $.ajax({
+                url: "@Url.Action("SaveUserRole")",
+                type: "POST",
+                dataType: "JSON",
+                data: JSON.stringify(postData),
+                contentType: "APPLICATION/JSON, CHARSET=UTF-8",
+                success: function (res) {
+                    top.layer.close(loading);
+                    btn.button('reset');
+                    if (res.flag) {
+                        $("#jqGrid_MyRole").trigger("reloadGrid");
+                        $("#jqGridList").trigger("reloadGrid");
+                    } else {
+                        alert("设置失败：" + res.msg);
+                    }
+                }
+            });
+        }
+        function reSaveData() {
+            var roleIds = RSLO2O.GetAllSelected("jqGrid_MyRole");
+            if (roleIds.Len == 0) {
+                alert("请选择要右边列表需要取消的角色");
+                return false;
+            }
+            var postData = {
+                id: userId,
+                datas: []
+            };
+            for (var i = 0, roleId; roleId = roleIds.Data[i]; i++) {
+                postData.datas.push({ USER_ID: userId, ROLE_ID: roleId });
+            }
+            var btn = $("#btnReSetRole");
+            btn.button('loading');
+            var loading = top.layer.load();
+            $.ajax({
+                url: "@Url.Action("ReSaveUserRole")",
+                type: "POST",
+                dataType: "JSON",
+                data: JSON.stringify(postData),
+                contentType: "APPLICATION/JSON, CHARSET=UTF-8",
+                success: function (res) {
+                    top.layer.close(loading);
+                    btn.button('reset');
+                    if (res.flag) {
+                        $("#jqGrid_MyRole").trigger("reloadGrid");
+                        $("#jqGridList").trigger("reloadGrid");
+                    } else {
+                        alert("设置失败：" + res.msg);
+                    }
+                }
+            });
+        }
+        $(document).ready(function () {
+
+            var config = {
+                title: '还未分配的角色列表',
+                url: '/FrameWork/UserRole/GetRoleList/' + userId,
+                colNames: ['主键', '名称'],
+                colModel: [
+                    { name: 'ROLE_ID', index: 'ROLE_ID', width: 60, key: true, hidden: true },
+                    { name: 'ROLE_NAME', index: 'ROLE_NAME', width: 60 }
+                ]
+            };
+            RSLO2O.InitTable(config,true);
+
+            var config = {
+                id: "jqGrid_MyRole",
+                pagerId: "jqGridPager_MyRole",
+                title: '用户拥有的角色',
+                url: '/FrameWork/UserRole/GetMyRoleList/' + userId,
+                colNames: ['主键', '名称'],
+                colModel: [
+                    { name: 'ROLE_ID', index: 'ROLE_ID', width: 60, key: true, hidden: true },
+                    { name: 'ROLE_NAME', index: 'ROLE_NAME', width: 60 }
+                ]
+            };
+            RSLO2O.InitTable(config,true);
+            $("#btnSetRole").click(saveData);
+            $("#btnReSetRole").click(reSaveData);
+        });
+    </script>
+}

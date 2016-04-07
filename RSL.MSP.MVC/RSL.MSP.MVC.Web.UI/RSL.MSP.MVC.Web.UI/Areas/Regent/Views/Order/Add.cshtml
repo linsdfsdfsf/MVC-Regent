@@ -1,0 +1,117 @@
+﻿@{
+    ViewBag.Title = "新增 - 用戶管理";
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+
+}
+
+<div id="validateList" class="modal-body">
+
+    <div class="form-group">
+        <label>登錄帳號</label>
+        <input class="form-control" type="text" id="txtUser_Account" name="Code" check-type="required" placeholder="登录账号" maxlength="50" />
+    </div>
+
+    <div class="form-group">
+        <label>登錄密碼</label>
+        <input class="form-control" type="text" id="txtUser_pwd" name="LoginPwd" check-type="required" placeholder="登录密码" maxlength="36" />
+    </div>
+
+    <div class="form-group">
+        <label>用戶姓名</label>
+        <input class="form-control" type="text" id="txtUser_Name" name="Name" check-type="required" placeholder="用户姓名" maxlength="20" />
+    </div>
+
+    <div class="form-group">
+
+        <label>特店名稱</label>
+
+        @*@{
+                if (ViewBag.CustomerList != null)
+                {
+                    <select id="Customer_ID" class="chosen-select form-control">
+                        @foreach (var item in @ViewBag.CustomerList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                }
+            }*@
+    </div>
+
+    <div class="form-group">
+        <label>郵箱</label>
+        <input class="form-control" type="text" id="txtUser_Email" name="Email" check-type="required" placeholder="邮箱" maxlength="100" />
+    </div>
+
+    <div class="form-group">
+        <label>電話</label>
+        <input class="form-control" type="text" id="txtUser_Tel" name="Phone" check-type="required" placeholder="电话" maxlength="20" />
+    </div>
+    <div class="form-group">
+        <label>初次登陸是否修改密碼</label>
+        <input id="chkisFirst" type="checkbox" name="chkisFirst">
+    </div>
+
+
+</div>
+
+<div class="modal-footer">
+    <button id="btnSave" type="button" class="btn btn-primary">保存内容</button>
+    <button id="btnBack" type="button" class="btn btn-danger">返回</button>
+</div>
+
+@section Script{
+    @Scripts.Render("~/js/adm/validate", "~/js/adm/base", "~/js/adm/json")
+}
+@section PageScript {
+    <script>
+        function saveData() {
+
+            var isChangeed = $("#chkisFirst").val();
+
+            var postData = {
+                User_Account: $("#txtUser_Account").val(),
+                User_PWD: $("#txtUser_pwd").val(),
+                User_Name: $("#txtUser_Name").val(),
+                Customer_ID: $("#Customer_ID").val(),
+                User_Email: $("#txtUser_Email").val(),
+                User_Tel: $("#txtUser_Tel").val(),
+                User_Tel: $("#txtUser_Tel").val(),
+                IS_CHANGEPWD: isChangeed
+            };
+            var url = "@Url.Action("AddModel")";
+            //XPage.SaveData(url, postData);
+
+            if ($("#validateList").valid()) {
+                var btn = $("#btnSave");
+                btn.button('loading');
+                $.post(url, postData, function (res, status, jqXHR) {
+                    if (res.flag) {
+                        alert("操作成功");
+
+                        XPage.GoTo("@Url.Action("Index")");
+                    } else {
+                        alert("操作失败：" + res.msg);
+                    }
+                }).error(function () {
+                    alert("服务器程序错误");
+                }).complete(function () {
+                    btn.button('reset');
+                });
+            }
+
+        }
+
+
+
+        $(document).ready(function () {
+            $("#validateList").validation({ icon: false });
+            $("#btnSave").click(saveData);
+
+            $("#btnBack").click(function () {
+                XPage.GoTo("@Url.Action("Index")");
+            });
+            Selectchange();
+        });
+    </script>
+}

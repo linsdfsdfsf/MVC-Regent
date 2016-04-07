@@ -1,0 +1,169 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+    ViewBag.Title = "支付方式列表";
+    var result = Model.result;
+
+    int NowPage = (result.rows != null) ? result.page : 1;
+    int TotalPage = (result.rows != null) ? result.total : 1;
+}
+<div id="validateList" class="modal-body">
+    <div class="form-group">
+        <button class="btn btn-primary" id="searchBtn"><i class="fa fa-search"></i>查詢</button>
+        <a href="/FirstBank/PayMethod/Info" class="btn btn-primary"><i class="fa fa-plus-square-o"></i>新增</a>
+        <button class="btn btn-primary" id="dlBtn"><i class="fa fa-file-excel-o"></i>下載</button>
+    </div>
+    <div class="ibox-content m-b-sm border-bottom">
+        <form id="form1" name="form1" method="post">
+            <input type="hidden" name="page" class="page" value="1" />
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label">支付群組</label>
+                        <select class="form-control" name="payGroupId">
+                            <option value="">全部</option>
+                            @{
+                                if (Model.groupList != null) {
+                                    foreach (var item in Model.groupList) {
+                            <option value="@item.CODEID" @(item.CODEID==Model.form.payGroupId?" selected":"")>@item.CODENAME</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label">支付代碼</label>
+                        <input type="text" class="form-control" name="payId" placeholder="00001" value="@Model.form.payId" />
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label" for="IsActive">狀態</label>
+                        <select name="conds.ISACTIVE" id="IsActive" class="form-control">
+                            <option value="">全部</option>
+                            <option value="1" @(Model.form.isActive == "1" ? " selected" : "")>啟用</option>
+                            <option value="0" @(Model.form.isActive == "0" ? " selected" : "")>停用</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="ibox">
+        <div class="ibox-content table-responsive">
+            <table class="table table-small-font table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th data-priority="1"><input type="checkbox" id="selectAll"></th>
+                        <th data-priority="1">支付系統名稱</th>
+                        <th data-priority="1">支付群組名稱</th>
+                        <th data-priority="1">支付名稱</th>
+                        <th data-priority="1">狀態</th>
+                        <th data-priority="6">編輯</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        if ((result.rows != null) && (result.rows.Count > 0))
+                        {
+                            foreach (var item in result.rows)
+                            {
+                                <tr>
+                                    <td><input type="checkbox" class="item" value="@item.PAYSEQ"></td>
+                                    <td>@item.PAYCATEGORYNAME ( @item.PAYCATEGORYID )</td>
+                                    <td>@item.PAYGROUPNAME ( @item.PAYGROUPID )</td>
+                                    <td>@item.PAYNAME ( @item.PAYID )</td>
+                                    <td>@(item.ISACTIVE == "1" ? "啟用" : "停用")</td>
+                                    <td>
+                                        <a href="/FirstBank/PayMethod/Info/@item.PAYSEQ" class="btn btn-xs btn-warning">修改</a> 
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else {
+                            <tr>
+                                <td colspan="5">查無資料</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        @{
+            if ((result.rows != null) && (result.rows.Count > 0))
+            {
+                <div class="row">
+                    @RenderPage("~/Views/Shared/pagination.cshtml", new { nowPage = NowPage, totalPage = TotalPage })
+                    <script>
+                var paginationFunction = function (obj) {
+                    $(".page").val($(obj).attr("data-page"));
+                    $("#form1").submit();
+                };
+                    </script>
+                </div>
+            }
+        }
+
+    </div>
+</div>
+<div class="modal inmodal fade" id="myModal6" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">系統訊息</h4>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="dialogOK" data-dismiss="modal">確定</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Styles {
+    @Styles.Render("~/css/rwd-table", "~/css/checkbox-radio")
+}
+@section Script{
+    @Scripts.Render("~/js/rwd-table", "~/js/pagination")
+}
+@section PageScript {
+    <script>
+        $(function () {
+            $('.table-responsive').responsiveTable();
+            $("#selectAll").on("click", function (e) {
+                $(".item").prop("checked", $(this).prop("checked"));
+                e.stopPropagation();
+            });
+            $("#searchBtn").on("click", function (e) {
+                $("#form1").attr("action", "/FirstBank/PayMethod");
+                $(".page").val(1);
+                $("#form1").submit();
+            });
+            $("#delBtn").on("click", function (e) {
+                if ($(".item").length > 0) {
+                    $(this).button("loading")
+                    var arr = new Array();
+                    $(".item:checked").each(function (i) { arr.push($(this).val()); });
+                    $.ajax({
+                        url: "/FirstBank/Merchant/Delete",
+                        method: "post",
+                        data: { merchantArr: arr },
+                        dataType: "json",
+                        traditional : true,
+                        success: function (json) {
+                            $("#myModal6 .modal-body").html("<p>"+json.msg+"</p>");
+                            $("#myModal6").modal("show");
+                            $("#delBtn").button("reset");
+                        }
+                    });
+                }
+            });
+            $("#dlBtn").on("click", function (e) {
+                $("#form1").attr("action", "/FirstBank/PayMethod/Download");
+                $("#form1").submit();
+            });
+            $("#dialogOK").on("click", function (e) { window.location.reload(); });
+        });
+    </script>
+}

@@ -1,0 +1,197 @@
+﻿@{
+    ViewBag.Title = "编辑 - 菜单";
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+    List<SelectListItem> list = ViewBag.ParentList;
+
+}
+@Styles.Render("~/css/adm/chosen")
+
+
+
+<div id="validateList" class="modal-body">
+
+    <div class="form-group">
+        <label>上级菜单</label>
+        @Html.DropDownList("txtParentId", list, null, new Dictionary<string, object> { { "class", "form-control chosen-select" }, { "check-type", "required" }, { "style", "width:250px" }, { "disabled", "disabled" } })
+    </div>
+
+    <div class="form-group">
+        <label>名称</label>
+        <input class="form-control" type="text" id="txtName" name="MENU_NAME" check-type="required" placeholder="菜单名称" value="@Model.MENU_NAME" />
+    </div>
+
+    <div class="form-group">
+        <label>排序</label>
+
+        <input class="form-control" type="email" id="txtMENU_SEQ" name="MENU_SEQ" check-type="required" placeholder="排序" style="width:100px" value="@Model.MENU_SEQ" required="" />
+
+
+    </div>
+
+    <div class="form-group">
+        <label>URL地址</label>
+        <input class="form-control" type="text" id="txtUrl" name="CONTROLLER_ACTION" check-type="required" placeholder="菜单Url地址" value="@Model.CONTROLLER_ACTION" />
+    </div>
+
+    <div class="form-group" id="ActionList">
+        @*@Html.Partial("ActionList")*@
+
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <button id="btnSave" type="button" class="btn btn-primary">保存內容</button>
+    <button id="btnBack" type="button" class="btn btn-danger">返回</button>
+</div>
+
+@section Script{
+    <!-- Validate JavaScript -->
+    @Scripts.Render("~/js/adm/validate", "~/js/adm/base", "/js/adm/chosen")
+}
+
+@section PageScript {
+    <script>
+
+        $(function () {
+            InitActionList(@ViewContext.RouteData.Values["id"]);
+            $("#validateList").validation({ icon: false });
+            $("#btnSave").click(saveData);
+            $("#btnBack").click(function () {
+                XPage.GoTo("@Url.Action("Index")");
+            });
+        });
+
+        function isCheckedActionURLisNull() {
+            var ReturnResult = true;
+            var $checkboxList = $("input.checkboxList:checked");
+            $checkboxList.each(function () {
+                var objActionURL = $(this).parent().next().val();
+                if ($.trim(objActionURL).length == 0) {
+                    alert("Action: " + $(this).val() + "的url不能为空");
+                    ReturnResult = false;
+                }
+            });
+            return ReturnResult;
+
+        }
+
+
+        function saveData() {
+
+            //var $elements = $('.search-choice');
+            //var MenuActonList = '';
+            if (!isCheckedActionURLisNull()) {
+                return false;
+            }
+
+            var $checkboxList = $("input.checkboxList:checked");
+            var MenuActionList = [];
+            $checkboxList.each(function () {
+
+                var $this = $(this);
+                var checkvalue = $this.val();
+                var textvalue = $this.parent().next().val();
+
+                MenuActionList.push({ Action_Type: checkvalue, CONTROLLER_ACTION: textvalue });
+
+            })
+
+            //$elements.each(function () {
+            //    var $this = $(this);
+            //    MenuActonList += $this.text();
+            //    MenuActonList += ",";
+            //});
+
+            //MenuActonList = MenuActonList.substr(0, MenuActonList.length - 1);
+
+            var postData = {
+                Menu_ID: '@ViewContext.RouteData.Values["id"]',
+                P_Menu_ID: $("#txtParentId").val(),
+                MENU_NAME: $("#txtName").val(),
+                CONTROLLER_ACTION: $("#txtUrl").val(),
+                MENU_SEQ: $("#txtMENU_SEQ").val(),
+                MenuActionList: MenuActionList
+            };
+
+
+            var url = "@Url.Action("EditModel")";
+            if ($("#validateList").valid()) {
+                var btn = $("#btnSave");
+                btn.button('loading');
+                //$.post()
+
+                //$.post(url, postData, function (res, status, jqXHR) {
+                //    if (res.flag) {
+                //        alert("操作成功");
+
+                //    } else {
+                //        alert("操作失败：" + res.msg);
+                //    }
+                //}, "json"
+                //    ).error(function () {
+                //        alert("服务器程序错误");
+                //    }).complete(function () {
+                //        btn.button('reset');
+                //    });
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: JSON.stringify(postData),
+                    contentType: "application/json, charset=utf-8",
+                    success: function (res) {
+                        btn.button('reset');
+                        if (res.flag) {
+                            alert("保存成功");
+                            XPage.GoTo("@Url.Action("Index")");
+                        } else {
+                            alert("保存失敗：" + res.msg);
+                        }
+                    },
+                    error: function () {
+                        alert("服務器程序錯誤");
+                    },
+                    complete: function () {
+                        btn.button('reset');
+                    }
+                });
+            }
+        }
+
+        function InitActionList(i) {
+
+            if (i > 0) {
+                $.ajax({
+                    url: "@Url.Action("ActionList")",
+                    data: { menu_id: i, isSelected: 1 },
+                    success: function (data) {
+                        $("#ActionList").html(data);
+                        $(".checkboxList").off("click").on("click", function () {
+
+                            if ($(this).prop("checked")) {
+                                if ($.trim($(this).parent().next().val()).length == 0) {
+                                    var objURL = $("#txtUrl").val();
+                                    var objIndex = objURL.lastIndexOf("/");
+                                    $(this).parent().next().val(objURL.substr(0, objIndex + 1) + $(this).val());
+                                }
+
+                            }
+                            else {
+                                $(this).parent().next().val('');
+                            }
+
+                            //if ($.trim(objAction).length == 0) {
+                            //    alert($(this).val() + "url不能为空");
+                            //    return;
+                            //}
+                        });
+                    }
+                });
+
+                $("#ActionList").show();
+            }
+        }
+    </script>
+}

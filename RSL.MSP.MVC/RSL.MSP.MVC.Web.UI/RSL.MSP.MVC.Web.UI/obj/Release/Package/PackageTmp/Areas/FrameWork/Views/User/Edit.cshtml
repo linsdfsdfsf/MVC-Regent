@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "编辑 - 用户管理";
+    Layout = "~/Views/Shared/_Layout_blank.cshtml";
+}
+
+
+<div id="validateList" class="modal-body">
+
+    <div class="form-group">
+        <label>登錄帳號</label>
+        <input class="form-control disabled" type="text" id="txtUser_Account" name="User_Account" check-type="required" placeholder="登录账号" maxlength="50" value="@Model.User_Account" disabled="disabled" />
+    </div>
+
+    <div class="form-group">
+        <label>登錄密碼</label>
+        <input class="form-control disabled" type="text" id="txtUser_PWD" name="User_PWD" check-type="required" placeholder="用户密码" maxlength="50" value="" />
+    </div>
+
+    <div class="form-group">
+        <label>用戶姓名</label>
+        <input class="form-control" type="text" id="txtUser_Name" name="User_Name" check-type="required" placeholder="用户姓名" maxlength="20" value="@Model.User_Name" />
+    </div>
+
+    <div class="form-group">
+        <label>用戶姓名</label>
+        @{
+            if (ViewBag.CustomerList != null)
+            {
+                <select id="Customer_ID" class="chosen-select form-control">
+                    @foreach (var item in @ViewBag.CustomerList)
+                    {
+                        <option value="@item.Value" selected=@item.Selected>@item.Text</option>
+                    }
+                </select>
+            }
+        }
+    </div>
+
+
+    <div class="form-group">
+        <label>郵箱</label>
+        <input class="form-control" type="text" id="txtUser_Email" name="User_Email" check-type="required" placeholder="邮箱" maxlength="100" value="@Model.User_Email" />
+    </div>
+
+    <div class="form-group">
+        <label>電話</label>
+        <input class="form-control" type="text" id="txtUser_Tel" name="User_Tel" check-type="required" placeholder="电话" maxlength="20" value="@Model.User_Tel" />
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button id="btnSave" type="button" class="btn btn-primary">保存內容</button>
+    <button id="btnBack" type="button" class="btn btn-danger">返回</button>
+</div>
+
+@section Script{
+    <!-- Validate JavaScript -->
+    @Scripts.Render("~/js/adm/validate", "~/js/adm/base")
+}
+@section PageScript {
+    <script>
+        function saveData() {
+            var postData = {
+                Id: '@ViewContext.RouteData.Values["id"]',
+                User_Account: $("#txtUser_Account").val(),
+                User_PWD: $("#txtUser_PWD").val(),
+                User_Name: $("#txtUser_Name").val(),
+                Customer_ID: $("#Customer_ID").val(),
+                User_Email: $("#txtUser_Email").val(),
+                User_Tel: $("#txtUser_Tel").val()
+            };
+            var url = "@Url.Action("EditModel")";
+            //XPage.SaveData(url, postData);
+            if ($("#validateList").valid()) {
+                var btn = $("#btnSave");
+                btn.button('loading');
+                $.post(url, postData, function (res, status, jqXHR) {
+                    if (res.flag) {
+                        alert("操作成功");
+                        XPage.GoTo("@Url.Action("Index")");
+                    } else {
+                        alert("操作失敗：" + res.msg);
+                    }
+                }).error(function () {
+                    alert("服務器程式錯誤");
+                }).complete(function () {
+                    btn.button('reset');
+                });
+            }
+        }
+        $(document).ready(function () {
+            $("#validateList").validation({ icon: false });
+            $("#btnSave").click(saveData);
+            $("#btnBack").click(function () {
+                XPage.GoTo("@Url.Action("Index")");
+            });
+        });
+    </script>
+}

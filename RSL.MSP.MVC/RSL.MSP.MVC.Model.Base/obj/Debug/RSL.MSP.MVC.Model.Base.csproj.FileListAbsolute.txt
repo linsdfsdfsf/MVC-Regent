@@ -1,0 +1,10 @@
+E:\REGENT_BS\RSL.MSP.MVC\RSL.MSP.MVC.Model.Base\bin\RSL.MSP.MVC.Model.Base.dll.config
+E:\REGENT_BS\RSL.MSP.MVC\RSL.MSP.MVC.Model.Base\bin\RSL.MSP.MVC.Model.Base.dll
+E:\REGENT_BS\RSL.MSP.MVC\RSL.MSP.MVC.Model.Base\bin\RSL.MSP.MVC.Model.Base.pdb
+E:\REGENT_BS\RSL.MSP.MVC\RSL.MSP.MVC.Model.Base\bin\RSL.MSP.MVC.Model.Common.dll
+E:\REGENT_BS\RSL.MSP.MVC\RSL.MSP.MVC.Model.Base\bin\Application.Framework.Data.dll
+E:\REGENT_BS\RSL.MSP.MVC\RSL.MSP.MVC.Model.Base\bin\Microsoft.Practices.EnterpriseLibrary.Data.dll
+E:\REGENT_BS\RSL.MSP.MVC\RSL.MSP.MVC.Model.Base\bin\Microsoft.Practices.EnterpriseLibrary.Common.dll
+E:\REGENT_BS\RSL.MSP.MVC\RSL.MSP.MVC.Model.Base\bin\Microsoft.Practices.ObjectBuilder.dll
+E:\REGENT_BS\RSL.MSP.MVC\RSL.MSP.MVC.Model.Base\obj\Debug\RSL.MSP.MVC.Model.Base.dll
+E:\REGENT_BS\RSL.MSP.MVC\RSL.MSP.MVC.Model.Base\obj\Debug\RSL.MSP.MVC.Model.Base.pdb

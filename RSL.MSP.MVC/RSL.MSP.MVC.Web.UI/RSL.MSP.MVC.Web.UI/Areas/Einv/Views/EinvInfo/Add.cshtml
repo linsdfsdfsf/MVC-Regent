@@ -1,0 +1,176 @@
+﻿@{
+    ViewBag.Title = "發票資料維護";
+    Layout = "~/Views/Shared/_Layout_blank.cshtml";
+}
+<!--/内容-->
+<div class="form-group">
+    <div class="row">
+        <div class="col-xs-10">
+            <label for="txtCenterId" class="col-sm-2 control-label">商家統編:</label>
+            <div class="col-sm-6">
+                <input type="text" id="txtCenterId" class="form-control"  maxlength="12" placeholder="商家統編" data-toggle="tooltip" data-placement="right" title="" data-original-title="請輸入商店統編" />
+                <input type="hidden" id="hiddCenterId" value="@ViewBag.txtCenterId" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="row">
+        <div class="col-xs-10">
+            <label for="txtInvY" class="col-sm-2 control-label">發票年月:</label>
+            <div class="col-sm-6">
+                <div class="col-sm-4" style="padding:0;">
+                    <input type="text" id="txtInvY" class="form-control"  maxlength="4" placeholder="" data-toggle="tooltip" data-placement="right" title="" data-original-title="請輸入發票年月" />
+                </div>
+                <div class="col-sm-8" style="padding-right:0;">
+                    @Html.DropDownList("ddlInvM", null, new { id = "ddlInvM", @class = "form-control" })
+                </div>
+
+                <input type="hidden" id="hdfInvTKey" value="@ViewBag.hdfInvTKey" />
+                <input type="hidden" id="hdInvYm" value="@ViewBag.hdInvYm" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="row">
+        <div class="col-xs-10">
+            <label for="ddlInvType" class="col-sm-2 control-label">發票類別:</label>
+            <div class="col-sm-6">
+                @Html.DropDownList("ddlInvType", null, new { id = "ddlInvType", @class = "form-control" })
+                <input type="hidden" id="hdInvType" value="@ViewBag.hdInvType" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-xs-10">
+            <label for="txtTrack" class="col-sm-2 control-label">發票字軌:</label>
+            <div class="col-sm-6">
+                <input type="text" id="txtTrack" class="form-control" maxlength="2"  onblur="this.value = this.value.toUpperCase();" placeholder="發票字軌" data-toggle="tooltip" data-placement="right" title="" data-original-title="請輸入發票字軌" />
+                <input type="hidden" id="hdTrack" value="@ViewBag.hdTrack" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-xs-10">
+            <label for="txtInvNoB" class="col-sm-2 control-label">發票起號:</label>
+            <div class="col-sm-6">
+                <input type="text" id="txtInvNoB" class="form-control"  maxlength="8" onchange="funGetInvRolll();" placeholder="發票起號" data-toggle="tooltip" data-placement="right" title="" data-original-title="請輸入發票起號" />
+                <input type="hidden" id="hdInvNoB" value="@ViewBag.hdInvNoB" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-xs-10">
+            <label for="txtInvNoB" class="col-sm-2 control-label">發票迄號:</label>
+            <div class="col-sm-6">
+                <input type="text" id="txtInvNoE" class="form-control"  maxlength="8" onchange="funGetInvRolll();" placeholder="發票迄號" data-toggle="tooltip" data-placement="right" title="" data-original-title="請輸入發票迄號" />
+                <input type="hidden" id="hdInvNoE" value="@ViewBag.txtInvNoE" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-xs-10">
+            <label for="txtInvroll" class="col-sm-2 control-label">發票卷數:</label>
+            <div class="col-sm-6">
+                <input type="text" id="txtInvroll" class="form-control" value="0" readonly placeholder="發票卷數" data-toggle="tooltip" data-placement="right" title="" data-original-title="請輸入發票卷數" />
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--/内容-->
+<!--Button-->
+<div style="height:50px;"></div>
+<div class="page-footer">
+    <div class="btn-list">
+        <button id="btnSave" type="button" class="btn btn-primary">保存内容</button>
+        <button id="btnBack" type="button" class="btn btn-danger">返回</button>
+    </div>
+    <div class="clear"></div>
+</div>
+@section Script{
+    @Scripts.Render("~/js/adm/validate", "~/js/adm/base", "~/js/adm/json")
+}
+@section PageScript {
+    <script>
+        $(document).ready(function () {
+            $("#validateList").validation({ icon: false });
+            $("#btnSave").click(saveData);
+
+            $("#btnBack").click(function () {
+                XPage.GoTo("@Url.Action("Index")");
+            });
+            //Selectchange();
+        });
+
+        function saveData() {            
+            var postData = {
+                CENTER_ID: $("#txtCenterId").val(),
+                INV_YM: $('#txtInvY').val() + $("#ddlInvM").val(),
+                INV_TYPE: $("#ddlInvType").val(),
+                TRACK: $("#txtTrack").val(),
+                INV_NO_B: $("#txtInvNoB").val(),
+                INV_NO_E: $("#txtInvNoE").val(),
+                INV_ROLL: $('#txtInvroll').val()
+            };
+            var url = "@Url.Action("AddModel")";
+            //XPage.SaveData(url, postData);
+
+            if ($("#validateList").valid()) {
+                var btn = $("#btnSave");
+                btn.button('loading');
+                $.post(url, postData, function (res, status, jqXHR) {
+                    if (res.flag) {
+                        alert("成功");
+
+                        XPage.GoTo("@Url.Action("Index")");
+                    } else {
+                        alert("失败：" + res.msg);
+                    }
+                }).error(function () {
+                    alert("存檔異常!");
+                }).complete(function () {
+                    btn.button('reset');
+                });
+            }
+
+        }
+
+        function funGetInvRolll() {
+            if (($("#txtInvNoB").val() != "") && ($("#txtInvNoE").val() != "")) {
+                var vInvNoB = $("#txtInvNoB").val() * 1;
+                var vInvNoE = $("#txtInvNoE").val() * 1;
+                $("#txtInvNoB, #txtInvNoE").removeClass("error");
+                $("label.error").remove();
+                if (vInvNoE > vInvNoB) {
+                    if (((vInvNoE - vInvNoB) + 1) % 50 == 0) {
+                        $("#txtInvroll").val(((vInvNoE - vInvNoB) + 1) / 50);
+                    }
+                    else {
+                        //$("txtInvNoE").focus();
+                        $("#txtInvNoE").val('');
+                        $("#txtInvNoE").after("<label class='error'>發票區間不為50張</label>");
+                        $("#txtInvNoE").addClass("error");
+                    }
+                }
+                else {
+                    $("#txtInvNoB").val('');
+                    $("#txtInvNoB").after("<label class='error'>發票起號不可大於發票迄號</label>");
+                    $("#txtInvNoB").addClass("error");
+                }
+            }
+        };
+    </script>
+}

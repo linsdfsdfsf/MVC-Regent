@@ -1,0 +1,97 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+    ViewBag.Title = "支付方式詳細內容";
+}
+<div id="validateList" class="modal-body">
+    <div class="ibox-content m-b-sm">
+        <fieldset class="form-horizontal">
+            <form name="form1" action="/FirstBank/PayMethod/SaveInfo" method="post">
+                <input type="hidden" name="PAYSEQ" value="@Model.info.PAYSEQ" />
+                <div class="row">
+                    <label class="col-sm-2 text-right">系統別:</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" name="PAYCATEGORYID">
+                            @{
+                                foreach (var item in Model.payCategoryList)
+                                {
+                                <option value="@item.CODEID" @(Model.info.PAYCATEGORYID==item.CODEID?"selected":"")>@item.CODENAME</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <label class="col-sm-2 text-right">群組別:</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" name="PAYGROUPID">
+                            @{
+                                foreach (var item in Model.payGroupList) {
+                            <option value="@item.CODEID" @(Model.info.PAYGROUPID == item.CODEID?"selected":"")>@item.CODENAME</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 text-right">支付代碼:</label>
+                    <div class="col-sm-4"><input type="text" class="form-control" name="PAYID" value="@Model.info.PAYID" /></div>
+                    <label class="col-sm-2 text-right">支付名稱:</label>
+                    <div class="col-sm-4"><input type="text" class="form-control" name="PAYNAME" value="@Model.info.PAYNAME" /></div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 text-right">狀態:</label>
+                    <div class="col-sm-4">
+                        <div class="radio radio-info radio-inline">
+                            <input type="radio" id="on" value="1" name="ISACTIVE" @(Model.info.ISACTIVE=="1"?"checked":"") />
+                            <label for="on"> 啟用 </label>
+                        </div>
+                        <div class="radio radio-inline">
+                            <input type="radio" id="off" value="0" name="ISACTIVE" @(Model.info.ISACTIVE=="0"?"checked":"") />
+                            <label for="off"> 停用 </label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="form-group">
+                <button class="btn btn-success"><i class="fa fa-save"></i>儲存</button>
+                <button class="btn btn-danger"><i class="fa fa-ban"></i>取消</button>
+            </div>
+        </fieldset>
+    </div>
+</div>
+@section Styles {
+    @Styles.Render("~/css/checkbox-radio")
+}
+@section Script{
+    @Scripts.Render("~/js/dialogs")
+}
+@section PageScript {
+    <script>
+    $(function () {
+        $("button.btn-danger").on("click", function (e) { window.location.reload(); });
+        //save data
+        $(".form-horizontal").on("click", "button.btn-success", function (e) {
+            loadingDialog("show", "資料儲存中...請稍候");
+            var obj = $(this).parents(".form-horizontal:first");
+            var form = $(obj).find("form");
+            $.ajax({
+                url: $(form).attr("action"),
+                method: "post",
+                dataType: "json",
+                traditional: true,
+                data: $(form).serialize(),
+                success: function (json) {
+                    loadingDialog("value", json.flag ? "處理完成" : json.msg);
+                    setTimeout(function () { loadingDialog("hide"); }, 1500);
+                },
+                error: function (data) {
+                    loadingDialog("value", "失敗:" + data);
+                    setTimeout(function () { loadingDialog("hide"); }, 1500);
+                }
+            });
+        });
+        //apply audit data
+        $("#survey").on("click", function (e) {
+            $("input.survey").val($(this).prop("checked") ? "1" : "0");
+        });
+    });
+    </script>
+}

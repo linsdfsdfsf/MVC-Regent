@@ -1,0 +1,182 @@
+﻿@{
+    ViewBag.Title = "訂單管理";
+    Layout = "~/Views/Shared/_Layout_blank_WithoutIframe.cshtml";
+}
+
+
+<div class="form-group">
+    @*@foreach (RSL.MSP.MVC.Model.Framework.OperateModel item in ViewBag.Buttonlist)
+        {
+            switch (item.Action_Name)
+            {
+                case "Add":
+                    <button id="btnAdd" type="button" class="btn btn-primary " onclick="addModel()"><i class="fa fa-check"></i>&nbsp;@item.Action_Name</button>
+                    break;
+                case "Edit":
+                <button id="btnEdit" type="button" class="btn btn-info " onclick="editModel()"><i class="fa fa-paste"></i> @item.Action_Name</button>
+                    break;
+                case "Delete":
+                <button id="btnDel" type="button" class="btn btn-danger " onclick="delData()"><i class="fa fa-dedent"></i>&nbsp;&nbsp;<span class="bold">@item.Action_Name</span></button>
+                    break;
+                default:
+                    break;
+            }
+        }*@
+</div>
+
+
+<div class="form-group">
+    <button id="btnSearchOrder" class="btn btn btn-primary" type="button"> <i class="fa fa-search"></i> 搜索</button>
+    <a href="@Url.Action("Add", "Order")" class="btn btn-primary"><i class="fa fa-plus-square-o"></i>新增</a>
+</div>
+<form id="formOrder" name="form1" method="post">
+    <div class="input-group">
+        <div class="row">
+            <div class="col-sm-2">訂單編號　</div><div class=" col-sm-4"><input id="txtOrderId" type="text" class="input form-control" placeholder="訂單編號" /></div>
+            <div class="col-sm-2">訂位方式　</div><div class=" col-sm-4"><input id="txtBOOKING_TYPE" type="text" style="width:220px" class="input form-control" placeholder="訂位方式" /></div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+            <div class="col-sm-2">訂單成立時間</div>
+            <div class="input-daterange input-group" id="datepicker">
+                <div class="col-sm-5">
+                    <input id="txtSYSTRANSTIME_B" name="SYSTRANSTIME" type="text" class="input form-control" placeholder="訂單成立時間(起)" />
+                </div>
+                <div class="col-sm-5"><input id="txtSYSTRANSTIME_E" name="SYSTRANSTIME" type="text" class="input form-control" placeholder="訂單成立時間(迄)" /></div>
+            </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+            <div class="col-sm-2">訂單狀態</div>
+            <div class="col-sm-4">
+                <select id="txtBOOKING_STATUS" class="input form-control">
+                    <option value="">-----</option>
+                    <option value="0">訂單失效</option>
+                    <option value="1">訂單成立</option>
+                    <option value="2">訂單取消</option>
+                    <option value="3">Web API直接退款</option>
+                    <option value="4">支付後台退款</option>
+                    <option value="5">退款作業完成</option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+</form>
+<div class="jqGrid_wrapper" style="margin-top:15px;">
+    <table id="jqGridListOrder"></table>
+    <div id="jqGridPagerOrder"></div>
+</div>
+
+@section Styles {
+    @Styles.Render("~/css/rwd-table", "~/css/checkbox-radio", "~/css/bootstrap-datepicker")
+}
+@section Script{
+    @Scripts.Render("~/js/rwd-table", "~/js/pagination", "~/js/dialogs", "~/js/bootstrap-datepicker", "~/js/adm/validate", "~/js/adm/base", "~/js/adm/json")
+}
+
+@section PageScript {
+    <script>
+        //=========搜尋資料===========//
+        function searchData() {
+            var grid = $("#jqGridListOrder");
+            var postdata = grid.jqGrid('getGridParam', 'postData');
+            $.extend(postdata,
+                           {
+                               //註 若要增加搜尋條件 要到model裡的OrderSearch和configuration新增參數
+                               "SearchKey[0].ORDERM_ID": $("#txtOrderId").val(),
+                               "SearchKey[0].BOOKING_TYPE": $("#txtBOOKING_TYPE").val(),
+                               "SearchKey[0].BOOKING_DATE_B": $("#txtSYSTRANSTIME_B").val(),
+                               "SearchKey[0].BOOKING_DATE_E": $("#txtSYSTRANSTIME_E").val(),
+                               "SearchKey[0].BOOKING_STATUS": $("#txtBOOKING_STATUS").val(),
+                               "SearchKey[0].filters": '',
+                               "SearchKey[0].searchField": 'ORDERM_ID',
+                               "SearchKey[0].searchOper": 'eq'
+                           });
+            grid.jqGrid('setGridParam', { search: true, postData: postdata });
+            grid.trigger("reloadGrid", [{ page: 1 }]);
+        }
+
+
+        //==============明細表=============//
+        function OrderViewDetail(id) {
+            @*$("#btnAdd").button("loading");
+        window.location.href = "@Url.Action("Detail")/" + id;*@
+
+            var url = "@Url.Action("Edit")/" + id;
+            //弹出即全屏
+            var index = top.layer.open({
+                type: 2,
+                content: url,
+                area: ['900px', '495px'],
+                maxmin: true,
+                title: '訂單明細'
+            });
+            top.layer.area(index);
+
+            // $('.J_mainContent').find('div.J_iframe').load("/FirstBank/Order/Detail/" + id, function (response, status, xhr) {
+            //     if (status == "error") {
+            //        $(this).html("錯誤 ");
+            //     }
+            //});
+        }
+        //===========日期選單============//
+        $('.input-daterange').datepicker({
+            format: "yyyy/mm/dd",
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true
+        });
+        //===================================
+        $(document).ready(function () {
+            var config = {
+                title: '訂單查詢',
+                url: '@Url.Action("GetList")',
+                search: false,
+                id: "jqGridListOrder",
+                pagerId: "jqGridPagerOrder",
+                colNames: ['編輯','訂單編號', '訂位方式', '餐廳名稱', '時段名稱', '用餐人數', '訂位狀態', '手機號碼', "顧客姓名", "顧客性別", "顧客Email", "顧客連絡電話", '特殊需求', '完成訂位時間', '取消訂位時間','取消訂位原因','訂單狀態','入場時間'],
+                colModel: [
+                                        {
+                                            name: 'ORDERM_ID',
+                                            index: 'ORDERM_ID',
+                                            width: "80px",
+                                            formatter: function (cellValue, options, rowObject) {
+                                                //object轉字串
+                                                var orderid = JSON.stringify(rowObject.ORDERM_ID);
+                                                //return cellValue == "0" ? "" : "<button id=\"btnbranchset\" type=\"button\" class=\"btn btn-info \" onclick=\"ViewDetail('" + orderid + "')\"><i class=\"fa fa-paste\"></i> 訂單明細</button>"
+                                                return cellValue == "" ? "" : "<button id='btnbranchset' type='button' class='btn btn-info ' onclick='OrderViewDetail(" + orderid + ")'><i class='fa fa-pencil-square-o'></i> 明細</button>"
+                                            }
+                                        },
+                    { name: 'ORDERM_ID', index: 'ORDERM_ID', key: true, width: "90px" },//訂單編號
+                    { name: 'BOOKING_TYPE', index: 'BOOKING_TYPE', width: "100px" },//訂位方式
+                    { name: 'RESTAURANT_NAME', index: 'RESTAURANT_NAME', width: "100px" },//餐廳名稱
+                    { name: 'PERIOD_NAME', index: 'PERIOD_NAME', width: "100px" },//時段名稱
+                    { name: 'RESERVATION_NUMBER', index: 'RESERVATION_NUMBER', width: "100px" },//用餐人數
+                    { name: 'BOOKING_STATUS', index: 'BOOKING_STATUS', width: "100px" },//訂位狀態
+                    { name: 'VERIFICATION_MOBILE', index: 'VERIFICATION_MOBILE', width: "100px" },//手機號碼
+                    { name: 'CUS_NAME', index: 'CUS_NAME', width: "100px" },//顧客姓名
+                    { name: 'CUS_GENDER', index: 'CUS_GENDER', width: "100px" },//顧客性別
+                    { name: 'CUS_EMAIL', index: 'CUS_EMAIL', width: "100px" },//顧客Email
+                    { name: 'CUS_TEL', index: 'CUS_TEL', width: "100px" },//顧客連絡電話
+                    { name: 'CUS_NOTE', index: 'CUS_NOTE', width: "100px" },//特殊需求
+                    { name: 'BOOKING_OK_DATE', index: 'BOOKING_OK_DATE', width: "100px" },//完成訂位時間
+                    { name: 'BOOKING_CANCEL_DATE', index: 'BOOKING_CANCEL_DATE', width: "100px" },//取消訂位時間
+                    { name: 'BOOKING_CANCEL_NOTE', index: 'BOOKING_CANCEL_NOTE', width: "100px" },//取消訂位原因
+                    { name: 'ORDER_STATUS', index: 'ORDER_STATUS', width: "100px" },//訂單狀態
+                    { name: 'ORDER_OK_DATE', index: 'ORDER_OK_DATE', width: "100px" }//入場時間
+
+                ]
+            };
+            RSLO2O.InitTable(config, false);
+
+            // var columnNumber = $("#jqGridList").jqGrid('getGridParam', 'colModel').length - 1;
+            // $('#jqGridList').jqxGrid('setcolumnproperty', 'OrderId', 'width', $(".ui-jqgrid-bdiv").width() / columnNumber);
+            $("#btnSearchOrder").click(searchData);
+            //取消點選事件
+            $("#jqGridListOrder").jqGrid('setGridParam', {
+                beforeSelectRow: function (rowid, e) {
+                    return false;
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,221 @@
+﻿@{
+    ViewBag.Title = "添加 - 菜单管理";
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+    List<SelectListItem> list = ViewBag.ParentList;
+    List<RSL.MSP.MVC.Model.Framework.ActionModel> _ActionModel = ViewBag.ActionList;
+    int isDisable = ViewBag.isDisable;
+}
+
+
+@Styles.Render("~/css/adm/chosen")
+
+
+<div id="validateList" class="modal-body">
+
+    <div class="form-group">
+        <label>上级菜单</label>
+
+        @if (isDisable == 1)
+        {
+            @Html.DropDownList("txtParentId", list, null, new Dictionary<string, object> { { "class", "form-control chosen-select" }, { "check-type", "required" }, { "style", "width:250px" }, { "disabled", "disabled" } })
+
+        }
+        else
+        {
+            @Html.DropDownList("txtParentId", list, null, new Dictionary<string, object> { { "class", "form-control chosen-select" }, { "check-type", "required" }, { "style", "width:250px" } })
+
+        }
+    </div>
+
+    <div class="form-group">
+        <label>名称</label>
+        <input class="form-control" type="text" id="txtName" name="MENU_NAME" check-type="required" placeholder="菜单名称" />
+    </div>
+
+    <div class="form-group">
+        <label>排序</label>
+        <input class="form-control" type="text" id="txtMENU_SEQ" name="MENU_SEQ" check-type="required" placeholder="排序" style="width:100px" />
+    </div>
+
+    <div class="form-group">
+        <label>菜单备注</label>
+        <input class="form-control" type="text" id="txtMENU_REMARK" name="MENU_REMARK" placeholder="菜单备注" style="width:500px" />
+
+    </div>
+
+    <div>
+        <label>URL地址</label>
+        <input class="form-control" type="text" id="txtUrl" name="CONTROLLER_ACTION" placeholder="菜单Url地址" />
+    </div>
+
+    <div class="form-group" id="ActionList">
+
+        @*@Html.Partial("ActionList")*@
+
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button id="btnSave" type="button" class="btn btn-primary">保存内容</button>
+    <button id="btnBack" type="button" class="btn btn-danger">返回</button>
+</div>
+
+@section Script{
+    <!-- Validate JavaScript -->
+    @Scripts.Render("~/js/adm/validate", "~/js/adm/base", "/js/adm/chosen")
+}
+@section PageScript {
+    <script>
+
+        function isCheckedActionURLisNull() {
+            var ReturnResult = true;
+            var $checkboxList = $("input.checkboxList:checked");
+            $checkboxList.each(function () {
+                var objActionURL = $(this).parent().next().val();
+                if ($.trim(objActionURL).length == 0) {
+                    alert("Action: " + $(this).val() + "的url不能为空");
+                    ReturnResult = false;
+                }
+            });
+            return ReturnResult;
+
+        }
+
+        function saveData() {
+            if (!isCheckedActionURLisNull()) {
+                return false;
+            }
+            var $elements = $('.search-choice');
+            //var MenuActionModel = [];
+
+            //var strMenuActionModel = "[";
+            var MenuActonList = '';
+
+            $elements.each(function () {
+                var $this = $(this);
+                //strMenuActionModel += "{",
+                //strMenuActionModel += "Action_Type:" + "'" + $this.text() + "'";
+                //strMenuActionModel += "}";
+                //strMenuActionModel += ",";
+
+                //MenuActionModel.push($this.text());
+
+                MenuActonList += $this.text();
+                MenuActonList += ",";
+
+            });
+            MenuActonList = MenuActonList.substr(0, MenuActonList.length - 1);
+
+            //strMenuActionModel = strMenuActionModel.substr(0, strMenuActionModel.length - 1);
+            //strMenuActionModel += "]";
+
+            //var jsonMenuActionModel = $.parseJSON(strMenuActionModel);
+
+
+
+            var postData = {
+                MENU_ID: $("#txtParentId").val(),
+                MENU_NAME: $("#txtName").val(),
+                MENU_REMARK: $("#txtMENU_REMARK").val(),
+                CONTROLLER_ACTION: $("#txtUrl").val(),
+                MENU_SEQ: $("#txtMENU_SEQ").val(),
+                Menu_URL: MenuActonList
+            };
+
+
+            var url = "@Url.Action("AddModel")";
+            //XPage.SaveData(url, postData);
+            if ($("#validateList").valid()) {
+                var btn = $("#btnSave");
+                btn.button('loading');
+                $.post(url, postData, function (res, status, jqXHR) {
+                    if (res.flag) {
+                        alert("操作成功");
+                        XPage.GoTo("@Url.Action("Index")");
+                    } else {
+                        alert("操作失败：" + res.msg);
+                    }
+                }).error(function () {
+                    alert("服务器程序错误");
+                }).complete(function () {
+                    btn.button('reset');
+                });
+            }
+        }
+
+
+
+
+        function showButtonList() {
+            var value = $("#txtParentId").find("option:selected").val();
+
+            if (value == 0) {
+                $("#ActionList").hide();
+            }
+        }
+
+        $(document).ready(function () {
+            $("#validateList").validation({ icon: false });
+            $("#btnSave").click(saveData);
+            $("#btnBack").click(function () {
+                XPage.GoTo("@Url.Action("Index")");
+            });
+
+
+            showButtonList();
+
+            $("#txtParentId").change(function () {
+                var checkValue = $(this).val();
+                if (checkValue == "0") {
+                    $("#ActionList").hide();
+                }
+                else {
+
+                    $.ajax({
+                        url: "@Url.Action("ActionList")",
+                        data: { menu_id: checkValue, isSelected: 0 },
+                        success: function (data) {
+                            $("#ActionList").html(data);
+
+                            $(".checkboxList").off("click").on("click", function () {
+
+                                if ($(this).prop("checked")) {
+                                    var objURL = $("#txtUrl").val();
+                                    //如果menu url为空，则系统强制须先维护menu url，并取消该checkbox为true的选择
+                                    if ($.trim(objURL).length > 0) {
+                                        //如果action url为空，则系统自动给出一个建议的url
+                                        if ($.trim($(this).parent().next().val()).length == 0) {
+                                            var objIndex = objURL.lastIndexOf("/");
+                                            $(this).parent().next().val(objURL.substr(0, objIndex + 1) + $(this).val());
+                                        }
+
+                                    }
+                                    else {
+                                        alert("请先维护菜单URL");
+                                        $(this).attr("checked", false);
+
+                                    }
+
+
+                                }
+                                else {
+                                    $(this).parent().next().val('');
+                                }
+
+                                //if ($.trim(objAction).length == 0) {
+                                //    alert($(this).val() + "url不能为空");
+                                //    return;
+                                //}
+                            });
+
+                        }
+                    });
+
+                    $("#ActionList").show();
+                }
+            });
+
+
+        });
+    </script>
+}

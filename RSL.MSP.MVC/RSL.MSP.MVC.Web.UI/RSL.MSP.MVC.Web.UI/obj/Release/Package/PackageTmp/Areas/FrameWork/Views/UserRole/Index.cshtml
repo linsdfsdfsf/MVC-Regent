@@ -1,0 +1,215 @@
+﻿@*******************************************************************************
+    * Copyright (C) RSL.Com
+    *
+    * Author: jichaoliu
+    * Create Date: 2015/9/4 16:10:36
+    * Description: Automated building by service@RSL.com
+    *
+    * Revision History:
+    * Date         Author               Description
+    *
+    *********************************************************************************@
+@{
+    ViewBag.Title = "角色授权";
+    Layout = "~/Views/Shared/_Layout_blank.cshtml";
+}
+@section Style{
+    @Styles.Render("~/Content/template/css/plugins/jsTree/style")
+}
+
+<div class="form-group">
+
+    <button id="btnSave" type="button" class="btn btn-primary" onclick="saveData()"><i class="fa fa-check"></i>保存</button>
+
+</div>
+
+
+
+<div class="row animated fadeInRight">
+    <div class="col-sm-4">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>角色列表</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <div id="jstree1">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>菜单列表</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content" style="display: block;">
+
+                <div>
+                    <div id="jstree2">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@section Script{
+    @*<script src="~/Content/template/js/plugins/jsTree/jstree.min.js"></script>
+        <script src="~/Scripts/adm/base.js"></script>
+        <script src="~/Scripts/json2.js"></script>*@
+    @Scripts.Render("~/Content/template/js/plugins/jsTree/roletree", "~/js/adm/base", "~/js/adm/json")
+}
+@section PageScript{
+    <script>
+        $('#jstree1').on('changed.jstree', function (e, data) {
+            var rows = data.selected;
+            var len = rows.length;
+            var id = data.instance.get_node(rows[len - 1]).id;
+            $('#jstree2').jstree().deselect_all();
+            if (id.indexOf("j") == -1) {
+                var loading = top.layer.load();
+
+                $.ajaxSetup({
+                    async: false
+                });
+
+                getRoleMenu(id);
+                GetUnRoleMenu(id);
+                top.layer.close(loading);
+            }
+        }).jstree({
+            'core': {
+                'check_callback': true,
+                'data': {
+                    'url': "@Url.Action("GetRoles")",
+                    'data': function (node) {
+                        return node;
+                    }
+                }
+            },
+            'plugins': ['types', "wholerow"],
+            'types': {
+                'default': {
+                    'icon': 'fa fa-folder'
+                }
+            }
+        });
+
+        $('#jstree2').jstree({
+            'core': {
+                'check_callback': false,
+                'data': {
+                    'url': "@Url.Action("GetMenus")",
+                    'data': function (node) {
+                        return node;
+                    }
+                }
+            },
+            'plugins': ['types', 'checkbox', "wholerow"],
+            'types': {
+                'default': {
+                    'icon': 'fa fa-folder'
+                }
+            }
+        });
+        @*获取选中的值*@
+        function saveData() {
+            var roleNodes = $("#jstree1").jstree().get_selected();
+            var menuNodes = $("#jstree2").jstree().get_selected();
+            var menuinfo = $("#jstree2").jstree().get_checked(true);
+
+            var roleId = roleNodes[roleNodes.length - 1];
+            
+            var postData = {
+                id: roleId, datas: []
+            };
+            $(".jstree-undetermined").each(function () {
+                postData.datas.push({ ROLE_ID: roleId, ObjType: 0, MENU_ID: $(this).parent().parent().attr("id") });
+            });
+
+            $.each(menuinfo, function (index, obj) {
+
+                var menuID = this.id;
+                var menuText = this.text;
+                var parentID=this.parent;
+                var objType = 0;
+                if (menuText.indexOf(")") > 0) {
+                    objType = 1;
+         
+                }
+               
+                postData.datas.push({ ROLE_ID: roleId, ObjType: objType, MENU_ID: menuID, Parenet_ID: parentID });
+
+                //var menuID = this.id;
+                //var menuText = this.text;
+                //var parentID = this.parent;
+                //var _RoleMenuActionList = [];
+                //var objType = 1;
+                //if (menuText.indexOf(")") < 0) {
+                //    objType = 0;
+                //    $.each(this.children, function (_index, _obj) {
+
+                //        _RoleMenuActionList.push({ Action_Type: menuID });
+                //    })
+                //}
+
+                //postData.datas.push({ ROLE_ID: roleId, ObjType: objType, MENU_ID: menuID, RoleMenuActionList: _RoleMenuActionList });
+            });
+
+            //$.each(menuNodes, function (i, n) {
+            //    if (n.indexOf("j") == -1)
+            //        postData.datas.push({ ROLE_ID: roleId, ObjType: 1, MENU_ID: n });
+            //});
+
+            XPage.SaveDataWithNoValid("/FrameWork/UserRole/SaveUserRole", postData);
+        }
+        @*获取角色的权重*@
+        function getRoleMenu(id) {
+            $.get("/FrameWork/UserRole/GetMenuRoleByRoleId/" + id, function (res) {
+
+                if (res && res.length > 0) {
+                    var len = res.length;
+                    var tree = $('#jstree2');
+                    for (var i = 0, item; item = res[i]; i++) {
+                        tree.jstree("check_node", tree.find("li[id='" + item.MENU_ID + "']"));
+                    }
+                }
+            });
+        }
+
+        function GetUnRoleMenu(id) {
+
+            $.get("/FrameWork/UserRole/GetNotMenuRoleByRoleId/" + id, function (resno) {
+                if (resno && resno.length > 0) {
+                    var len = resno.length;
+                    var tree = $('#jstree2');
+                    for (var i = 0, item; item = resno[i]; i++) {
+                        tree.jstree("uncheck_node", tree.find("li[id='" + item.MENU_ID + "']"));
+                    }
+                }
+            });
+        }
+
+    </script>
+}

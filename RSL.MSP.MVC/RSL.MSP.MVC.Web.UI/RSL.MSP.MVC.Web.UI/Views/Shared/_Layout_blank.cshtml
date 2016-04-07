@@ -1,0 +1,53 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="renderer" content="webkit" />
+
+    <title>@ViewBag.Title</title>
+    <meta name="keywords" content="后台管理系统" />
+    <meta name="description" content="后台管理系统" />
+
+    <script type="text/javascript" charset="utf-8" src="~/Content/tool/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="~/Content/tool/ueditor/ueditor.all.js"> </script>
+
+    @System.Web.Optimization.Styles.Render("~/css/adm/control", "~/css/adm/jqgrid")
+    @RenderSection("Style", false)
+    <style>
+        /* Additional style to fix warning dialog position */
+
+        #alertmod_table_list_2 {
+            top: 900px !important;
+        }
+    </style>
+    @RenderSection("Styles", false)
+</head>
+<body>
+    <div class="wrapper wrapper-content  animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox ">
+                    <div class="ibox-title">
+                        <h5>@ViewBag.Title</h5>
+                    </div>
+                    <div class="ibox-content">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @System.Web.Optimization.Scripts.Render("~/js/adm/blank")
+    <!-- Page-Level 我想知道 这几个加入的操作在哪里写的这三个，，Scripts -->
+    @RenderSection("Script", false)
+    <!-- Page-Level 区分，，Scripts -->
+    @RenderSection("PageScript", false)
+    <!-- Page-Level 二区分，，Scripts -->
+</body>
+
+</html>

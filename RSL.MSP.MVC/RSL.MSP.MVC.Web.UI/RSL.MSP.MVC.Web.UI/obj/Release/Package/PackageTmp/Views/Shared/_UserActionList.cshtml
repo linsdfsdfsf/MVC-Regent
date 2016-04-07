@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "_UserActionList";
+}
+
+<div class="form-group">
+
+    @foreach (RSL.MSP.MVC.Model.Framework.OperateModel item in ViewBag._User_Buttonlist)
+    {
+        switch (item.Action_Type)
+        {
+            case "Add":
+                <button id="btnAdd" type="button" class="btn btn-primary " onclick="addModel()"><i class="fa fa-check"></i>@item.Action_Name</button>
+                break;
+            case "Edit":
+            <button id="btnEdit" type="button" class="btn btn-edit " onclick="editModel()"><i class="fa fa-paste"></i> @item.Action_Name</button>
+                break;
+            case "Delete":
+            <button id="btnDel" type="button" class="btn btn-danger " onclick="delData()"><i class="fa fa-dedent"></i><span class="bold">@item.Action_Name</span></button>
+                break;
+
+            case "Cancel":
+            <button id="btnCancel" type="button" class="btn btn-info " onclick="CancelModel()"><i class="fa fa-paste"></i> @item.Action_Name</button>
+                break;
+
+            case "Invalid":
+            <button id="btnInvalid" type="button" class="btn btn-info " onclick="InvalidModel()"><i class="fa fa-paste"></i> @item.Action_Name</button>
+                break;
+
+            case "Upload":
+            <button id="btnUpload" type="button" class="btn btn-info " onclick="UploadModel()"><i class="fa fa-paste"></i> @item.Action_Name</button>
+                break;
+
+            case "Excel":
+            <button id="btnExcel" type="button" class="btn btn-excel " onclick="ExcelModel()"><i class="fa fa-paste"></i> @item.Action_Name</button>
+                break;
+
+            case "Print":
+            <button id="btnPrint" type="button" class="btn btn-print " onclick="PrintModel()"><i class="fa fa-paste"></i> @item.Action_Name</button>
+                break;
+
+        }
+        
+        
+        
+    }
+</div>

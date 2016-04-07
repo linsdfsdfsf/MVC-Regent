@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "添加 - 特點管理";
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+}
+
+<div id="validateList" class="modal-body">
+
+    <div class="form-group">
+        <label>特店名稱</label>
+        <input class="form-control" type="text" id="txtCustomerName" name="CUSTOMER_NAME" check-type="required" placeholder="特店名稱" maxlength="20" />
+        
+        <label>特店備註</label>
+        <input class="form-control" type="text" id="txtCustomerRemark" name="CUSTOMER_REMARK" check-type="required" placeholder="特店備註" maxlength="20" />
+
+
+        <label>DB NAME</label>
+        <input class="form-control" type="text" id="txtDB_Name" name="DB_NAME" check-type="required" placeholder="DB NAME" maxlength="20" />
+
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button id="btnSave" type="button" class="btn btn-primary">保存内容</button>
+    <button id="btnBack" type="button" class="btn btn-danger">返回</button>
+</div>
+
+@section Script{
+    <!-- Validate JavaScript -->
+    @Scripts.Render("~/js/adm/validate", "~/js/adm/base")}
+@section PageScript {
+    <script>
+        function saveData() {
+            var postData = {
+                CUSTOMER_NAME: $("#txtCustomerName").val(),
+                CUSTOMER_REMARK: $("#txtCustomerRemark").val(),
+                DB_NAME: $("#txtDB_Name").val()
+            };
+            var url = "@Url.Action("AddModel")";
+            //XPage.SaveData(url, postData);
+            if ($("#validateList").valid()) {
+                var btn = $("#btnSave");
+                btn.button('loading');
+                $.post(url, postData, function (res, status, jqXHR) {
+                    if (res.flag) {
+                        alert("操作成功");
+                        XPage.GoTo("@Url.Action("Index")");
+                    } else {
+                        alert("操作失败：" + res.msg);
+                    }
+                }).error(function () {
+                    alert("服务器程序错误");
+                }).complete(function () {
+                    btn.button('reset');
+                });
+            }
+        }
+        $(document).ready(function () {
+            $("#validateList").validation({ icon: false });
+            $("#btnSave").click(saveData);
+            $("#btnBack").click(function () {
+                XPage.GoTo("@Url.Action("Index")");
+            });
+        });
+    </script>
+}
+
+

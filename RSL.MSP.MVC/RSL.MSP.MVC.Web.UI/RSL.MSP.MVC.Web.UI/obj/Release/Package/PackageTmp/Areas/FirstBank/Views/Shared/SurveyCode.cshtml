@@ -1,0 +1,17 @@
+﻿@{
+    string survey = "未送審";
+    string key = Page.Code;
+    switch (key)
+    {
+        case "1":
+            survey = "已送審";
+            break;
+        case "2":
+            survey = "退件";
+            break;
+        case "9":
+            survey = "過關";
+            break;
+    }
+}
+@survey

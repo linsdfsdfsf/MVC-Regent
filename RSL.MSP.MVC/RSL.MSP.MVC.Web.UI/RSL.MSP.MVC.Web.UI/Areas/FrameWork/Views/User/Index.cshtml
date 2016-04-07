@@ -1,0 +1,115 @@
+﻿@{
+    ViewBag.Title = "用户管理";
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+}
+
+@{Html.RenderPartial("_UserActionList");}
+
+
+<div class="form-group">
+    <div class="input-group">
+        <input id="txtSearchKey" type="text" class="input form-control" placeholder="用户登录帐号、名称" />
+        <span class="input-group-btn">
+            <button id="btnSearch" class="btn btn btn-primary" type="button"> <i class="fa fa-search"></i> 搜索</button>
+        </span>
+    </div>
+</div>
+
+
+<div class="jqGrid_wrapper">
+    <table id="jqGridList"></table>
+    <div id="jqGridPager"></div>
+</div>
+
+@section Script{
+    <!-- Validate JavaScript -->
+    @Scripts.Render("~/js/adm/validate", "~/js/adm/base", "~/js/adm/json")
+}
+@section PageScript {
+    <script>
+        function addModel() {
+            $("#btnAdd").button("loading");
+            window.location.href = "@Url.Action("Add")";
+        }
+
+        //编辑
+        function editModel() {
+            var row = RSLO2O.GetDataTableEditeData();
+            if (row != null) {
+                $("#btnEdit").button("loading");
+                window.location.href = "@Url.Action("Edit")/" + row.ID;
+            } else {
+                alert("請選擇要編輯的數據");
+            }
+        }
+
+        //删除
+        function delData() {
+            XPage.DelData("@Url.Action("DeleteModel")");
+        }
+
+        function searchData() {
+            var json = {
+                SearchKey: $("#txtSearchKey").val()
+             
+            };
+            XPage.Search(json);
+        }
+
+
+        function OnSetUserRole(id) {
+
+            var url = "../UserRole/Users" + "/" + id
+            //弹出即全屏
+            var index = top.layer.open({
+                type: 2,
+                content: url,
+                area: ['900px', '495px'],
+                maxmin: true,
+                title: '用戶角色設定'
+            });
+            top.layer.area(index);
+
+
+        }
+
+
+        $(document).ready(function () {
+
+            var config = {
+                title: '用户列表',
+                url: '@Url.Action("GetList")',
+                colNames: ['主鍵', '登錄ID', '登錄帳號', '姓名', '郵箱', '電話', "狀態", "創建時間", "創建人", "角色設定"],
+                colModel: [
+                    { name: 'USER_ID', index: 'USER_ID', width: 60, key: true, hidden: true },
+                    { name: 'ID', index: 'ID', width: 100 },
+                    { name: 'User_Account', index: 'User_Account', width: 120 },
+                    { name: 'User_Name', index: 'User_Name', width: 150 },
+                    { name: 'User_Email', index: 'User_Email', width: 200 },
+                    { name: 'User_Tel', index: 'User_Tel', width: 150 },
+                    {
+                        name: 'IS_VALID',
+                        index: 'IS_VALID',
+                        width: 100,
+                        formatter: function (cellValue, options, rowObject) {
+                            return cellValue == "1" ? "有效" : "无效";
+                        }
+                    },
+                    { name: 'CREATE_DATE', index: 'CREATE_DATE', width: 120, formatter: "date", formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' } },
+                    { name: 'CREATE_BY', index: 'CREATE_BY', width: 120 },
+                    {
+                        name: 'USER_ID',
+                        index: 'USER_ID',
+                        width: 165,
+                        formatter: function (cellValue, options, rowObject) {
+                            return cellValue == "0" ? "" : "<button id=\"btnbranchset\" type=\"button\" class=\"btn btn-info \" onclick=\"OnSetUserRole(" + cellValue + ")\"><i class=\"fa fa-paste\"></i> 角色设定</button>"
+                        }
+                    }
+                ]
+            };
+
+            RSLO2O.InitTable(config, true);
+            $("#btnSearch").click(searchData);
+        });
+    </script>
+}

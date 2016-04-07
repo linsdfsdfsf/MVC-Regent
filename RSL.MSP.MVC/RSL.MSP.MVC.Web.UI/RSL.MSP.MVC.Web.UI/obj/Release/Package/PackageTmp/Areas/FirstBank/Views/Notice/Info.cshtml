@@ -1,0 +1,11 @@
+﻿@{
+    if (ViewBag.status)
+    {
+        <h2>@ViewBag.data.Notice_Title</h2>
+        <div>@Html.Raw(ViewBag.data.Notice_Content)</div>
+        <div>@ViewBag.data.Start_Date</div>
+    }
+    else {
+        <div>查無此公告消息!</div>
+    }
+}

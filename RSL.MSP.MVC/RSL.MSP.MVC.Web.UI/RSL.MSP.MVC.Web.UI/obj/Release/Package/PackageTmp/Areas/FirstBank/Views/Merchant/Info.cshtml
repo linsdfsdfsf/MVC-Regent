@@ -1,0 +1,309 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+    ViewBag.Title = "特店管理";
+}
+<div id="validateList" class="modal-body">
+    <div class="ibox-content m-b-sm">
+        <div class="row">
+            <label class="col-sm-2 text-right">特店編號:</label>
+            <div class="col-sm-4">@Model.info.MERCHANTID (@RenderPage("~/Areas/FirstBank/Views/Shared/SurveyCode.cshtml", new { Code = Model.info.ISSURVEY }))</div>
+            <label class="col-sm-2 text-right">覆核說明:</label>
+            <div class="col-sm-4">@Model.info.MEMO</div>
+        </div>
+        @{
+            if ((Model.info.ISSURVEY != "1") && (Model.info.ISSURVEY != "9"))
+            {
+                <div class="form-group">
+                    <div class="checkbox checkbox-success">
+                        <input id="survey" type="checkbox" value="1">
+                        <label for="survey">申請覆核特店資料</label>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li><a class="tabs" data-toggle="tab" href="#tab-1" aria-expanded="false">基本資料</a></li>
+                    <li><a class="tabs" data-toggle="tab" href="#tab-2" aria-expanded="false">支付授權</a></li>
+                    <li><a class="tabs" data-toggle="tab" href="#tab-3" aria-expanded="false">介接設定</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane">
+                        <div class="panel-body">
+                            <fieldset class="form-horizontal">
+                                <form action="/FirstBank/Merchant/SaveBasic" name="form1" method="post">
+                                    <input type="hidden" name="MERCHANTID" value="@Model.info.MERCHANTID" />
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">*營業名稱:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="MERCHANTNAME" value="@Model.info.MERCHANTNAME" placeholder="第一銀行"></div>
+                                        <label class="col-sm-2 control-label">業務聯絡人:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="CONTACTUSERNAME1" value="@Model.info.CONTACTUSERNAME1" placeholder="王小明"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">*公司登記名稱:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="CORPNAME" value="@Model.info.CORPNAME" placeholder=""></div>
+                                        <label class="col-sm-2 control-label">業務聯絡人電話:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="CONTACTTEL1" value="@Model.info.CONTACTTEL1" placeholder=""></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">統一編號/身份證字號:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="UNIQUENUMBER" value="@Model.info.UNIQUENUMBER" placeholder=""></div>
+                                        <label class="col-sm-2 control-label">業務聯絡人e-mail:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="CONTACTMAIL1" value="@Model.info.CONTACTMAIL1" placeholder=""></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">負責人:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="PRICNIPAL" value="@Model.info.PRICNIPAL" placeholder=""></div>
+                                        <label class="col-sm-2 control-label">帳務聯絡人:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="CONTACTUSERNAME2" value="@Model.info.CONTACTUSERNAME2" placeholder=""></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">登記地址:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="ADDRESS" value="@Model.info.ADDRESS" placeholder=""></div>
+                                        <label class="col-sm-2 control-label">帳務聯絡人電話:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="CONTACTTEL2" value="@Model.info.CONTACTTEL2" placeholder=""></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">營業地址:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="BUSSINESSADDRESS" value="@Model.info.BUSSINESSADDRESS" placeholder=""></div>
+                                        <label class="col-sm-2 control-label">帳務聯絡人e-mail:</label>
+                                        <div class="col-sm-4">
+                                            <input type="text" class="form-control" name="CONTACTMAIL2" value="@Model.info.CONTACTMAIL2" placeholder="">
+                                            <div class="checkbox checkbox-success">
+                                                <input id="checkbox3" type="checkbox" name="SENDMAIL" value="1" @(Model.info.SENDMAIL=="1"?"checked":"")>
+                                                <label for="checkbox3">啟用付款成功通知</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">電話:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="TEL" value="@Model.info.TEL" placeholder=""></div>
+                                        <label class="col-sm-2 control-label">客服聯絡人:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="CONTACTUSERNAME3" value="@Model.info.CONTACTUSERNAME3" placeholder=""></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">傳真:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="FAX" value="@Model.info.FAX" placeholder=""></div>
+                                        <label class="col-sm-2 control-label">客服聯絡人電話:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="CONTACTTEL3" value="@Model.info.CONTACTTEL3" placeholder=""></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">網址:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="WEBSITE" value="@Model.info.WEBSITE" placeholder=""></div>
+                                        <label class="col-sm-2 control-label">客服聯絡人e-mail:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="CONTACTMAIL3" value="@Model.info.CONTACTMAIL3" placeholder=""></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">狀態:</label>
+                                        <div class="col-sm-4">
+                                            <div class="radio radio-info radio-inline">
+                                                <input type="radio" id="active1" value="1" name="ISACTIVE" @(Model.info.ISACTIVE=="1"?"checked":"")>
+                                                <label for="active1"> 啟用 </label>
+                                            </div>
+                                            <div class="radio radio-inline">
+                                                <input type="radio" id="active2" value="0" name="ISACTIVE" @(Model.info.ISACTIVE=="0"?"checked":"")>
+                                                <label for="active2"> 停用 </label>
+                                            </div>
+                                        </div>
+                                        <label class="col-sm-2 control-label">大特店:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control" name="PARENTMERCHANTID" value="@Model.info.PARENTMERCHANTID" placeholder=""></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">HASHKey:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control hashkey" name="HASHKEY" value="@Model.info.HASHKEY" /></div>
+                                        <label class="col-sm-2 control-label">HASHIV:</label>
+                                        <div class="col-sm-4"><input type="text" class="form-control hashiv" name="HASHIV" value="@Model.info.HASHIV" /></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12"><button class="btn btn-default" id="generate">重新產生</button></div>
+                                    </div>
+                                    <input type="hidden" value="@Model.info.ISSURVEY" name="ISSURVEY" class="survey">
+                                </form>
+                                <div class="form-group text-center">
+                                    <button class="btn btn-success"><i class="fa fa-save"></i>儲存</button>
+                                    <button class="btn btn-danger"><i class="fa fa-ban"></i>取消</button>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                            <fieldset class="form-horizontal">
+                                <form action="/FirstBank/Merchant/SaveAuthorize" name="form2" method="post">
+                                    <input type="hidden" name="merchantId" value="@Model.info.MERCHANTID" />
+                                    @{
+                                        if ((Model.payList != null) && (Model.payList.Count > 0))
+                                        {
+                                            int i = 0;
+                                            foreach (var item in Model.payList)
+                                            {
+                                                <div class="row">
+                                                    <div class="checkbox checkbox-success">
+                                                        <input type="hidden" name="MerchantKey[@i].PAYSEQ" value="@(item.PAYSEQ)" />
+                                                        <input id="paymethod@(item.PAYSEQ)" class="payenable" type="checkbox" name="MerchantKey[@i].ISACTIVE" value="1" @(item.ISACTIVE == "1"?"checked":"")>
+                                                        <label for="paymethod@(item.PAYSEQ)">@item.PAYNAME</label>
+                                                    </div>
+                                                    <div class="paydetail" style="@(item.ISACTIVE=="1"?"":"display:none")">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">HASHKey</label>
+                                                            <div class="col-sm-4"><input type="text" class="form-control" name="MerchantKey[@(i)].ORIHASHKEY" value="@item.ORIHASHKEY" /></div>
+                                                            <label class="col-sm-2 control-label">HASHIV</label>
+                                                            <div class="col-sm-4"><input type="text" class="form-control" name="MerchantKey[@(i)].ORIHASHIV" value="@item.ORIHASHIV" /></div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">特店編號</label>
+                                                            <div class="col-sm-4"><input type="text" class="form-control" name="MerchantKey[@(i)].ORIMERCHANTID" value="@item.ORIMERCHANTID" /></div>
+                                                            <label class="col-sm-2 control-label">入款帳號</label>
+                                                            <div class="col-sm-4"><input type="text" class="form-control" name="MerchantKey[@(i)].INACCOUNT" value="@item.INACCOUNT" /></div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            @if (item.PAYGROUPID == "cc")
+                                                            {
+                                                                <label class="col-sm-2 control-label">啟用刷卡頁持卡人姓名欄</label>
+                                                                <div class="col-sm-4">
+                                                                    <div class="radio radio-info radio-inline">
+                                                                        <input type="radio" id="ccname@(item.PAYSEQ)" value="1" name="MerchantKey[@(i)].ENABLENAME" @(item.ENABLENAME == "1"?"checked":"")>
+                                                                        <label for="ccname@(item.PAYSEQ)"> 啟用 </label>
+                                                                    </div>
+                                                                    <div class="radio radio-inline">
+                                                                        <input type="radio" id="ccname@(item.PAYSEQ)_off" value="0" name="MerchantKey[@(i)].ENABLENAME" @(item.ENABLENAME == "0"?"checked":"")>
+                                                                        <label for="ccname@(item.PAYSEQ)_off"> 停用 </label>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            @if (item.PAYGROUPID == "ea")
+                                                            {
+                                                                <label class="col-sm-2 control-label">密碼單</label>
+                                                                <div class="col-sm-4"><input type="text" class="form-control" name="MerchantKey[@(i)].ORICYPHER" value="@item.ORICYPHER" /></div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                i++;
+                                            }
+                                        }
+                                        else {
+                                            <div>something wrong!</div>
+                                        }
+                                    }
+                                    <input type="hidden" value="@Model.info.ISSURVEY" name="ISSURVEY" class="survey">
+                                </form>
+                                <div class="form-group text-center">
+                                    <button class="btn btn-success"><i class="fa fa-save"></i>儲存</button>
+                                    <button class="btn btn-danger"><i class="fa fa-ban"></i>取消</button>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div id="tab-3" class="tab-pane">
+                        <div class="panel-body">
+                            <fieldset class="form-horizontal">
+                                <form action="/FirstBank/Merchant/SaveParas" name="form3" method="post">
+                                    <input type="hidden" name="MERCHANTID" value="@Model.info.MERCHANTID" />
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">IP / Domain:</label>
+                                        <div class="col-sm-10">
+                                            <div class="checkbox checkbox-success">
+                                                <input id="enableIP" type="checkbox" value="1" name="ENABLEIP" @(Model.info.ENABLEIP=="1"?"checked":"")>
+                                                <label for="enableIP">啟用來源位址認證</label>
+                                            </div>
+                                            <input type="text" class="form-control" name="ALLOWIP" value="@Model.info.ALLOWIP" placeholder="">(最多設定50組)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">交易成功回傳網址:</label>
+                                        <div class="col-sm-10"><input type="text" class="form-control" name="SUCCESSURL" value="@Model.info.SUCCESSURL" placeholder=""></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">交易失敗回傳網址:</label>
+                                        <div class="col-sm-10"><input type="text" class="form-control" name="ERRORURL" value="@Model.info.ERRORURL" placeholder=""></div>
+                                    </div>
+                                    <input type="hidden" value="@Model.info.ISSURVEY" name="ISSURVEY" class="survey">
+                                </form>
+                                <div class="form-group text-center">
+                                    <button class="btn btn-success"><i class="fa fa-save"></i>儲存</button>
+                                    <button class="btn btn-danger"><i class="fa fa-ban"></i>取消</button>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Styles {
+    @Styles.Render("~/css/checkbox-radio")
+}
+@section Script{
+    @Scripts.Render("~/js/dialogs")
+}
+@section PageScript {
+<script>
+    $(function () {
+        $("a.tabs[href='#@(Model.activeTab)']").trigger("click");
+        $("button.btn-danger").on("click", function (e) { window.location.reload(); });
+        //records tab
+        $(".nav-tabs").on("click", "a.tabs", function (e) {
+            history.pushState({}, "", "@(Request.Url.GetLeftPart(UriPartial.Path))?tab=" + $(this).attr("href").replace("#", ""));
+        });
+        //支付授權設定
+        $("#tab-2").on("click", "input.payenable", function (e) {
+            var obj = $(this).parents("div.row:first").find("div.paydetail");
+            if ($(this).prop("checked")) { $(obj).show(); }
+            else { $(obj).hide(); }
+            e.stopPropagation();
+        });
+        //save data
+        $(".form-horizontal").on("click", "button.btn-success", function (e) {
+            loadingDialog("show", "資料儲存中...請稍候");
+            var obj = $(this).parents(".form-horizontal:first");
+            var form = $(obj).find("form");
+            $.ajax({
+                url: $(form).attr("action"),
+                method: "post",
+                dataType: "json",
+                traditional: true,
+                data: $(form).serialize(),
+                success: function (json) {
+                    loadingDialog("value", json.flag?"處理完成!":json.msg);
+                    setTimeout(function () { loadingDialog("hide"); }, 1500);
+                },
+                error: function (data) {
+                    loadingDialog("value", "失敗:" + data);
+                    setTimeout(function () { loadingDialog("hide"); }, 1500);
+                }
+            });
+        });
+        //generate hashkey, hashiv
+        $("#generate").on("click", function (e) {
+            e.preventDefault();
+            $(this).button("loading");
+            $.ajax({
+                url: "/FirstBank/Merchant/NewHashKey",
+                method: "post",
+                data: {
+                    merchantId: "@Model.info.MERCHANTID",
+                    datetime: new Date().toLocaleString()
+                },
+                dataType: "json",
+                success: function (json) {
+                    if (json) {
+                        $(".hashkey").val(json.hashkey);
+                        $(".hashiv").val(json.hashiv);
+                    }
+                    $("#generate").button("reset");
+                }
+            });
+            e.stopPropagation();
+        });
+        //apply audit data
+        $("#survey").on("click", function (e) {
+            $("input.survey").val($(this).prop("checked") ? "1" : "0");
+        });
+    });
+</script>
+}

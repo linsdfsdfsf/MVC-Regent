@@ -1,0 +1,153 @@
+﻿@{
+    ViewBag.Title = "訂單管理";
+    Layout = "~/Views/Shared/_Layout_blank_WithoutIframe.cshtml";
+}
+
+    <div class="form-group">
+        @*@foreach (RSL.MSP.MVC.Model.Framework.OperateModel item in ViewBag.Buttonlist)
+        {
+            switch (item.Action_Name)
+            {
+                case "Add":
+                    <button id="btnAdd" type="button" class="btn btn-primary " onclick="addModel()"><i class="fa fa-check"></i>&nbsp;@item.Action_Name</button>
+                    break;
+                case "Edit":
+                <button id="btnEdit" type="button" class="btn btn-info " onclick="editModel()"><i class="fa fa-paste"></i> @item.Action_Name</button>
+                    break;
+                case "Delete":
+                <button id="btnDel" type="button" class="btn btn-danger " onclick="delData()"><i class="fa fa-dedent"></i>&nbsp;&nbsp;<span class="bold">@item.Action_Name</span></button>
+                    break;
+                default:
+                    break;
+            }
+        }*@
+    </div>
+
+
+    <div class="form-group">
+        <button id="btnSearchOrderStatistical" class="btn btn btn-primary" type="button"> <i class="fa fa-search"></i> 搜索</button>
+        <button id="btnExcelOrderStatistical" class="btn btn btn-primary" type="button"> <i class="fa fa-file-excel-o "></i> 匯出</button>
+    </div>
+<form id="formOrderStatistical" name="form1" method="post">
+    <div class="input-group">
+        <div class="row">
+            <!--<div class="col-sm-2">訂單編號　</div><div class=" col-sm-4"><input id="txtStatisticalOrderId" type="text" class="input form-control" placeholder="訂單編號" /></div>-->
+            <div class="col-sm-2">特店編號　</div><div class=" col-sm-4"><input id="txtStatisticalMerchantId" type="text" class="input form-control" placeholder="特店編號" /></div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+            <div class="col-sm-2">訂單成立時間</div>
+            <div class="input-daterange input-group" id="datepicker">
+                <div class="col-sm-5">
+                    <input id="txtStatisticalSYSTRANSTIME_B" name="SYSTRANSTIME" type="text" class="input form-control" placeholder="訂單成立時間(起)" />
+                </div>
+                <div class="col-sm-5"><input id="txtStatisticalSYSTRANSTIME_E" name="SYSTRANSTIME" type="text" class="input form-control" placeholder="訂單成立時間(迄)" /></div>
+            </div>
+        </div>
+        <div class="row" style="margin-top:15px;">
+            <div class="col-sm-2">訂單狀態</div>
+            <div class="col-sm-4">
+                <select id="txtStatisticalOrderStatus" class="input form-control">
+                    <option value="">-----</option>
+                    <option value="0">訂單失效</option>
+                    <option value="1">訂單成立</option>
+                    <option value="2">訂單取消</option>
+                    <option value="3">Web API直接退款</option>
+                    <option value="4">支付後台退款</option>
+                    <option value="5">退款作業完成</option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+    <div class="jqGrid_wrapper" style="margin-top:15px;">
+        <table id="jqGridListOrderStatistical"></table>
+        <div id="jqGridPagerOrderStatistical"></div>
+    </div>
+
+@section Styles {
+    @Styles.Render("~/css/rwd-table", "~/css/checkbox-radio", "~/css/bootstrap-datepicker")
+}
+@section Script{
+    @Scripts.Render("~/js/rwd-table", "~/js/pagination", "~/js/dialogs", "~/js/bootstrap-datepicker", "~/js/adm/validate", "~/js/adm/base", "~/js/adm/json")
+}
+    @section PageScript {
+        <script>
+            //=========搜尋資料===========//
+            function searchData() {
+                var grid = $("#jqGridListOrderStatistical");
+                var postdata = grid.jqGrid('getGridParam', 'postData');
+                $.extend(postdata,
+                               {
+                                   //註 若要增加搜尋條件 要到model裡的OrderSearch和configuration新增參數
+                                   filters: '',
+                                   searchField: 'MerchantId',
+                                   searchOper: 'eq',
+                                   OrderId: $("#txtStatisticalOrderId").val(),
+                                   MerchantId: $("#txtStatisticalMerchantId").val(),
+                                   SYSTRANSTIME_B: $("#txtStatisticalSYSTRANSTIME_B").val(),
+                                   SYSTRANSTIME_E: $("#txtStatisticalSYSTRANSTIME_E").val(),
+                                   OrderStatus: $("#txtStatisticalOrderStatus").val()
+                               });
+                grid.jqGrid('setGridParam', { search: true, postData: postdata });
+                grid.trigger("reloadGrid", [{ page: 1 }]);
+            }
+
+            //=============匯出資料==============//
+            function ExportData() {
+                $("#formOrderStatistical").attr("action", "/FirstBank/OrderStatistical/Download");
+                $("#formOrderStatistical").submit();
+
+            }
+
+            //==============明細表=============//
+            @*function ViewDetail(id) {
+                $("#btnAdd").button("loading");
+                window.location.href = "@Url.Action("Detail")/" + id;
+            }*@
+
+            //===========日期選單============//
+            $('.input-daterange').datepicker({
+                format: "yyyy/mm/dd",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+
+            $(document).ready(function () {
+
+                var config = {
+                    title: '訂單統計表',
+                    url: '@Url.Action("GetList")',
+                    id: "jqGridListOrderStatistical",
+                    pagerId: "jqGridPagerOrderStatistical",
+                    search: true,
+                    colNames: ['特店編號','訂單狀態','訂單日期','特店名稱', '支付別', '訂單狀態名稱', "幣別", "總實收金額", '筆數'],
+                    colModel: [
+                          { name: 'MerchantId', index: 'MerchantId', width: "150px", hidden: true},//特店編號  隱藏欄位 搜尋用
+                           { name: 'OrderStatus', index: 'OrderStatus', width: "150px", hidden: true},//訂單狀態  隱藏欄位 搜尋用
+                           { name: 'OrderDate', index: 'OrderDate', width: "150px" },//訂單日期
+                        { name: 'MerchantName', index: 'MerchantName', width: "150px", key: true },//特店名稱
+                         { name: 'PaySeq', index: 'PaySeq', width: 120 },//支付別
+                        { name: 'OrderStatusName', index: 'OrderStatusName', width: "150px"},//訂單狀態名稱
+                        { name: 'CurrencyName', index: 'CurrencyName', width: "150px" },//幣別名稱
+                        {
+                            name: 'TotalIncome', index: 'TotalIncome', width: "150px", formatter: 'currency',
+                            formatoptions: { prefix: '$', thousandsSeparator: ',', decimalPlaces: 0 }
+                        },//總實收金額  (總金額的加總)
+                        { name: 'TotalRecords', index: 'TotalRecords', width: "150px" },//筆數
+                    ]
+                };
+                RSLO2O.InitTable(config, false);
+                $("#btnSearchOrderStatistical").click(searchData);
+                $("#btnExcelOrderStatistical").click(ExportData);
+                //取消點選事件
+                $("#jqGridListOrderStatistical").jqGrid('setGridParam', {
+                    beforeSelectRow: function (rowid, e) {
+                        return false;
+                    }
+                });
+            });
+        </script>
+    }

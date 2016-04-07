@@ -1,0 +1,91 @@
+﻿@model RSL.MSP.MVC.Model.FirstBank.OrderPayTypeModel
+        <div class="row">
+            <!--特店編號-->
+            <label class="col-sm-2 control-label">*信用卡交易模式：</label>
+            <div class="col-sm-4">@Html.DisplayFor(model => model.PayPage)</div>
+
+            <!--訂單編號-->
+            <label class="col-sm-2 control-label">*0一般1分期2紅利折抵：</label>
+            <div class="col-sm-4"> @Html.DisplayFor(model => model.TransType)</div>
+        </div>
+
+<div class="row">
+    <!--特店編號-->
+    <label class="col-sm-2 control-label">*信用卡卡號：</label>
+    <div class="col-sm-4">@Html.DisplayFor(model => model.CardId)</div>
+
+    <!--訂單編號-->
+    <label class="col-sm-2 control-label">*信用卡有效期日：</label>
+    <div class="col-sm-4"> @Html.DisplayFor(model => model.ExpiryDate)</div>
+</div>
+
+<div class="row">
+    <!--特店編號-->
+    <label class="col-sm-2 control-label">*分期交易：</label>
+    <div class="col-sm-4">@Html.DisplayFor(model => model.PeriodNum)</div>
+
+    <!--訂單編號-->
+    <label class="col-sm-2 control-label">*紅利交易：</label>
+    <div class="col-sm-4"> @Html.DisplayFor(model => model.BonusActionCode)</div>
+</div>
+
+<div class="row">
+    <!--特店編號-->
+    <label class="col-sm-2 control-label">*授權結果：</label>
+    <div class="col-sm-4">@Html.DisplayFor(model => model.Status)</div>
+
+    <!--訂單編號-->
+    <label class="col-sm-2 control-label">*交易授權碼：</label>
+    <div class="col-sm-4"> @Html.DisplayFor(model => model.AuthCode)</div>
+</div>
+
+<div class="row">
+    <!--特店編號-->
+    <label class="col-sm-2 control-label">*交易驗證碼：</label>
+    <div class="col-sm-4">@Html.DisplayFor(model => model.ReqToken)</div>
+
+    <!--訂單編號-->
+    <label class="col-sm-2 control-label">*此次授權金額：</label>
+    <div class="col-sm-4"> @Html.DisplayFor(model => model.AuthAmt)</div>
+</div>
+
+<div class="row">
+    <!--特店編號-->
+    <label class="col-sm-2 control-label">*信用卡別：</label>
+    <div class="col-sm-4">@Html.DisplayFor(model => model.CardBrand)</div>
+
+    <!--訂單編號-->
+    <label class="col-sm-2 control-label">*交易時間：</label>
+    <div class="col-sm-4"> @Html.DisplayFor(model => model.AuthRespTime)</div>
+</div>
+
+<div class="row">
+    <!--特店編號-->
+    <label class="col-sm-2 control-label">*分期交易之首期分期金額：</label>
+    <div class="col-sm-4">@Html.DisplayFor(model => model.DownPayments)</div>
+
+    <!--訂單編號-->
+    <label class="col-sm-2 control-label">*其他每期金額：</label>
+    <div class="col-sm-4"> @Html.DisplayFor(model => model.InstallmentPayments)</div>
+</div>
+
+<div class="row">
+    <!--特店編號-->
+    <label class="col-sm-2 control-label">*扣底後消費金額：</label>
+    <div class="col-sm-4">@Html.DisplayFor(model => model.BonusDebutAmt)</div>
+
+    <!--訂單編號-->
+    <label class="col-sm-2 control-label">*網路交易驗證碼：</label>
+    <div class="col-sm-4"> @Html.DisplayFor(model => model.WalletVerifyCode)</div>
+</div>
+
+<div class="row">
+    <!--特店編號-->
+    <label class="col-sm-2 control-label">*電話號碼：</label>
+    <div class="col-sm-4">@Html.DisplayFor(model => model.MobileNbr)</div>
+
+    <!--訂單編號-->
+    <label class="col-sm-2 control-label">*信用卡交易序號：</label>
+    <div class="col-sm-4"> @Html.DisplayFor(model => model.xid)</div>
+</div>
+

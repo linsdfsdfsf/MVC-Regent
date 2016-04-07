@@ -1,0 +1,122 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+    ViewBag.Title = "特店列表";
+    var result = Model.resultList;
+
+    int NowPage = (result.rows != null) ? result.page : 1;
+    int TotalPage = (result.rows != null) ? result.total : 1;
+}
+<div id="validateList" class="modal-body">
+    <div class="form-group">
+        <button class="btn btn-primary" id="searchBtn"><i class="fa fa-search"></i>查詢</button>
+    </div>
+    <div class="ibox-content m-b-sm border-bottom">
+        <form id="form1" name="form1" method="post">
+            <input type="hidden" name="page" class="page" value="1" />
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label" for="MerchantId">特店編號</label>
+                        <input type="text" class="form-control" name="merchantId" placeholder="M1234567890" value="@Model.form.merchantId" maxlength="50" />
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label">成立時間</label>
+                        <div class="input-daterange input-group" id="datepicker">
+                            <input type="text" class="input-sm form-control" name="startDate" placeholder="2016/01/01" value="@Model.form.startDate">
+                            <span class="input-group-addon">~</span>
+                            <input type="text" class="input-sm form-control" name="endDate" placeholder="2016/03/01" value="@Model.form.endDate">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label" for="IsActive">狀態</label>
+                        <select name="isActive" id="IsActive" class="form-control">
+                            <option value="">全部</option>
+                            <option value="1" @(Model.form.isActive == "1" ? " selected" : "")>啟用</option>
+                            <option value="0" @(Model.form.isActive == "0" ? " selected" : "")>停用</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="ibox">
+        <div class="ibox-content table-responsive">
+            <table class="table table-small-font table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th data-priority="1"><input type="checkbox" id="selectAll"></th>
+                        <th data-priority="1">特店編號</th>
+                        <th data-priority="1">特店名稱</th>
+                        <th data-priority="1">狀態</th>
+                        <th data-priority="6">覆核</th>
+                        <th data-priority="6">成立時間</th>
+                        <th data-priority="6">編輯</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        if ((result.rows != null) && (result.rows.Count > 0))
+                        {
+                            foreach (var item in result.rows)
+                            {
+                                <tr>
+                                    <td><input type="checkbox" class="item" value="@item.MERCHANTID"></td>
+                                    <td>@item.MERCHANTID</td>
+                                    <td>@item.MERCHANTNAME</td>
+                                    <td>@(item.ISACTIVE == "1" ? "啟用" : "停用")</td>
+                                    <td>
+                                        @RenderPage("~/Areas/FirstBank/Views/Shared/SurveyCode.cshtml", new { Code = item.ISSURVEY })
+                                    </td>
+                                    <td>@(item.ISCOMPLETE == "1" ? item.CREATE_DATE : "(資料不完全)")</td>
+                                    <td><a class="btn btn-warning btn-xs" href="/FirstBank/Merchant/SurveyInfo/@item.MERCHANTID"><i class="fa fa-edit"></i>編輯</a></td>
+                                </tr>
+                            }
+                        }
+                        else {
+                            <tr>
+                                <td colspan="7">查無資料</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        @{
+            if ((result.rows != null) && (result.rows.Count > 0))
+            {
+                <div class="row">
+                    @RenderPage("~/Views/Shared/pagination.cshtml", new { nowPage = NowPage, totalPage = TotalPage })
+                    <script>
+                var paginationFunction = function (obj) {
+                    $(".page").val($(obj).attr("data-page"));
+                    $("#form1").submit();
+                };
+                    </script>
+                </div>
+            }
+        }
+
+    </div>
+</div>
+@section Styles {
+    @Styles.Render("~/css/rwd-table", "~/css/checkbox-radio")
+}
+@section Script{
+    @Scripts.Render("~/js/rwd-table", "~/js/pagination")
+}
+@section PageScript {
+    <script>
+        $(function () {
+            $('.table-responsive').responsiveTable();
+            $("#searchBtn").on("click", function (e) {
+                $("#form1").attr("action", "@Url.Action("Survey")");
+                $(".page").val(1);
+                $("#form1").submit();
+            });
+        });
+    </script>
+}

@@ -1,0 +1,28 @@
+﻿@model RSL.MSP.MVC.Model.FirstBank.OrderPayTypeModel
+        <div class="row">
+            <!--特店編號-->
+            <label class="col-sm-2 control-label">*功能代碼：</label>
+            <div class="col-sm-4">@Html.DisplayFor(model => model.FunCode)</div>
+
+            <!--訂單編號-->
+            <label class="col-sm-2 control-label">*支出帳號：</label>
+            <div class="col-sm-4"> @Html.DisplayFor(model => model.OutAccountNo)</div>
+        </div>
+<div class="row">
+    <!--特店編號-->
+    <label class="col-sm-2 control-label">*銷帳帳號：</label>
+    <div class="col-sm-4">@Html.DisplayFor(model => model.InAccountNo)</div>
+
+    <!--訂單編號-->
+    <label class="col-sm-2 control-label">*身分字號：</label>
+    <div class="col-sm-4"> @Html.DisplayFor(model => model.UniqueNumber)</div>
+</div>
+<div class="row">
+    <!--特店編號-->
+    <label class="col-sm-2 control-label">*支出銀行：</label>
+    <div class="col-sm-4">@Html.DisplayFor(model => model.OutBank)</div>
+</div>
+
+
+
+

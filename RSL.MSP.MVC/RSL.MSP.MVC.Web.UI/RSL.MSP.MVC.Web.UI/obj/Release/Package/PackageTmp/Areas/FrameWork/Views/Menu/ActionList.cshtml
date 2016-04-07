@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "ActionList";
+    List<RSL.MSP.MVC.Model.Framework.ActionModel> _ActionModel = ViewBag.ActionList;
+    int isSelected = ViewBag.isSelected;
+}
+
+
+@*<link href="/css/plugins/iCheck/custom.css" rel="stylesheet">*@
+
+<label>按鈕權限</label>
+
+<div class="input-group">
+    @*@Html.DropDownList("ddlButtlonList", ActionList, null, new Dictionary<string, object> { { "class", "chosen-select" }, { "multiple style", "width:700px" }, { "data-placeholder", "请选择一个" } })*@
+
+    @*<div class="form-group">
+            <div class="input-group">
+                <select data-placeholder="请选择一个按钮" class="chosen-select" multiple style="width:650px;" tabindex="4">
+                    @foreach (var item in _ActionModel)
+                    {
+                        if (@item.IS_SELECTED == "0")
+                        {
+                            <option value="@item.Action_Type">@item.Action_Name</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Action_Type" selected="selected">@item.Action_Name</option>
+                        }
+                    }
+                </select>
+            </div>
+
+        </div>*@
+
+    <div class="rows">
+        @{
+            foreach (var item in _ActionModel)
+            {
+                <div class="col-sm-4">
+                    <div class="i-checks input-group date form-group">
+
+                        @if (isSelected == 1)
+                        {
+                            <span class="input-group-addon">
+                                <input class="checkboxList" type="checkbox" value="@item.Action_Type" @(item.IS_SELECTED == "0" ? "" : " checked")><i></i>@item.Action_Name
+                            </span>
+                            <input type="text" id="@item.Action_Type" class="form-control" value="@item.CONTROLLER_ACTION" placeholder="請輸入網址" />
+                        }
+                        else
+                        {
+                            <span class="input-group-addon">
+                                <input class="checkboxList" type="checkbox" value="@item.Action_Type"><i></i>@item.Action_Name
+                            </span>
+                            <input type="text" id="@item.Action_Type" class="form-control" placeholder="請輸入網址" />
+                        }
+
+
+
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@*<script src="/js/plugins/iCheck/icheck.min.js"></script>
+    <script>
+        var config = {
+            '.chosen-select': {},
+            '.chosen-select-deselect': { allow_single_deselect: true },
+            '.chosen-select-no-single': { disable_search_threshold: 10 },
+            '.chosen-select-no-results': { no_results_text: 'Oops, nothing found!' },
+            '.chosen-select-width': { width: "95%" }
+        }
+        for (var selector in config) {
+            $(selector).chosen(config[selector]);
+        }
+
+        $('.i-checks').iCheck({ checkboxClass: 'icheckbox_square-green' });
+        $(".i-checks").on({
+            ifChecked: function (e) { $(this).find("input:text").removeAttr("readonly"); },
+            ifUnchecked: function (e) { $(this).find("input:text").attr("readonly", true); }
+        });
+
+    </script>*@

@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>登录</title>
+    @Styles.Render("~/css/adm/control", "~/css/adm/chosen")
+</head>
+
+<body class="gray-bg">
+    <div class="middle-box text-center loginscreen animated fadeInDown">
+        <div>
+            <div>
+                <h1 class="logo-name">IN+</h1>
+            </div>
+            <h3>Welcome to RSL</h3>
+            <p>
+                Perfectly designed and precisely prepared admin theme with over 50 pages with extra new web app views.
+                <!--Continually expanded and constantly improved Inspinia Admin Them (IN+)-->
+            </p>
+            <p>Login in. To see it in action.</p>
+
+
+            <div class="col-sm-12">
+
+                <form class="m-t" id="loginFrm" method="post">
+                    <span class="panel-title">请输入登录帐号及密码</span>
+                    <div class="form-group" id="DIVDBSiteList">
+                        @{
+                            if (ViewBag.DBSiteList != null)
+                            {
+                                <select id="DBSiteList" class="chosen-select form-control">
+                                    @foreach (var item in @ViewBag.DBSiteList)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            }
+                        }
+                    </div>
+                    <div class="form-group" id="LoginCustomer">
+                        <input type="text" id="User_Customer" name="User_Customer" class="form-control" placeholder="客戶ID" value="xcom" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="User_Account" name="User_Account" class="form-control" placeholder="登入帳號" value="xcom" />
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="User_PWD" name="User_PWD" class="form-control" placeholder="密碼" value="abc123" />
+                    </div>
+                    <div class="checkbox">
+                        <input type="text" id="SafeCode" name="SafeCode" class="form-control" placeholder="驗證碼" check-type="required" />
+                        <span><img alt="驗證碼" style="cursor: pointer;" src="/FrameWork/CheckCode/Index" width="75" height="24" id="imgSafeCode" /></span>
+                    </div>
+                    <button type="button" id="btnLogin" class="btn btn-primary block full-width m-b" data-loading-text="認證中...">登录</button>
+                    <a href="#"><small>Forgot password?</small></a>
+                    <p class="text-muted text-center"><small>Do not have an account?</small></p>
+                    <a class="btn btn-sm btn-white btn-block" href="register.html">Create an account</a>
+                </form>
+                <p class="m-t"> <small>Inspinia we app framework base on Bootstrap 3 &copy; 2014</small> </p>
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/js/adm/control", "~/js/adm/base", "~/js/adm/json", "~/js/adm/validate", "~/js/adm/blank")
+    @Scripts.Render("~/js/adm/validate", "~/js/adm/base", "~/js/adm/json")
+
+    <script type="text/javascript">
+        $(function () {
+            $.get("/FrameWork/Login/GetLoginDBisOpen", function (DBRes, state) {
+
+                if (DBRes == "OFF") {
+                    $("#DIVDBSiteList").hide();
+                }
+                else {
+                    $("#DIVDBSiteList").show();
+
+                }
+
+            });
+
+
+            $.get("/FrameWork/Login/GetLoginCustomerisOpen", function (CunstomerRes) {
+
+                if (CunstomerRes == "OFF") {
+                    $("#User_Customer").hide();
+                }
+                else {
+                    $("#User_Customer").show();
+
+                }
+
+            });
+
+            $("#imgSafeCode").bind("click", function () {
+                this.src = "/FrameWork/CheckCode/Index?time=" + (new Date()).getTime();
+            });
+
+            function UserSetPassWord(id) {
+
+                var url = "../Control/ChangePassWord" + "/" + id
+                //弹出即全屏
+                var index = top.layer.open({
+                    type: 2,
+                    content: url,
+                    area: ['900px', '495px'],
+                    maxmin: true,
+                    title: '密碼修改'
+                });
+                top.layer.area(index);
+
+
+            }
+
+            var btn = $("#btnLogin");
+            btn.click(function () {
+                $("#loginFrm input").attr("readonly", true);
+                $("#DBSiteList").attr("disabled", true);
+                btn.button("loading");
+                var postData = {
+                    choose_ID: $("#DBSiteList").val(),
+                    User_Account: $("#User_Account").val(),
+                    User_PWD: $("#User_PWD").val(),
+                    User_Customer: $("#User_Customer").val(),
+                    strCheckCode: $("#SafeCode").val()
+                };
+                var url = "@Url.Action("Index")";
+                $.post(url, postData, function (postData, status, jqXHR) {
+
+                    if (postData.flag) {
+                        @*XPage.GoTo("@Url.Action("../Control/Index")");*@
+
+                        //if (postData.data == 1) {
+                        //    UserSetPassWord(1);
+                        //}
+                        //else {
+                            window.location.href = "@Url.Action("../Control/Index")";
+                        //}
+
+                    }
+                    else {
+                        alert("登录失败:" + postData.msg);
+                        $("#loginFrm input").removeAttr("readonly");
+                        $("#DBSiteList").attr("disabled", false);
+                        btn.button('reset');
+                    }
+
+                }).error(function () {
+                    alert("服务器程序错误");
+                    $("#loginFrm input").removeAttr("readonly");
+                    $("#DBSiteList").attr("disabled", false);
+                    btn.button('reset');
+                });
+            });
+
+            $("input:text, input:password").on("keyup", function (e) {
+                if (e.keyCode == 13) {
+                    $("#btnLogin").trigger("click");
+                }
+                e.stopPropagation();
+            });
+        });
+    </script>
+
+
+</body>
+</html>

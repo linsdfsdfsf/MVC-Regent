@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "添加 - 角色管理";
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+}
+
+
+<div id="validateList" class="modal-body">
+
+    <div class="form-group">
+        <label>角色名称</label>
+        <input class="form-control" type="text" id="txtName" name="ROLE_NAME" check-type="required" placeholder="角色名称" maxlength="20" />
+        <input class="form-control" type="text" id="txtRole_Remark" name="Role_Remark" check-type="required" placeholder="角色备注" maxlength="20" />
+
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button id="btnSave" type="button" class="btn btn-primary">保存内容</button>
+    <button id="btnBack" type="button" class="btn btn-danger">返回</button>
+</div>
+
+@section Script{
+    <!-- Validate JavaScript -->
+    @Scripts.Render("~/js/adm/validate", "~/js/adm/base")}
+@section PageScript {
+    <script>
+        function saveData() {
+            var postData = {
+                ROLE_NAME: $("#txtName").val(),
+                Role_Remark: $("#txtRole_Remark").val()
+            };
+            var url = "@Url.Action("AddModel")";
+            //XPage.SaveData(url, postData);
+            if ($("#validateList").valid()) {
+                var btn = $("#btnSave");
+                btn.button('loading');
+                $.post(url, postData, function (res, status, jqXHR) {
+                    if (res.flag) {
+                        alert("操作成功");
+                        XPage.GoTo("@Url.Action("Index")");
+                    } else {
+                        alert("操作失败：" + res.msg);
+                    }
+                }).error(function () {
+                    alert("服务器程序错误");
+                }).complete(function () {
+                    btn.button('reset');
+                });
+            }
+        }
+        $(document).ready(function () {
+            $("#validateList").validation({ icon: false });
+            $("#btnSave").click(saveData);
+            $("#btnBack").click(function () {
+                XPage.GoTo("@Url.Action("Index")");
+            });
+        });
+    </script>
+}

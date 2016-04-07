@@ -1,0 +1,84 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+    ViewBag.Title = "交易代碼查詢";
+    int NowPage = Model.page;
+    int TotalPage = Model.total;
+}
+<div id="validateList" class="modal-body">
+    <div class="form-group">
+        <button class="btn btn-primary actionBtn" id="btnSearch" data-loading-text="處理中..." data-action="/FirstBank/ErrorCode/"><i class="fa fa-search"></i>查詢</button>
+        <button class="btn btn-primary actionBtn" id="btnDownload" data-loading-text="處理中..." data-action="/FirstBank/ErrorCode/DownLoad"><i class="fa fa-file-excel-o"></i>下載</button>
+    </div>
+    <form id="codeForm" name="codeForm" method="post">
+        <div class="ibox-content m-b-sm border-bottom">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label class="control-label" for="MerchantId">交易代碼</label>
+                        <input type="text" class="form-control" id="CodeId" name="CodeId" placeholder="3345678" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ibox">
+            <div class="table-responsive">
+                <table class="table table-small-font table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th data-priority="1">交易狀態</th>
+                            <th data-priority="1">錯誤代碼</th>
+                            <th data-priority="1">錯誤說明</th>
+                            <th data-priority="1">備註</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            if ((Model.rows != null) && (Model.rows.Count > 0))
+                            {
+                                foreach (var item in Model.rows)
+                                {
+                        <tr>
+                            <td>@item.CODESTATUS</td>
+                            <td>@item.ERRORCODE</td>
+                            <td>@item.DEFINEDTYPE</td>
+                            <td>@item.NOTE</td>
+                        </tr>
+                                }
+                            }
+                            else {
+                        <tr>
+                            <td colspan="4">無任何資料!</td>
+                        </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @if ((Model.rows != null) && (Model.rows.Count > 0))
+            {
+            <div class="row">@RenderPage("~/Views/Shared/pagination.cshtml", new { nowPage = NowPage, totalPage = TotalPage,path="" })</div>
+            }
+        </div>
+    </form>
+</div>
+@section Styles {
+    @Styles.Render("~/css/rwd-table")
+}
+@section Script{
+    @Scripts.Render("~/js/rwd-table", "~/js/pagination")
+}
+@section PageScript {
+    <script>
+        var paginationFunction = function () { alert("hi"); };
+        $(function () {
+            $('.table-responsive').responsiveTable();
+            $(".actionBtn").on("click", function (e) {
+                $(this).button("loading");
+                $("#codeForm").attr("action", $(this).attr("data-action"));
+                $("#codeForm").submit();
+                setTimeout(function () { $(".actionBtn").button("reset"); }, 1500);
+                e.stopPropagation();
+            });
+        });
+    </script>
+}

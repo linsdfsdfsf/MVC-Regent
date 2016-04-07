@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="@ViewBag.baseurl" />
+    <title>整合支付平台系統 - 登入</title>
+    @Styles.Render("~/css/adm/control")
+</head>
+<body class="gray-bg">
+    <div class="loginColumns animated fadeInDown">
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="font-bold text-center">最新公告消息</h2>
+                <div id="noticeList">Loading...Please Wait</div>
+            </div>
+            <div class="col-md-6">
+                <div class="ibox-content">
+                    <form class="m-t" role="form" method="post" action="FrameWork/Login/Verify">
+                        @{
+                            if (ViewBag.multiSite)
+                            {
+                                <div class="form-group">
+                                    <select id="DBSiteList" class="chosen-select form-control">
+                                        @foreach (var item in @ViewBag.DBSiteList)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                            }
+                        }
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="Partner_Id" name="Partner_Id" placeholder="特店編號">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="User_Account" name="User_Account" placeholder="使用者帳號">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="User_PWD" name="User_PWD" placeholder="密碼">
+                        </div>
+                        <div class="form-group">
+                            [圖形驗證區塊]
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="SafeCode" name="SafeCode" placeholder="請輸入上圖驗證碼">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary block full-width m-b" id="btnLogin">登入</button>
+                        </div>
+                    </form>
+                    <p class="m-t">
+                        <small>Inspinia we app framework base on Bootstrap 3 &copy; 2014</small>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-6">
+                Copyright 第一銀行
+            </div>
+            <div class="col-md-6 text-right">
+                <small>© 2014-2015</small>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/js/adm/jqueryWithBootStrap")
+    <script>
+        $.getJSON("/FirstBank/Notice/", function (json) {
+            if (json.length > 0) {
+                var content = "";
+                for (var i = 0; i < json.length; i++) {
+                    content += ("<li data-nid='" + json[i]["Notice_ID"] + "'>" + (i + 1) + ".<span>" + json[i]["Notice_Title"] + "</span><span>" + json[i]["Start_Date"] + "</span></li>");
+                }
+                $("#noticeList").html("<ul class='unstyled'>" + content + "</ul>");
+                $("#noticeList").off("click", "li").on("click", "li", function (e) {
+                    $("#test").remove();
+                    $("body").append("<div id='test'></div>");
+                    $("#test").load("/FirstBank/Notice/Info/" + $(this).attr("data-nid"));
+                });
+            }
+            else {
+                $("#noticeList").html("無任何公告消息");
+            }
+        });
+    </script>
+</body>
+</html>

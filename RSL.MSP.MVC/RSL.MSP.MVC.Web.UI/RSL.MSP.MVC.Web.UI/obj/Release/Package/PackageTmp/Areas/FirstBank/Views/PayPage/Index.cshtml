@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSPINIA | E-commerce</title>
+    @Styles.Render("~/css/adm/control", "~/css/paypage")
+</head>
+<body>
+    <div id="wrapper">
+        <div id="page-wrapper" class="gray-bg">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li>
+                            <span class="m-r-sm text-muted welcome-message"><img src='img/logo.png' /></span>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-10">
+                    <div class='col-sm-6'><label>訂單編號：</label> <font color='red'><strong>119806655541</strong></font></div>
+                    <div class='col-sm-6'><label>付款總額：</label> <font color='red'><strong>$390,00 NTD</strong></font></div>
+                    <div class='col-sm-6'>請您在<font color='red'><strong>24小時內</strong></font>完成付款動作，否則訂單會自動取消失效</div>
+                </div>
+                <div class="col-lg-2"></div>
+            </div>
+            <div class="wrapper wrapper-content">
+                <div class="row payments">
+                    <div class="col-md-9">
+                        <div class="ibox">
+                            <div class="ibox-content">
+                                <button class="btn btn-primary btn-sm pull-right checkout" disabled data-loading-text="驗證中..."><i class="fa fa-shopping-cart"></i> 結帳</button>
+                                <h5>請選擇付款方式</h5>
+                            </div>
+                            <div class="row">
+                                @{
+                                    if (Model.payList != null)
+                                    {
+                                        foreach (var item in Model.payList)
+                                        {
+                                <div class="col-md-3">
+                                    <div class="ibox">
+                                        <div class="ibox-content product-box">
+                                            <div class="product-imitation">
+                                                [ INFO ]
+                                            </div>
+                                            <div class="product-desc">
+                                                <span class="product-price">
+                                                    $10
+                                                </span>
+                                                <small class="text-muted">@item.PAYNAME</small>
+                                                <a href="#" class="product-name"> Product</a>
+                                                <div class="small m-t-xs">
+                                                    Many desktop publishing packages and web page editors now.
+                                                </div>
+                                                <div class="m-t text-righ">
+                                                    <a href="#" class="btn btn-xs btn-outline btn-primary">Info <i class="fa fa-long-arrow-right"></i> </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                        }
+                                    }
+                                }
+                            </div>
+                            <div class="ibox-content">
+                                <button class="btn btn-primary btn-sm pull-right checkout" disabled data-loading-text="驗證中..."><i class="fa fa-shopping-cart"></i> 結帳</button>
+                                <h5>請選擇付款方式</h5>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-3">
+                        <div class="ibox" style='display:none'>
+                            <div class="ibox-title">
+                                <h5>付款總額</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <span>
+                                    金額
+                                </span>
+                                <h2 class="font-bold">
+                                    $390,00 NTD
+                                </h2>
+                                <hr />
+                                <span class="text-muted small">
+                                    *For United States, France and Germany applicable sales tax will be applied
+                                </span>
+                            </div>
+                        </div>
+                        <div class="ibox">
+                            <div class="ibox-title">
+                                <h5>客服專區</h5>
+                            </div>
+                            <div class="ibox-content text-center">
+                                <h3><i class="fa fa-phone"></i> 0800 000 000</h3>
+                                <span class="small">
+                                    如有任何疑問，請立即聯絡我們.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="pull-right">
+                    10GB of <strong>250GB</strong> Free.
+                </div>
+                <div>
+                    <strong>Copyright</strong> Retail System CO., Ltd. &copy; 2014-2015
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal inmodal fade" id="myModal6" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Modal title</h4>
+                </div>s
+                <div class="modal-body">
+                    <p>Loading...Please Wait</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/js/adm/jqueryWithBootStrap")
+    <script>
+    $(function(){
+        $(".payments").on("click", "table", function(e){
+            $(".checkout").attr("disabled", false);
+            $(".paymentDetail").hide();
+            $(".paymentChecked").remove();
+            $(this).find("td:last").html("<i class='fa fa-check paymentChecked'></i>");
+            $(this).parents("div.ibox-content:first").find(".paymentDetail").show();
+            e.stopPropagation();
+        });
+        $(".checkout").on("click", function(e){
+            $(".payments").off("click", "table");
+            $(".checkout").button("loading");
+            $("#myModal6").modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+            e.stopPropagation();
+        });
+    });
+    </script>
+</body>
+</html>

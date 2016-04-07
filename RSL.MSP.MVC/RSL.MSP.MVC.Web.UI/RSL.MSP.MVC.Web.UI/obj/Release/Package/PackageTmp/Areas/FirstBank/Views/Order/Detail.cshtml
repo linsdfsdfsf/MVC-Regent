@@ -1,0 +1,176 @@
+﻿@model RSL.MSP.MVC.Model.FirstBank.OrderModel
+
+@{
+    ViewBag.Title = "訂單明細";
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+
+    var strOrderStatusName = "";
+    var strPayIdName = "";
+    var strPayId = "";
+}
+<div class="panel-body">
+    <fieldset>
+        <div class="row">
+            <!--特店編號-->
+            <label class="col-sm-2 control-label">*特店編號：</label>
+            <div class="col-sm-4">@Html.DisplayFor(model => model.MerchantId)</div>
+
+            <!--訂單編號-->
+            <label class="col-sm-2 control-label">*訂單編號：</label>
+            <div class="col-sm-4"> @Html.DisplayFor(model => model.OrderId)</div>
+        </div>
+        <div class="row">
+            <!--訂單狀態-->
+            <label class="col-sm-2 control-label">*訂單狀態：</label>
+            @switch (Model.OrderStatus)
+            {
+                case "0":
+                    strOrderStatusName = "訂單失效";
+                    break;
+                case "1":
+                    strOrderStatusName = "訂單成立";
+                    break;
+                case "2":
+                    strOrderStatusName = "訂單取消";
+                    break;
+                case "3":
+                    strOrderStatusName = "Web API直接退款";
+                    break;
+                case "4":
+                    strOrderStatusName = "支付後台退款";
+                    break;
+                case "5":
+                    strOrderStatusName = "退款作業完成";
+                    break;
+                default:
+                    strOrderStatusName = "";
+                    break;
+            }
+            <div class="col-sm-4">@strOrderStatusName</div><br>
+            </div>
+            <!--商品金額-->
+        <div class="row">
+            <label class="col-sm-2 control-label">*商品金額：</label>
+            <div class="col-sm-4">@Html.DisplayFor(model => model.Billing)</div>
+
+            <!--兌換幣別-->
+            <label class="col-sm-2 control-label">*兌換幣別：</label>
+            <div class="col-sm-4">@Html.DisplayFor(model => model.ConvertCurrency)</div>
+        </div>
+        <div class="row">
+            <!--運費買方-->
+
+            <label class="col-sm-2 control-label">*買方運費：</label>
+            <div class="col-sm-4">@Html.DisplayFor(model => model.ShippingBuy)</div>
+
+            <!--兌換金額-->
+            <label class="col-sm-2 control-label">*兌換金額：</label>
+            <div class="col-sm-4">@Html.DisplayFor(model => model.ConvertExpend)</div>
+            <!--運費賣方-->
+        </div>
+        <div class="row">
+            <label class="col-sm-2 control-label">*賣方運費：</label>
+            <div class="col-sm-4">@Html.DisplayFor(model => model.ShippingSell)</div>
+
+            <!--撥款金額-->
+
+            <label class="col-sm-2 control-label">*撥款金額：</label>
+            <div class="col-sm-4">@Html.DisplayFor(model => model.TransMoney) </div>
+        </div>
+        <div class="row">
+            <!--總金額-->
+
+            <label class="col-sm-2 control-label">*總金額：</label>
+            <div class="col-sm-4">@Html.DisplayFor(model => model.Amount)</div>
+            <!--付款別(支付方式)-->
+            @switch (Model.PayId)
+            {
+                case "1":
+                    strPayIdName = "Web ATM";
+                    strPayId = "1";
+                    break;
+                case "2":
+                    strPayIdName = "信用卡";
+                    strPayId = "2";
+                    break;
+                case "3":
+                    strPayIdName = "現金";
+                    strPayId = "3";
+                    break;
+                case "4":
+                    strPayIdName = "第三方支付";
+                    strPayId = "4";
+                    break;
+            }
+            <label class="col-sm-2 control-label">*付款別：</label>
+            <div class="col-sm-4">@strPayIdName</div>
+        </div>
+            <!--付款方式-->
+        <div class="row">
+            <label class="col-sm-2 control-label">*付款方式：</label>
+            <div class="col-sm-4">@Html.DisplayFor(model => model.SubPayType)</div>
+            <!--訂單成立時間-->
+            <label class="col-sm-2 control-label">*訂單成立時間：</label>
+            <div class="col-sm-4">@Html.DisplayFor(model => model.SYSTRANSTIME)</div>
+        </div>
+        <!--依據付款別　切換顯示欄位 partialView的內容會取代div MasterDetailViewOrderDetail 的內容-->
+        <div id="MasterDetailViewOrderDetail"></div>
+        <button id="OrderDetailPartialView" class="col-sm-2 col-md-offset-5 btn btn-white" style="margin-top: 20px;"><span class="glyphicon glyphicon-chevron-down">更多</span></button>
+</fieldset>
+</div>
+    <div class="modal-footer">
+        @*@Html.ActionLink("Edit", "Edit", new { /* id=Model.PrimaryKey */ }) |*@
+        @*@Html.ActionLink("回上一頁", "Index")*@
+        @if (Model.PayId == "1")
+        {
+            <button id="btnRefund" type="button" class="btn searchBtn">取消/退貨</button>
+        }
+        <button id="OrderDetailbtnBack" type="button" class="btn btn-info">返回</button>
+    </div>
+
+    @section Script{
+        <!-- Validate JavaScript -->
+        @Scripts.Render("~/js/adm/validate", "~/js/adm/base")
+    }
+    @section PageScript {
+        <script type="text/javascript">
+    $(document).ready(function () {
+        $("#OrderDetailbtnBack").click(function () {
+            XPage.GoTo("@Url.Action("Index")");
+            //$('.J_mainContent').find('div.J_iframe').load("/FirstBank/Order/", function (response, status, xhr) {
+            //    if (status == "error") {
+            //        $(this).html("錯誤 ");
+            //    }
+            //});
+        });
+
+        $(".gohome").hide();
+            //partialView的Ajax MasterDetail功能
+    });
+            $('#OrderDetailPartialView').click(function () {
+                //傳入付款別　回傳不同的partialView
+
+                if ($('#MasterDetailViewOrderDetail').is(':empty')) {
+                    //new { PayId =Model.PayId, OrderId =Model.OrderId}
+                    $.get('@(Html.Raw(Url.Action("DisplayDetail", "Order", new { PayId = Model.PayId, OrderId = Model.OrderId })))', function (data) {
+                        if ($(data).length > 0) {
+                            $('#MasterDetailViewOrderDetail').html(data).show().collapse('show');
+                            $("#OrderDetailPartialView").find("span").attr('class', 'glyphicon glyphicon-chevron-up').html("折疊");
+                        }
+                        else {
+                            $('#MasterDetailViewOrderDetail').html("<div>無法讀取資料</div>").show();
+                        }
+                    });
+                    
+                }
+                else {
+                    $("#MasterDetailViewOrderDetail").collapse('hide');
+                    setTimeout(function(){
+                        $("#MasterDetailViewOrderDetail").empty();
+                    }, 300);
+                    
+                    $("#OrderDetailPartialView").find("span").attr('class', 'glyphicon glyphicon-chevron-down').html("更多");
+                }
+            });
+        </script>
+    }

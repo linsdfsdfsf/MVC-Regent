@@ -1,0 +1,216 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+    ViewBag.Title = "特店管理";
+}
+<div id="validateList" class="modal-body">
+    <div class="ibox-content m-b-sm">
+        <div class="row">
+            <div class="form-group">
+                <label class="col-sm-2 control-label text-right">特店編號:</label>
+                <div class="col-sm-10">@Model.info.MERCHANTID</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li><a class="tabs" data-toggle="tab" href="#tab-1" aria-expanded="false">基本資料</a></li>
+                    <li><a class="tabs" data-toggle="tab" href="#tab-2" aria-expanded="false">支付授權</a></li>
+                    <li><a class="tabs" data-toggle="tab" href="#tab-3" aria-expanded="false">介接設定</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane">
+                        <div class="panel-body">
+                            <fieldset class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">*營業名稱:</label>
+                                    <div class="col-sm-4">@Model.info.MERCHANTNAME</div>
+                                    <label class="col-sm-2 control-label">業務聯絡人:</label>
+                                    <div class="col-sm-4">@Model.info.CONTACTUSERNAME1</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">*公司登記名稱:</label>
+                                    <div class="col-sm-4">@Model.info.CORPNAME</div>
+                                    <label class="col-sm-2 control-label">業務聯絡人電話:</label>
+                                    <div class="col-sm-4">@Model.info.CONTACTTEL1</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">統一編號/身份證字號:</label>
+                                    <div class="col-sm-4">@Model.info.UNIQUENUMBER</div>
+                                    <label class="col-sm-2 control-label">業務聯絡人e-mail:</label>
+                                    <div class="col-sm-4">@Model.info.CONTACTMAIL1</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">負責人:</label>
+                                    <div class="col-sm-4">@Model.info.PRICNIPAL</div>
+                                    <label class="col-sm-2 control-label">帳務聯絡人:</label>
+                                    <div class="col-sm-4">@Model.info.CONTACTUSERNAME2</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">登記地址:</label>
+                                    <div class="col-sm-4">@Model.info.ADDRESS</div>
+                                    <label class="col-sm-2 control-label">帳務聯絡人電話:</label>
+                                    <div class="col-sm-4">@Model.info.CONTACTTEL2</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">營業地址:</label>
+                                    <div class="col-sm-4">@Model.info.BUSSINESSADDRESS</div>
+                                    <label class="col-sm-2 control-label">帳務聯絡人e-mail:</label>
+                                    <div class="col-sm-4">
+                                        @Model.info.CONTACTMAIL2
+                                            @{
+                                                if (Model.info.SENDMAIL == "1")
+                                                {
+                                                    <label>啟用付款成功通知</label>
+                                                }
+                                            }
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">電話:</label>
+                                    <div class="col-sm-4">@Model.info.TEL</div>
+                                    <label class="col-sm-2 control-label">客服聯絡人:</label>
+                                    <div class="col-sm-4">@Model.info.CONTACTUSERNAME3</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">傳真:</label>
+                                    <div class="col-sm-4">@Model.info.FAX</div>
+                                    <label class="col-sm-2 control-label">客服聯絡人電話:</label>
+                                    <div class="col-sm-4">@Model.info.CONTACTTEL3</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">網址:</label>
+                                    <div class="col-sm-4">@Model.info.WEBSITE</div>
+                                    <label class="col-sm-2 control-label">客服聯絡人e-mail:</label>
+                                    <div class="col-sm-4">@Model.info.CONTACTMAIL3</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">狀態:</label>
+                                    <div class="col-sm-4">
+                                        <label>@(Model.info.ISACTIVE == "1" ? "啟用":"停用")</label>
+                                    </div>
+                                    <label class="col-sm-2 control-label">大特店:</label>
+                                    <div class="col-sm-4">@Model.info.PARENTMERCHANTID</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">HASHKey:</label>
+                                    <div class="col-sm-4">@Model.info.HASHKEY</div>
+                                    <label class="col-sm-2 control-label">HASHIV:</label>
+                                    <div class="col-sm-4">@Model.info.HASHIV</div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                            <fieldset class="form-horizontal">
+                                @{
+                                    if ((Model.payList != null) && (Model.payList.Count > 0))
+                                    {
+                                        int i=0;
+                                        foreach (var item in Model.payList)
+                                        {
+                                            if (item.ISACTIVE == "1")
+                                            {
+                                                <div class="row">
+                                                    <div class="">
+                                                        <label for="paymethod@(item.PAYSEQ)">@item.PAYNAME</label>
+                                                    </div>
+                                                    <div class="paydetail">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">HASHKey</label>
+                                                            <div class="col-sm-4">@item.ORIHASHKEY</div>
+                                                            <label class="col-sm-2 control-label">HASHIV</label>
+                                                            <div class="col-sm-4">@item.ORIHASHIV</div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">特店編號</label>
+                                                            <div class="col-sm-4">@item.ORIMERCHANTID</div>
+                                                            <label class="col-sm-2 control-label">入款帳號</label>
+                                                            <div class="col-sm-4">@item.INACCOUNT</div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            @if ((item.PAYGROUPID == "cc") && (item.ENABLENAME == "1"))
+                                                            {
+                                                                <label class="col-sm-2 control-label">啟用刷卡頁持卡人姓名欄</label>
+                                                            }
+                                                            @if (item.PAYGROUPID == "ea")
+                                                            {
+                                                                <label class="col-sm-2 control-label">密碼單</label>
+                                                                <div class="col-sm-4">@item.ORICYPHER</div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                i++;
+                                            }
+                                        }
+                                        if (i<1) {
+                                            <div>未選用任何支付方式</div>
+                                        }
+                                    }
+                                }
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div id="tab-3" class="tab-pane">
+                        <div class="panel-body">
+                            <fieldset class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">IP / Domain:</label>
+                                    <div class="col-sm-10">
+                                        <label for="enableIP">@(Model.info.ENABLEIP == "1"? "啟用來源位址認證" : "")</label>
+                                        @Model.info.ALLOWIP
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">交易成功回傳網址:</label>
+                                    <div class="col-sm-10">@Model.info.SUCCESSURL</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">交易失敗回傳網址:</label>
+                                    <div class="col-sm-10">@Model.info.ERRORURL</div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <form name="form1" id="form1" method="post">
+                <input type="hidden" name="MERCHANTID" value="@Model.info.MERCHANTID" />
+                <textarea name="MEMO" placeholder="備註說明"></textarea>
+            </form>
+            <div class="form-group">
+                <button id="pass" class="btn btn-success cmd" data-href="/FirstBank/Merchant/SurveyPass"><i class="fa fa-check"></i>審核通過</button>
+                <button id="reject" class="btn btn-danger cmd" data-href="/FirstBank/Merchant/SurveyReject"><i class="fa fa-times-circle"></i>退件</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Styles {
+    @Styles.Render("~/css/checkbox-radio")
+}
+@section Script{
+    @Scripts.Render("~/js/dialogs")
+}
+@section PageScript {
+<script>
+    $(function () {
+        $("a.tabs[href='#@(Model.activeTab)']").trigger("click");
+        //records tab
+        $(".nav-tabs").on("click", "a.tabs", function (e) {
+            history.pushState({}, "", "@(Request.Url.GetLeftPart(UriPartial.Path))?tab=" + $(this).attr("href").replace("#", ""));
+        });
+        $("button.cmd").on("click", function (e) {
+            loadingDialog("show", "資料儲存中...請稍候");
+            $.post($(this).attr("data-href"), $("#form1").serialize(), function (json) {
+                loadingDialog("value", json.flag ? "處理完成" : json.msg);
+                setTimeout(function () { loadingDialog("hide"); }, 1500);
+            }, "json");
+        });
+    });
+</script>
+}

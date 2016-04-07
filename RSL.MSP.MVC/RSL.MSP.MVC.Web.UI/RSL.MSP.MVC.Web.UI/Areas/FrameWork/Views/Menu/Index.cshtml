@@ -1,0 +1,113 @@
+﻿@{
+    ViewBag.Title = "菜单管理";
+    Layout = "~/Views/Shared/_Layout_Blank.cshtml";
+}
+
+
+@{Html.RenderPartial("_UserActionList");}
+
+
+
+<div class="form-group">
+    <div class="input-group">
+        <input id="txtSearchKey" type="text" class="input form-control" placeholder="搜索关键字" />
+        <span class="input-group-btn">
+            <button id="btnSearch" class="btn btn btn-primary" type="button"> <i class="fa fa-search"></i> 搜索</button>
+        </span>
+    </div>
+</div>
+
+
+<div class="jqGrid_wrapper">
+    <table id="jqGridList"></table>
+    <div id="jqGridPager"></div>
+</div>
+
+@section Script{
+    <!-- Validate JavaScript -->
+    @Scripts.Render("~/js/adm/validate", "~/js/adm/base", "~/js/adm/json")
+}
+@section PageScript {
+    <script>
+        function addModel() {
+            $("#btnAdd").button("loading");
+            window.location.href = "@Url.Action("Add")";
+        }
+        //编辑
+        function editModel() {
+            var row = RSLO2O.GetDataTableEditeData();
+
+            if (row != null) {
+                $("#btnEdit").button("loading");
+                window.location.href = "@Url.Action("Edit")/" + row.MENU_ID;
+            } else {
+                alert("请选择要编辑的数据");
+            }
+        }
+        //删除
+        function delData() {
+            XPage.DelData("@Url.Action("DeleteModel")");
+        }
+        function searchData() {
+            var json = {
+                SearchKey: $("#txtSearchKey").val()
+            };
+            XPage.Search(json);
+        }
+
+
+        function AddSubMenu(ParenetID, CurrentObj) {
+            $(CurrentObj).button("loading");
+            window.location.href = "@Url.Action("AddSubMenu")/" + "?menu_id=" + ParenetID;
+        }
+
+
+        $(document).ready(function () {
+            var config = {
+                title: '菜单列表',
+                url: '@Url.Action("GetList")',
+                colNames: ["Id", "菜单层级", "菜单名称", "菜单备注", "Url地址", "排序", "新增子级"],
+                colModel: [
+                    { name: 'MENU_ID', index: 'MENU_ID', key: true, hidden: true },
+                    {
+                        name: 'Menu_Level', index: 'Menu_Level', width: 80,
+
+                        formatter: function (cellValue, options, rowObject) {
+                            return cellValue == 1 ? "第一级" : "第二级";
+                        }
+                    },
+            {
+                name: 'MENU_NAME',
+                index: 'MENU_NAME',
+                width: 150,
+                formatter: function (cellValue, options, rowObject) {
+                    var shwoContent = "";
+                    if (rowObject.MENU_LEVEL == 1)
+                        shwoContent = "<span class=\"folder-open\"></span>" + cellValue;
+                    else {
+                        shwoContent = "<span style=\"display:inline-block;width:" + (rowObject.Menu_Level - 1) * 24 + "px;\"></span><span class=\"folder-line\"></span><span class=\"folder-open\"></span>" + cellValue;
+                    }
+                    return shwoContent;
+                }
+            },
+
+                    { name: 'MENU_REMARK', index: 'MENU_REMARK' },
+                    { name: 'CONTROLLER_ACTION', index: 'CONTROLLER_ACTION' },
+                       { name: 'MENU_SEQ', index: 'MENU_SEQ', width: 120 },
+
+            {
+                name: 'test',
+                index: 'test',
+                width: 120,
+                formatter: function (cellValue, options, rowObject) {
+
+                    return "<button id=\"btnbranchset\" type=\"button\" class=\"btn btn-info \" onclick=\"AddSubMenu(" + rowObject.MENU_ID + ",this)\"><i class=\"fa fa-paste\"></i> 新增子級</button>"
+                }
+            }
+                ]
+            };
+            RSLO2O.InitTable(config, true);
+            $("#btnSearch").click(searchData);
+        });
+    </script>
+}

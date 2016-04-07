@@ -1,0 +1,36 @@
+﻿@{
+    int baseRange = 5;
+    string url = Page.path;
+}
+<input type="hidden" class="nowpage" name="page" value="@Page.nowPage" />
+<ul class="pagination pull-center">
+    @{
+        if (Page.nowPage > 1)
+        {
+            <li class="footable-page-arrow"><a data-page="1" href="@(url==null?"#":url+"1")">«</a></li>
+            <li class="footable-page-arrow"><a data-page="@(Page.nowPage-1)" href="@(url==null?"#":url+(Page.nowPage-1).ToString())">‹</a></li>
+        }
+        for (int i = baseRange; i > 0; i--)
+        {
+            int tmp = Page.nowPage - i;
+            if (tmp > 0)
+            {
+            <li class="footable-page"><a data-page="@tmp" href="@(url==null?"#":url+tmp.ToString())">@tmp</a></li>
+            }
+        }
+            <li class="footable-page active disabled"><a>@Page.nowPage</a></li>
+        for (int i = 1; i <= baseRange; i++)
+        {
+            int tmp = Page.nowPage + i;
+            if (tmp <= Page.totalPage)
+            {
+            <li class="footable-page"><a data-page="@tmp" href="@(url==null?"#":url+tmp.ToString())">@tmp</a></li>
+            }
+        }
+        if (Page.nowPage < Page.totalPage)
+        {
+            <li class="footable-page-arrow"><a data-page="@(Page.nowPage+1)" href="@(url==null?"#":url+(Page.nowPage+1).ToString())">›</a></li>
+            <li class="footable-page-arrow"><a data-page="@Page.totalPage" href="@(url==null?"#":url+Page.totalPage.ToString())">»</a></li>
+        }
+    }
+</ul>
