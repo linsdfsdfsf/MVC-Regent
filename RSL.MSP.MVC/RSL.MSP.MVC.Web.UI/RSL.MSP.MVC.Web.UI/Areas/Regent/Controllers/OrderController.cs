@@ -55,7 +55,7 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
         }
 
         // 取得要編輯的訂單資料
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             OrderBLL MyOrderBLL = new OrderBLL();
             OrderModel myUserModel = MyOrderBLL.GetOrderByOrdermId(id);

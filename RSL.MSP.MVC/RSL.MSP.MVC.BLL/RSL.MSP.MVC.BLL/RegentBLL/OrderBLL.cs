@@ -22,9 +22,9 @@ namespace RSL.MSP.MVC.BLL.Regent
         }
 
         //修改訂單資料 取得欲修改資料
-        public OrderModel GetOrderByOrdermId(int User_ID)
+        public OrderModel GetOrderByOrdermId(string ORDERM_ID)
         {
-            return this.m_orderDAL.GetOrderByOrdermId(User_ID);
+            return this.m_orderDAL.GetOrderByOrdermId(ORDERM_ID);
         }
 
         //修改訂單資料 更新資料庫

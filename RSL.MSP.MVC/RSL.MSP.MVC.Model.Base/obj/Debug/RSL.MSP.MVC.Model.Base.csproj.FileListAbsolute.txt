@@ -8,4 +8,3 @@ E:\REGENT_BS\RSL.MSP.MVC\RSL.MSP.MVC.Model.Base\bin\Microsoft.Practices.Enterpri
 E:\REGENT_BS\RSL.MSP.MVC\RSL.MSP.MVC.Model.Base\bin\Microsoft.Practices.ObjectBuilder.dll
 E:\REGENT_BS\RSL.MSP.MVC\RSL.MSP.MVC.Model.Base\obj\Debug\RSL.MSP.MVC.Model.Base.dll
 E:\REGENT_BS\RSL.MSP.MVC\RSL.MSP.MVC.Model.Base\obj\Debug\RSL.MSP.MVC.Model.Base.pdb
-E:\REGENT_BS\RSL.MSP.MVC\RSL.MSP.MVC.Model.Base\obj\Debug\RSL.MSP.MVC.Model.Base.csprojResolveAssemblyReference.cache

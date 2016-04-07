@@ -71,6 +71,7 @@
         @Scripts.Render("~/js/adm/validate", "~/js/adm/base", "~/js/adm/json")*@
 
     <script type="text/javascript">
+        $(window).load(function () { $("#btnLogin").click(); })
         $(function () {
             $.get("/FrameWork/Login/GetLoginDBisOpen", function (DBRes, state) {
 
@@ -142,7 +143,7 @@
                 });
             });
 
-            btn.click();
+
             $("input:text, input:password").on("keyup", function (e) {
                 if (e.keyCode == 13) {
                     $("#btnLogin").trigger("click");
@@ -165,6 +166,7 @@
 
 
         }
+
     </script>
 
 

@@ -51,10 +51,10 @@ namespace RSL.MSP.MVC.DAO.RegentDAO
         }
 
         //修改訂單資料 取得欲修改訂單的資料
-        public OrderModel GetOrderByOrdermId(int User_ID)
+        public OrderModel GetOrderByOrdermId(string ORDERM_ID)
         {
             DataCommand command = DataCommandManager.GetDataCommand("GetOrderByOrdermId");
-            command.SetParameterValue("@User_ID", User_ID);
+            command.SetParameterValue(":ORDERM_ID", ORDERM_ID);
             return command.ExecuteEntity<OrderModel>();
         }
 
