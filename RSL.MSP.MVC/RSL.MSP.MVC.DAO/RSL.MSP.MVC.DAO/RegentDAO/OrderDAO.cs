@@ -50,12 +50,28 @@ namespace RSL.MSP.MVC.DAO.RegentDAO
             return _Result;
         }
 
-        //修改訂單資料
+        //修改訂單資料 取得欲修改訂單的資料
         public OrderModel GetOrderByOrdermId(int User_ID)
         {
             DataCommand command = DataCommandManager.GetDataCommand("GetOrderByOrdermId");
             command.SetParameterValue("@User_ID", User_ID);
             return command.ExecuteEntity<OrderModel>();
+        }
+
+        //修改訂單資料 送出修改資料
+        public void  UpdateOrder(OrderModel order)
+        {
+            DataCommand command = DataCommandManager.GetDataCommand("UpdateOrder");
+            command.SetParameterValue("@User_Account", order.ORDERM_ID);
+            //command.SetParameterValue("@User_pwd", order.User_PWD);
+            //command.SetParameterValue("@User_Name", order.User_Name);
+            //command.SetParameterValue("@Customer_ID", order.Customer_ID);
+            //command.SetParameterValue("@User_Email", order.User_Email);
+            //command.SetParameterValue("@User_Tel", order.User_Tel);
+            //command.SetParameterValue("@Is_Valid", order.IS_VALID);
+            //command.SetParameterValue("@LAST_MODIFIED_BY", order.LAST_MODIFIED_BY);
+            command.ExecuteNonQuery();
+        
         }
 
     }

@@ -21,10 +21,16 @@ namespace RSL.MSP.MVC.BLL.Regent
             return m_orderDAL.GetOrderListByPage(queryModel, page);
         }
 
-        //修改訂單資料
+        //修改訂單資料 取得欲修改資料
         public OrderModel GetOrderByOrdermId(int User_ID)
         {
             return this.m_orderDAL.GetOrderByOrdermId(User_ID);
+        }
+
+        //修改訂單資料 更新資料庫
+        public void UpdateOrder(OrderModel order)
+        {
+            m_orderDAL.UpdateOrder(order);
         }
     }
 }

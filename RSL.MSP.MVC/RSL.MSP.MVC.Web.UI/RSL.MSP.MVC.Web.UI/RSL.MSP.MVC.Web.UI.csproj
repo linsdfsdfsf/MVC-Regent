@@ -493,6 +493,7 @@
     <Content Include="Areas\Regent\Views\Order\Index.cshtml" />
     <Content Include="Areas\Regent\Views\Order\Add.cshtml" />
     <Content Include="Configuration\Data\Regent\Order.config" />
+    <Content Include="Areas\Regent\Views\Order\Edit.cshtml" />
     <None Include="Content\template\Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Content\template\Scripts\jquery-1.8.2.js" />
     <Content Include="Content\template\Scripts\jquery-1.9.1.min.js" />
