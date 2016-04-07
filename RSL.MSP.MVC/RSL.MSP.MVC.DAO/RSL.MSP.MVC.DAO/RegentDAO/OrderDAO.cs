@@ -74,5 +74,30 @@ namespace RSL.MSP.MVC.DAO.RegentDAO
         
         }
 
+
+        //新增訂單資料 取得需要的值
+        public OrderModel AddOrderGetDropDownList(OrderModel order)
+        {
+            DataCommand command = DataCommandManager.GetDataCommand("AddOrderGetDropDownList");
+            command.SetParameterValue(":ORDERM_ID", order.ORDERM_ID);
+            return command.ExecuteEntity<OrderModel>();
+        }
+
+        //新增訂單資料 送出訂單資料
+        public void AddOrder(OrderModel order)
+        {
+            DataCommand command = DataCommandManager.GetDataCommand("AddOrder");
+            command.SetParameterValue("@User_Account", order.ORDERM_ID);
+            //command.SetParameterValue("@User_pwd", order.User_PWD);
+            //command.SetParameterValue("@User_Name", order.User_Name);
+            //command.SetParameterValue("@Customer_ID", order.Customer_ID);
+            //command.SetParameterValue("@User_Email", order.User_Email);
+            //command.SetParameterValue("@User_Tel", order.User_Tel);
+            //command.SetParameterValue("@Is_Valid", order.IS_VALID);
+            //command.SetParameterValue("@LAST_MODIFIED_BY", order.LAST_MODIFIED_BY);
+            command.ExecuteNonQuery();
+
+        }
+
     }
 }

@@ -98,10 +98,10 @@
 
         //==============明細表=============//
         function OrderViewDetail(id) {
-            @*$("#btnAdd").button("loading");
-        window.location.href = "@Url.Action("Detail")/" + id;*@
+            $("#btnAdd").button("loading");
+        window.location.href = "@Url.Action("Edit")/" + id;
 
-            var url = "@Url.Action("Edit")/" + id;
+            @*var url = "@Url.Action("Edit")/" + id;
 
             //弹出即全屏
             var index = top.layer.open({
@@ -111,7 +111,7 @@
                 maxmin: true,
                 title: '訂單明細'
             });
-            top.layer.area(index);
+            top.layer.area(index);*@
 
             // $('.J_mainContent').find('div.J_iframe').load("/FirstBank/Order/Detail/" + id, function (response, status, xhr) {
             //     if (status == "error") {

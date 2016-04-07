@@ -32,5 +32,17 @@ namespace RSL.MSP.MVC.BLL.Regent
         {
             m_orderDAL.UpdateOrder(order);
         }
+
+        //新增訂單資料 取得需要的值
+        public OrderModel AddOrderGetDropDownList(OrderModel order)
+        {
+           return this.m_orderDAL.AddOrderGetDropDownList(order);
+        }
+
+        //新增訂單資料 送出資料 更新資料庫
+        public void AddOrder(OrderModel order)
+        {
+            m_orderDAL.AddOrder(order);
+        }
     }
 }

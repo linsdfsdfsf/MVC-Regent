@@ -45,14 +45,52 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
             }
         }
 
-        /// function: 特店管理系統 - 基本資料
-        /// Editor: Kafaka Lin
+        //========================================新增==============================//
+        /// 新增訂單資料 取得資料
         [AcceptVerbs(WebRequestMethods.Http.Get, WebRequestMethods.Http.Post)]
         public ActionResult Add(string merchantId)
         {
+           // ViewBag.CustomerList = new UserBLL().GetCustomerList().Select(item => new SelectListItem { Value = item.CUSTOMER_ID.ToString(), Text = item.CUSTOMER_NAME });
             return View();
 
         }
+
+        //新增訂單資料 送出資料
+        [HttpPost]
+        public JsonResult AddModel(OrderModel model)
+        {
+            var result = new Result<string>();
+            try
+            {
+                if (model == null)
+                    throw new ArgumentException("参数错误");
+
+                OrderBLL _BLL = new OrderBLL();
+                OrderModel OrderModel = new OrderModel();
+                //UserModel.User_Account = model.User_Account;
+                //UserModel.User_Name = model.User_Name;
+                //UserModel.IS_CHANGEPWD = model.IS_CHANGEPWD;
+                //UserModel.User_Tel = model.User_Tel;
+                //UserModel.User_Email = model.User_Email;
+                //UserModel.IS_VALID = 1;
+                //UserModel.User_PWD = model.User_PWD.ToMD5();//密码加密
+                //UserModel.CREATE_BY = this.LoginedUserID;
+                //UserModel.CREATE_DATE = System.DateTime.Now;
+                //UserModel.Customer_ID = model.Customer_ID;
+
+
+                _BLL.AddOrder(OrderModel);
+
+            }
+            catch (Exception ex)
+            {
+                result.msg = ex.Message;
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        //========================================編輯==============================//
+
 
         // 取得要編輯的訂單資料
         public ActionResult Edit(string id)
