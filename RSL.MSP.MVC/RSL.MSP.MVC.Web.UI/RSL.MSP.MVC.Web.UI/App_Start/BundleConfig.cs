@@ -40,7 +40,7 @@ namespace RSL.MSP.MVC.Web.UI.App_Start
                 ));
 
             bundles.Add(new ScriptBundle("~/js/adm/validate").Include(
-               "~/Bootstrap/validate/bootstrap3-validation.js",
+             //  "~/Bootstrap/validate/bootstrap3-validation.js",
                "~/content/template/Scripts/jquery.validate.js"));
 
             bundles.Add(new ScriptBundle("~/js/adm/base").Include(
