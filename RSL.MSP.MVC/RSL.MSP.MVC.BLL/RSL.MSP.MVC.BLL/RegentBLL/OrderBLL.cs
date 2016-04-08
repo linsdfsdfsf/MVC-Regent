@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,17 +33,38 @@ namespace RSL.MSP.MVC.BLL.Regent
         {
             m_orderDAL.UpdateOrder(order);
         }
+        //=======================新增=============================//
 
         //新增訂單資料 取得需要的值
-        public OrderModel AddOrderGetDropDownList(OrderModel order)
-        {
-           return this.m_orderDAL.AddOrderGetDropDownList(order);
-        }
+        //public OrderModel AddOrderGetDropDownList(OrderModel order)
+        //{
+        //   return this.m_orderDAL.AddOrderGetDropDownList(order);
+        //}
 
         //新增訂單資料 送出資料 更新資料庫
         public void AddOrder(OrderModel order)
         {
             m_orderDAL.AddOrder(order);
+        }
+        
+
+        //============================產生下拉選單資料====================//
+        // 取得餐廳資料
+        public List<RestaurantModel> GetRestaurant()
+        {
+            return m_orderDAL.GetRestaurant();
+        }
+        
+        // 取得用餐目的資料
+        public List<DataRow> GetPurpose()
+        {
+            return m_orderDAL.GetPurpose();
+        }
+        
+        // 取得開放訂位期限
+        public string GetOpenSeatEndDate()
+        {
+            return m_orderDAL.GetOpenSeatEndDate();
         }
     }
 }

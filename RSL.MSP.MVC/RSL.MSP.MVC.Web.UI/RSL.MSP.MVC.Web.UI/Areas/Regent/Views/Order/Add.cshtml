@@ -55,13 +55,13 @@
             <div class="col-md-4 inputGroupContainer input-daterange" >
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon glyphicon glyphicon-calendar"></i></span>
-                    <input name="first_name" placeholder="用餐日期" id="txtBOOKING_DATE" class="form-control" maxlength="50" type="text" required>
+                    <input name="first_name" placeholder="用餐日期" id="txtBOOKING_DATE" class="form-control" onkeydown="return false" maxlength="50" type="text" required>
                 </div>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="col-md-4 control-label">每日時段編號(*改成下拉+時段名稱)</label>
+            <label class="col-md-4 control-label">每日時段編號</label>
             <div class="col-md-4 inputGroupContainer">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
@@ -171,7 +171,7 @@
             <div class="col-md-4 inputGroupContainer">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-comment"></i></span>
-                    <input name="first_name" placeholder="特殊需求" id="txtCUS_NOTE" class="form-control" maxlength="50" type="text">
+                    <textarea name="first_name" placeholder="特殊需求" id="txtCUS_NOTE" class="form-control" rows="4" cols="50"></textarea>
                 </div>
             </div>
         </div>
@@ -230,49 +230,63 @@
 }
 @section PageScript {
     <script>
-        function saveData() {
-            var postData = {
-                Id: '@ViewContext.RouteData.Values["id"]',
-                User_Account: $("#txtUser_Account").val(),
-                User_PWD: $("#txtUser_PWD").val(),
-                User_Name: $("#txtUser_Name").val(),
-                Customer_ID: $("#Customer_ID").val(),
-                User_Email: $("#txtUser_Email").val(),
-                User_Tel: $("#txtUser_Tel").val()
-            };
-            var url = "@Url.Action("EditModel")";
-            //XPage.SaveData(url, postData);
-            if ($("#validateList").valid()) {
-                var btn = $("#btnSave");
-                btn.button('loading');
-                $.post(url, postData, function (res, status, jqXHR) {
-                    if (res.flag) {
-                        alert("操作成功");
-                        XPage.GoTo("@Url.Action("Index")");
-                    } else {
-                        alert("操作失敗：" + res.msg);
-                    }
-                }).error(function () {
-                    alert("Server Error");
-                }).complete(function () {
-                    btn.button('reset');
-                });
-            }
+        //=============
+        //存檔
+        //============
+    function saveData() {
+        var postData = {
+            Id: '@ViewContext.RouteData.Values["id"]',
+            User_Account: $("#txtUser_Account").val(),
+            User_PWD: $("#txtUser_PWD").val(),
+            User_Name: $("#txtUser_Name").val(),
+            Customer_ID: $("#Customer_ID").val(),
+            User_Email: $("#txtUser_Email").val(),
+            User_Tel: $("#txtUser_Tel").val()
+        };
+        var url = "@Url.Action("EditModel")";
+        //XPage.SaveData(url, postData);
+        if ($("#validateList").valid()) {
+            var btn = $("#btnSave");
+            btn.button('loading');
+            $.post(url, postData, function (res, status, jqXHR) {
+                if (res.flag) {
+                    alert("操作成功");
+                    XPage.GoTo("@Url.Action("Index")");
+                } else {
+                    alert("操作失敗：" + res.msg);
+                }
+            }).error(function () {
+                alert("Server Error");
+            }).complete(function () {
+                btn.button('reset');
+            });
         }
-        $(document).ready(function () {
-            //$("#validateList").validation({ icon: false });
-            $("#btnSave").click(saveData);
-            $("#btnBack").click(function () {
-                XPage.GoTo("@Url.Action("Index")");
+    }
+        //=============
+        //網頁剛load完
+        //============
+    $(document).ready(function () {
+        //$("#validateList").validation({ icon: false });
+        $("#btnSave").click(saveData);
+        $("#btnBack").click(function () {
+            XPage.GoTo("@Url.Action("Index")");
             });
         });
 
-        //===========日期選單============//
+        //=============
+        //日期選單
+        //============
+
+        //取得開放訂位期限
+        var OpenSeatEndDate = '@(ViewBag.OpenSeatEndDate)';
+
         $('.input-daterange').datepicker({
             format: "yyyy/mm/dd",
             keyboardNavigation: false,
             forceParse: false,
-            autoclose: true
+            autoclose: true,
+            startDate: '+0d',
+            endDate: "+" + OpenSeatEndDate + "m"
         }).removeClass("input-daterange");
         //=======Ajax改變下拉選單=======//
         //$("province_dll").change(function () {

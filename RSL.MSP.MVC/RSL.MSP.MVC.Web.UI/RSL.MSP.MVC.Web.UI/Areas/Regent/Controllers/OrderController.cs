@@ -58,6 +58,9 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
             List<DataRow> myPurpost = MyOrderBLL.GetPurpose();
             ViewBag.PurposeList = myPurpost;
 
+            string mySeatEndDate = MyOrderBLL.GetOpenSeatEndDate();
+            ViewBag.OpenSeatEndDate = mySeatEndDate;
+
            // ViewBag.CustomerList = new OrderBLL().GetCustomerList().Select(item => new SelectListItem { Value = item.CUSTOMER_ID.ToString(), Text = item.CUSTOMER_NAME });
             return View();
 

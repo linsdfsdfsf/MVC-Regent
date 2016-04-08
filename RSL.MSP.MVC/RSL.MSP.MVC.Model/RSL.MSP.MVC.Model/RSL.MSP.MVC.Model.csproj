@@ -61,6 +61,7 @@
     <Compile Include="EinvModel\EinvUtilModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegentModel\OrderModel.cs" />
+    <Compile Include="RegentModel\RestaurantModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RSL.MSP.MVC.Model.Base\RSL.MSP.MVC.Model.Base.csproj">

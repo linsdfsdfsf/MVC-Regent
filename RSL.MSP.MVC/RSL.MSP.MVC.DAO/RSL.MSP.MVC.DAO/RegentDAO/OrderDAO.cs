@@ -9,6 +9,7 @@ using RSL.MSP.MVC.Model;
 using Application.Framework.Data.DataAccess;
 using RSL.MSP.MVC.Model.Common;
 using RSL.MSP.MVC.DAO.Common;
+using System.Data;
 
 namespace RSL.MSP.MVC.DAO.RegentDAO
 {
@@ -74,14 +75,15 @@ namespace RSL.MSP.MVC.DAO.RegentDAO
         
         }
 
+        //================================新增==============================//
 
         //新增訂單資料 取得需要的值
-        public OrderModel AddOrderGetDropDownList(OrderModel order)
-        {
-            DataCommand command = DataCommandManager.GetDataCommand("AddOrderGetDropDownList");
-            command.SetParameterValue(":ORDERM_ID", order.ORDERM_ID);
-            return command.ExecuteEntity<OrderModel>();
-        }
+        //public OrderModel AddOrderGetDropDownList(OrderModel order)
+        //{
+        //    DataCommand command = DataCommandManager.GetDataCommand("AddOrderGetDropDownList");
+        //    command.SetParameterValue(":ORDERM_ID", order.ORDERM_ID);
+        //    return command.ExecuteEntity<OrderModel>();
+        //}
 
         //新增訂單資料 送出訂單資料
         public void AddOrder(OrderModel order)
@@ -97,6 +99,33 @@ namespace RSL.MSP.MVC.DAO.RegentDAO
             //command.SetParameterValue("@LAST_MODIFIED_BY", order.LAST_MODIFIED_BY);
             command.ExecuteNonQuery();
 
+        }
+        
+        //========================取得下拉選單資料====================//
+
+        //取得餐廳資料
+        public List<RestaurantModel> GetRestaurant()
+        {
+            DataCommand command = DataCommandManager.GetDataCommand("GetRestaurant");
+            return command.ExecuteEntityList<RestaurantModel>();
+        }
+        
+        //取得用餐目的資料
+        public List<DataRow> GetPurpose()
+        {
+            DataCommand command = DataCommandManager.GetDataCommand("GetPurpose");
+            var ds = command.ExecuteDataSet();
+            List<DataRow> list = ds.Tables[0].AsEnumerable().ToList();
+            return list;
+        }
+        
+        //取得開放訂位期限
+        public string GetOpenSeatEndDate()
+        {
+            DataCommand command = DataCommandManager.GetDataCommand("GetOpenSeatEndDate");
+            var ds = command.ExecuteDataSet();
+            string result = ds.Tables[0].Rows[0]["PARAMETER_VALUE"].ToString();
+            return result;
         }
 
     }
