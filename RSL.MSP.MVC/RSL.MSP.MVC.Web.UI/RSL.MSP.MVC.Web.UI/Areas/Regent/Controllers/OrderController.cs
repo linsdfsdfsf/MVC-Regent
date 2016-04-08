@@ -60,9 +60,13 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
             List<DataRow> myPurpost = MyOrderBLL.GetPurpose();
             ViewBag.PurposeList = myPurpost;
 
-            //取得開放訂位最後期階
+            //取得開放訂位最後期限
             string mySeatEndDate = MyOrderBLL.GetOpenSeatEndDate();
             ViewBag.OpenSeatEndDate = mySeatEndDate;
+
+            //取得用餐人數最大值
+            string myMaxReservationNumber = MyOrderBLL.GetReservationNumber();
+            ViewBag.MaxReservationNumber = myMaxReservationNumber;
 
            // ViewBag.CustomerList = new OrderBLL().GetCustomerList().Select(item => new SelectListItem { Value = item.CUSTOMER_ID.ToString(), Text = item.CUSTOMER_NAME });
             return View();
@@ -142,8 +146,10 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
         }
 
         //=====================Ajax 取得資料===============//
-        [HttpPost]
 
+
+        //取得用餐時段資料
+        [HttpPost]
         public ActionResult AjaxGetDailyPeriodId(string RestaurantId, string BookingDate)
         {
             try

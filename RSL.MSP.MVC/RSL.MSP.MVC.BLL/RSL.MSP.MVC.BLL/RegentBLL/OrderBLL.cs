@@ -66,5 +66,21 @@ namespace RSL.MSP.MVC.BLL.Regent
         {
             return m_orderDAL.GetOpenSeatEndDate();
         }
+
+
+        //取得用餐時段
+        public List<DataRow> AjaxGetDailyPeriodId(string RestaurantId, string BookingDate)
+        {
+            return m_orderDAL.AjaxGetDailyPeriodId(RestaurantId,BookingDate);
+        }
+
+        //============其他==================//
+
+        
+         //取得用餐人數最大值
+        public string GetReservationNumber()
+        {
+            return m_orderDAL.GetReservationNumber();
+        }
     }
 }

@@ -128,7 +128,7 @@ namespace RSL.MSP.MVC.DAO.RegentDAO
             return result;
         }
 
-        //取得用餐時段和該時段最大用餐人數
+        //取得用餐時段
         public List<DataRow> AjaxGetDailyPeriodId(string RestaurantId, string BookingDate)
         {
             DataCommand command = DataCommandManager.GetDataCommand("AjaxGetDailyPeriodId");
@@ -139,5 +139,16 @@ namespace RSL.MSP.MVC.DAO.RegentDAO
             return list;
         }
 
+        //=========================其他========================//
+
+
+        //取得用餐人數最大值
+        public string GetReservationNumber()
+        {
+            DataCommand command = DataCommandManager.GetDataCommand("GetReservationNumber");
+            var ds = command.ExecuteDataSet();
+            string result = ds.Tables[0].Rows[0]["PARAMETER_VALUE"].ToString();
+            return result;
+        }
     }
 }

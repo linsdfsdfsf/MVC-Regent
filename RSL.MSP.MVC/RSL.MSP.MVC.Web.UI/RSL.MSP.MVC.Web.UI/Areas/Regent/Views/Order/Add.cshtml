@@ -77,7 +77,7 @@
             <div class="col-md-4 inputGroupContainer">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-chevron-down"></i></span>
-                    <input name="first_name" placeholder="用餐人數" id="txtRESERVATION_NUMBER" class="form-control" maxlength="50" type="text" required>
+                    <input name="first_name" placeholder="用餐人數" id="txtRESERVATION_NUMBER" class="form-control" type="number" min="1" max="@(ViewBag.MaxReservationNumber)" step="1">
                 </div>
             </div>
         </div>
@@ -305,39 +305,25 @@
         else {
 
             $.ajax(
-
             {
-
                 url: "@Url.Action("AjaxGetDailyPeriodId", "Order")",
-
                 data: { RestaurantId: selectedRestaurantId, BookingDate: selectdedBookingDate },
-
                 type: 'post',
-
                 cache: false,
-
                 async: false,
-
                 dataType: 'html',
-
                 success: function (data) {
-
                     if (data.length > 0) {
                         SetDaily_PeriodEmpty();
                         $('#txtDAILY_PERIOD_ID').append(data);
-
                     }
-
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     $('#txtDAILY_PERIOD_ID').empty();
                     $('#txtDAILY_PERIOD_ID').append($('<option></option>').val('').text('查無此餐廳和訂位日期下的時段'));
                 }
-
             });
-
         }
-
     }
     //=======將'時段'下拉選單的內容設為空========//
     function SetDaily_PeriodEmpty() {
@@ -347,6 +333,17 @@
         $('#txtDAILY_PERIOD_ID').append($('<option></option>').val('').text('請選擇時段'));
 
     }
+    //=================自動修改為正確的用餐人數==============//
+    $("#txtRESERVATION_NUMBER").change(function () {
+        var max = parseInt($(this).attr('max'));
+        var min = parseInt($(this).attr('min'));
+        if ($(this).val() > max) {
+            $(this).val(max);
+        }
+        else if ($(this).val() < min) {
+            $(this).val(min);
+        }
+    });
 
     </script>
 }
