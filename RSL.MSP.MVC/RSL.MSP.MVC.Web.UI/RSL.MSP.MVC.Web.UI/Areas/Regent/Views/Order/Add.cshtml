@@ -56,7 +56,7 @@
                 <div class="col-md-4 inputGroupContainer input-daterange">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon glyphicon glyphicon-calendar"></i></span>
-                        <input name="txtBOOKING_DATE" placeholder="用餐日期" id="txtBOOKING_DATE" class="form-control dateISO" onkeydown="return false" maxlength="50" type="text" required>
+                        <input name="txtBOOKING_DATE" placeholder="用餐日期" id="txtBOOKING_DATE" class="form-control" onkeydown="return false" maxlength="50" type="text" required>
                     </div>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                 <div class="col-md-4 inputGroupContainer">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-chevron-down"></i></span>
-                        <input name="txtRESERVATION_NUMBER" placeholder="用餐人數" id="txtRESERVATION_NUMBER" class="form-control number" type="number" min="1" max="@(ViewBag.MaxReservationNumber)" step="1" value="" required>
+                        <input name="txtRESERVATION_NUMBER" placeholder="用餐人數" id="txtRESERVATION_NUMBER" class="form-control" type="number" min="1" max="@(ViewBag.MaxReservationNumber)" step="1" value="" required>
                     </div>
                 </div>
             </div>
@@ -103,7 +103,7 @@
                 <div class="col-md-4 inputGroupContainer">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-                        <input name="txtVERIFICATION_MOBILE" placeholder="手機號碼" id="txtVERIFICATION_MOBILE" class="required form-control number" maxlength="50" type="text">
+                        <input name="txtVERIFICATION_MOBILE" placeholder="手機號碼" id="txtVERIFICATION_MOBILE" class="required form-control" maxlength="50" type="text">
                     </div>
                 </div>
             </div>
@@ -147,7 +147,7 @@
                 <div class="col-md-4 inputGroupContainer">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-phone-alt"></i></span>
-                        <input name="txtCUS_TEL" placeholder="顧客連絡電話" id="txtCUS_TEL" class="form-control number" maxlength="50" type="text">
+                        <input name="txtCUS_TEL" placeholder="顧客連絡電話" id="txtCUS_TEL" class="form-control" maxlength="50" type="text">
                     </div>
                 </div>
             </div>
@@ -198,7 +198,7 @@
                 <div class="col-md-4 inputGroupContainer  input-daterange">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon glyphicon-time"></i></span>
-                        <input name="txtORDER_OK_DATE" placeholder="入場時間" id="txtORDER_OK_DATE" class="form-control dateISO" maxlength="50" type="text">
+                        <input name="txtORDER_OK_DATE" placeholder="入場時間" id="txtORDER_OK_DATE" class="form-control" maxlength="50" type="text">
                     </div>
                 </div>
             </div>
@@ -232,7 +232,7 @@
 }
 @section Script{
     @Scripts.Render("~/js/rwd-table", "~/js/pagination", "~/js/dialogs", "~/js/bootstrap-datepicker", "~/js/adm/validate", "~/js/adm/base", "~/js/adm/json")
-    @Scripts.Render("~/content/template/Scripts/messages_zh_TW.js")
+    @Scripts.Render("~/Scripts/messages_zh_TW.js")
 }
 @section PageScript {
     <script>
