@@ -10,6 +10,7 @@ using RSL.MSP.MVC.BLL.Regent;
 using System.Net;
 using RSL.MSP.MVC.Model.Base;
 using RSL.MSP.MVC.Common;
+using System.Text;
 
 
 namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
@@ -55,9 +56,11 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
             List<RestaurantModel> myRestaurantList = MyOrderBLL.GetRestaurant();
             ViewBag.RestaurantList = myRestaurantList;
 
+            //取得訂餐目的資料填入下拉選單
             List<DataRow> myPurpost = MyOrderBLL.GetPurpose();
             ViewBag.PurposeList = myPurpost;
 
+            //取得開放訂位最後期階
             string mySeatEndDate = MyOrderBLL.GetOpenSeatEndDate();
             ViewBag.OpenSeatEndDate = mySeatEndDate;
 
@@ -137,6 +140,65 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
             }
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+        //=====================Ajax 取得資料===============//
+        [HttpPost]
+
+        public ActionResult AjaxGetDailyPeriodId(string RestaurantId, string BookingDate)
+        {
+            try
+            {
+                StringBuilder sb = new StringBuilder();
+
+                if (!string.IsNullOrWhiteSpace(RestaurantId) && !string.IsNullOrWhiteSpace(BookingDate))
+                {
+                    var res = this.MyOrderBLL.AjaxGetDailyPeriodId(RestaurantId, BookingDate);
+                    //將取出來的datarow資料依照Period_group_name分組
+                    var TimeByPeriod = from car in res
+                                     group car by car.Field<string>("PERIOD_GROUP_NAME")
+                                         into PeriodGroup
+                                           select new { Type = PeriodGroup.Key, Period = PeriodGroup.ToList() };
+
+                    //串dropDownList語法
+                    foreach (var type in TimeByPeriod)
+                    {
+                        sb.AppendFormat("<optgroup label=\"{0}\">",
+                            type.Type
+                        );
+
+                        foreach (var item in type.Period)
+                        {
+                            sb.AppendFormat("<option value=\"{0}\">{1}</option>",
+                                item[0].ToString(),
+                                item[1].ToString()
+                            );
+                        }
+
+                        sb.AppendFormat("</optgroup>");
+                    }
+                    ///////////////
+                    //var counties = this.MyOrderBLL.AjaxGetDailyPeriodId(RestaurantId, BookingDate);
+
+                    //foreach (var item in counties)
+                    //{
+
+                    //    sb.AppendFormat("<option value=\"{0}\">{1}({2})</option>",
+                    //        item[0].ToString(),
+                    //        item[2].ToString(),
+                    //        item[1].ToString()
+                    //    );
+                    //}
+
+                }
+
+                return Content(sb.ToString());
+            }
+            catch (Exception e) {
+                throw e;
+            }
+
+        } 
+
 
     }
 }

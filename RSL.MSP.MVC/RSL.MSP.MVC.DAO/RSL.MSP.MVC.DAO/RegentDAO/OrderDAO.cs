@@ -63,7 +63,7 @@ namespace RSL.MSP.MVC.DAO.RegentDAO
         public void  UpdateOrder(OrderModel order)
         {
             DataCommand command = DataCommandManager.GetDataCommand("UpdateOrder");
-            command.SetParameterValue("@User_Account", order.ORDERM_ID);
+            command.SetParameterValue(":User_Account", order.ORDERM_ID);
             //command.SetParameterValue("@User_pwd", order.User_PWD);
             //command.SetParameterValue("@User_Name", order.User_Name);
             //command.SetParameterValue("@Customer_ID", order.Customer_ID);
@@ -89,7 +89,7 @@ namespace RSL.MSP.MVC.DAO.RegentDAO
         public void AddOrder(OrderModel order)
         {
             DataCommand command = DataCommandManager.GetDataCommand("AddOrder");
-            command.SetParameterValue("@User_Account", order.ORDERM_ID);
+            command.SetParameterValue(":User_Account", order.ORDERM_ID);
             //command.SetParameterValue("@User_pwd", order.User_PWD);
             //command.SetParameterValue("@User_Name", order.User_Name);
             //command.SetParameterValue("@Customer_ID", order.Customer_ID);
@@ -126,6 +126,17 @@ namespace RSL.MSP.MVC.DAO.RegentDAO
             var ds = command.ExecuteDataSet();
             string result = ds.Tables[0].Rows[0]["PARAMETER_VALUE"].ToString();
             return result;
+        }
+
+        //取得用餐時段和該時段最大用餐人數
+        public List<DataRow> AjaxGetDailyPeriodId(string RestaurantId, string BookingDate)
+        {
+            DataCommand command = DataCommandManager.GetDataCommand("AjaxGetDailyPeriodId");
+            command.SetParameterValue(":RESTAURANT_ID", RestaurantId);
+            command.SetParameterValue(":BOOKING_DATE", BookingDate);
+            var ds = command.ExecuteDataSet();
+            List<DataRow> list = ds.Tables[0].AsEnumerable().ToList();
+            return list;
         }
 
     }

@@ -65,7 +65,9 @@
             <div class="col-md-4 inputGroupContainer">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-                    <input name="first_name" placeholder="餐廳編號" id="txtDAILY_PERIOD_ID" class="form-control" maxlength="50" type="text" required>
+                    <select name="first_name" placeholder="每日時段編號" id="txtDAILY_PERIOD_ID" class="chosen-select form-control" maxlength="50">
+                        <option selected="selected" value="">請選擇時段</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -230,9 +232,9 @@
 }
 @section PageScript {
     <script>
-        //=============
-        //存檔
-        //============
+    //=============
+    //存檔
+    //============
     function saveData() {
         var postData = {
             Id: '@ViewContext.RouteData.Values["id"]',
@@ -262,43 +264,89 @@
             });
         }
     }
-        //=============
-        //網頁剛load完
-        //============
+    //=============
+    //網頁剛load完
+    //============
     $(document).ready(function () {
         //$("#validateList").validation({ icon: false });
         $("#btnSave").click(saveData);
         $("#btnBack").click(function () {
             XPage.GoTo("@Url.Action("Index")");
-            });
         });
+        $('#txtBOOKING_DATE,#txtRESTAURANT_IDE').change(function () {
+            BindDaily_Period();
+        });
+    });
 
-        //=============
-        //日期選單
-        //============
+    //=============
+    //日期選單
+    //============
 
-        //取得開放訂位期限
-        var OpenSeatEndDate = '@(ViewBag.OpenSeatEndDate)';
+    //取得開放訂位期限
+    var OpenSeatEndDate = '@(ViewBag.OpenSeatEndDate)';
 
-        $('.input-daterange').datepicker({
-            format: "yyyy/mm/dd",
-            keyboardNavigation: false,
-            forceParse: false,
-            autoclose: true,
-            startDate: '+0d',
-            endDate: "+" + OpenSeatEndDate + "m"
-        }).removeClass("input-daterange");
-        //=======Ajax改變下拉選單=======//
-        //$("province_dll").change(function () {
-        //    $.ajax({
-        //        url: 'OrderController/getCitiesAction',
-        //        type: 'post',
-        //        data: {
-        //            provinceId: provinceIdVar
-        //        }
-        //    }).done(function (response) {
-        //        $("cities_dll").html(response);
-        //    });
-        //});
+    $('.input-daterange').datepicker({
+        format: "yyyy/mm/dd",
+        keyboardNavigation: false,
+        forceParse: false,
+        autoclose: true,
+        startDate: '+0d',
+        endDate: "+" + OpenSeatEndDate + "m"
+    }).removeClass("input-daterange");
+
+
+    //=======Ajax動態改變'時段'下拉選單=======//
+    function BindDaily_Period() {
+        var selectedRestaurantId = $.trim($('#txtRESTAURANT_IDE option:selected').val());
+        var selectdedBookingDate = $.trim($('#txtBOOKING_DATE').val());
+        if (selectedRestaurantId.length == 0 || selectdedBookingDate.length == 0) {
+            SetDaily_PeriodEmpty()
+        }
+        else {
+
+            $.ajax(
+
+            {
+
+                url: "@Url.Action("AjaxGetDailyPeriodId", "Order")",
+
+                data: { RestaurantId: selectedRestaurantId, BookingDate: selectdedBookingDate },
+
+                type: 'post',
+
+                cache: false,
+
+                async: false,
+
+                dataType: 'html',
+
+                success: function (data) {
+
+                    if (data.length > 0) {
+                        SetDaily_PeriodEmpty();
+                        $('#txtDAILY_PERIOD_ID').append(data);
+
+                    }
+
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $('#txtDAILY_PERIOD_ID').empty();
+                    $('#txtDAILY_PERIOD_ID').append($('<option></option>').val('').text('查無此餐廳和訂位日期下的時段'));
+                }
+
+            });
+
+        }
+
+    }
+    //=======將'時段'下拉選單的內容設為空========//
+    function SetDaily_PeriodEmpty() {
+
+        $('#txtDAILY_PERIOD_ID').empty();
+
+        $('#txtDAILY_PERIOD_ID').append($('<option></option>').val('').text('請選擇時段'));
+
+    }
+
     </script>
 }
