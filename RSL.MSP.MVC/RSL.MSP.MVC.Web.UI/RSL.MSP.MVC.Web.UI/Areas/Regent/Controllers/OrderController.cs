@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -15,6 +16,7 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
 {
     public class OrderController : Controller
     {
+        OrderBLL MyOrderBLL = new OrderBLL();
         //
         // GET: /Regent/Order/
 
@@ -47,10 +49,16 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
 
         //========================================新增==============================//
         /// 新增訂單資料 取得資料
-        [AcceptVerbs(WebRequestMethods.Http.Get, WebRequestMethods.Http.Post)]
-        public ActionResult Add(string merchantId)
+        public ActionResult Add()
         {
-           // ViewBag.CustomerList = new UserBLL().GetCustomerList().Select(item => new SelectListItem { Value = item.CUSTOMER_ID.ToString(), Text = item.CUSTOMER_NAME });
+            //取得餐廳資料填入下拉選單
+            List<RestaurantModel> myRestaurantList = MyOrderBLL.GetRestaurant();
+            ViewBag.RestaurantList = myRestaurantList;
+
+            List<DataRow> myPurpost = MyOrderBLL.GetPurpose();
+            ViewBag.PurposeList = myPurpost;
+
+           // ViewBag.CustomerList = new OrderBLL().GetCustomerList().Select(item => new SelectListItem { Value = item.CUSTOMER_ID.ToString(), Text = item.CUSTOMER_NAME });
             return View();
 
         }

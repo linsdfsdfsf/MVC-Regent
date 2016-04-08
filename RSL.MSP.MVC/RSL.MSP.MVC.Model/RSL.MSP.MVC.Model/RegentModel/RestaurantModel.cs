@@ -5,7 +5,7 @@ using RSL.MSP.MVC.Model.Common;
 
 namespace RSL.MSP.MVC.Model.RegentModel
 {
-    class RestaurantModel : ModelBase
+    public class RestaurantModel : ModelBase
     {
         /// <summary>
         /// 餐廳編號
