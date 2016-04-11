@@ -99,21 +99,11 @@
             </div>
 
             <div class="form-group">
-                <label class="col-md-4 control-label">手機號碼</label>
-                <div class="col-md-4 inputGroupContainer">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-                        <input name="VERIFICATION_MOBILE" placeholder="手機號碼" id="VERIFICATION_MOBILE" class="required form-control" maxlength="50" type="text">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
                 <label class="col-md-4 control-label">顧客姓名</label>
                 <div class="col-md-4 inputGroupContainer">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-sunglasses"></i></span>
-                        <input name="CUS_NAME" placeholder="顧客姓名" id="CUS_NAME" class="form-control" maxlength="50" type="text">
+                        <input name="CUS_NAME" placeholder="顧客姓名" id="CUS_NAME" class="form-control" maxlength="50" type="text" required>
                     </div>
                 </div>
             </div>
@@ -147,7 +137,7 @@
                 <div class="col-md-4 inputGroupContainer">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-phone-alt"></i></span>
-                        <input name="CUS_TEL" placeholder="顧客連絡電話" id="CUS_TEL" class="form-control" maxlength="50" type="text">
+                        <input name="CUS_TEL" placeholder="顧客連絡電話" id="CUS_TEL" class="form-control" maxlength="50" type="text" required>
                     </div>
                 </div>
             </div>
@@ -291,7 +281,11 @@
 
         //表單驗證
         $("#OrderForm").validate({
-
+            RESERVATION_NUMBER: {
+                required: true,
+                minlength: 8,
+                Check_If_Exceed_Max_Period_Number: true
+            },
             errorPlacement:function(error, element){
                 //指定錯誤訊息的放置位置
                 error.insertAfter(element.parent());
@@ -373,26 +367,29 @@
         var strDAILY_PERIOD_ID = $.trim($('#DAILY_PERIOD_ID option:selected').val());
         var strRESERVATION_NUMBER=$('#RESERVATION_NUMBER').val();
         console.log("DAILY_PERIOD_ID.length="+strDAILY_PERIOD_ID.length+"RESERVATION_NUMBER="+parseInt(strRESERVATION_NUMBER)+"最大值="+@(ViewBag.MaxReservationNumber));
-        if (strDAILY_PERIOD_ID.length != 0  && parseInt(strRESERVATION_NUMBER) > 0 && parseInt(strRESERVATION_NUMBER)<parseInt(@(ViewBag.MaxReservationNumber))) {
-                $.ajax(
-                {
-            url: "@Url.Action("AjaxCheck_If_Exceed_Max_Period_Number", "Order")",
-            data: { DAILY_PERIOD_ID: strDAILY_PERIOD_ID, RESERVATION_NUMBER: strRESERVATION_NUMBER },
-            type: 'post',
-            cache: false,
-            async: false,
-            dataType: 'html',
-            success: function (data) {
-                if (data.length > 0) {
-        //如果未超過會回傳false 如果已超過會回傳True
-                        alert(data);
+        if (strDAILY_PERIOD_ID.length != 0  && parseInt(strRESERVATION_NUMBER) > 0 && parseInt(strRESERVATION_NUMBER)<parseInt(@(ViewBag.MaxReservationNumber)))
+        {
+                    $.ajax(
+                            {
+                            url: "@Url.Action("AjaxCheck_If_Exceed_Max_Period_Number", "Order")",
+                            data: { DAILY_PERIOD_ID: strDAILY_PERIOD_ID, RESERVATION_NUMBER: strRESERVATION_NUMBER },
+                            type: 'post',
+                            cache: false,
+                            async: false,
+                            dataType: 'html',
+                            success: function (data) {
+                                if (data.toString().toUpperCase()=="TRUE") {
+                                    //如果未超過會回傳false 如果已超過會回傳True
+                                    alert("訂位人數已超過此時段上限!!");
+                                    $('#RESERVATION_NUMBER').val("");
+                                }
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                            }
+                    });
+                   
         }
-        },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.log(XMLHttpRequest+"  "+textStatus+"  "+errorThrown);
-        }
-        });
-    }
     }
 
     </script>

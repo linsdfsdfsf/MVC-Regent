@@ -82,5 +82,17 @@ namespace RSL.MSP.MVC.BLL.Regent
         {
             return m_orderDAL.GetReservationNumber();
         }
+
+        //取得訂單流水號
+        public string GetOrderSingleNumber()
+        {
+            return m_orderDAL.GetOrderSingleNumber();
+        }
+
+        //判斷是否超過該時段人數上限
+        public bool Check_If_Exceed_Max_Period_Number(string DAILY_PERIOD_ID, string RESERVATION_NUMBER)
+        {
+            return m_orderDAL.Check_If_Exceed_Max_Period_Number(DAILY_PERIOD_ID, RESERVATION_NUMBER);
+        }
     }
 }

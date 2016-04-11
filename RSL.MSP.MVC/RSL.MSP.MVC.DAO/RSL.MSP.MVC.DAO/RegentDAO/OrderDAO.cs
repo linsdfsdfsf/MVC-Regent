@@ -10,6 +10,10 @@ using Application.Framework.Data.DataAccess;
 using RSL.MSP.MVC.Model.Common;
 using RSL.MSP.MVC.DAO.Common;
 using System.Data;
+using Oracle.DataAccess.Client;
+using RSL.MSP.MVC.DAO.Common.Data;
+//using System.Data.OracleClient;
+//using System.Data;
 
 namespace RSL.MSP.MVC.DAO.RegentDAO
 {
@@ -142,12 +146,56 @@ namespace RSL.MSP.MVC.DAO.RegentDAO
         //=========================其他========================//
 
 
-        //取得用餐人數最大值
+        //取得用餐人數最大值(單筆訂單的限制 非計算該時段是否超過總訂單人數)
         public string GetReservationNumber()
         {
             DataCommand command = DataCommandManager.GetDataCommand("GetReservationNumber");
             var ds = command.ExecuteDataSet();
             string result = ds.Tables[0].Rows[0]["PARAMETER_VALUE"].ToString();
+            return result;
+        }
+        
+        //取得訂單流水號
+        public string GetOrderSingleNumber() {
+            string p_sql = "REGENT_BS.SP_GET_SINGLE_NUMBER";
+            using (DataCommandProcedure cmd = DataCommandFactory.CreateDataCommand2(p_sql, CommandType.StoredProcedure))
+            {
+                cmd.AddParameter("sdbtablename", "ORDERM");
+                cmd.AddParameter("stablecolumn", "ORDERM_ID");
+                cmd.AddParameter("sLENGTH", 5);//流水號補零
+                cmd.AddParameter("sparameter_01", "132");
+                cmd.AddParameter("sparameter_02", "");
+                cmd.AddParameter("sparameter_03", "");
+                cmd.AddParameter("sparameter_04", "");
+                cmd.AddParameter("sparameter_05", "");
+                cmd.AddParameter("sSYSTEM_SEQ", "1",DataType.String, ParameterDirection.Output,50);//將storeProcedure的回傳結果丟到這個參數
+
+                cmd.ExecuteNonQuery();
+                string result = cmd.GetParameterValue("sSYSTEM_SEQ").ToString();
+
+                //var ds = cmd.ExecuteDataRow();
+                //string result = ds.;
+                return result;
+            }
+        }
+
+        //判斷訂位人數是否大於時段上限
+        public bool Check_If_Exceed_Max_Period_Number(string DAILY_PERIOD_ID, string RESERVATION_NUMBER)
+        {
+            bool result = false;
+            DataCommand command = DataCommandManager.GetDataCommand("Check_If_Exceed_Max_Period_Number");
+            command.SetParameterValue(":DAILY_PERIOD_ID", DAILY_PERIOD_ID);
+            command.SetParameterValue(":RESERVATION_NUMBER", RESERVATION_NUMBER);
+            string a=command.CommandText;
+            var ds = command.ExecuteDataSet();
+            string msg = ds.Tables[0].Rows[0][0].ToString();
+            if (msg.ToUpper() == "超過") {
+                result = true;
+            }
+            else if (msg.ToUpper() == "未超過")
+            {
+                result = false;
+            }
             return result;
         }
     }

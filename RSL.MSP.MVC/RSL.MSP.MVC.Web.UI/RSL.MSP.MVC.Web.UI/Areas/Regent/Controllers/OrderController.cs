@@ -48,8 +48,11 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
             }
         }
 
-        //========================================新增==============================//
-        /// 新增訂單資料 取得資料
+        //======================================================================//
+        //                                  新增
+        //======================================================================//
+
+        /// 頁面:新增訂單資料 動作:取得資料
         public ActionResult Add()
         {
             //取得餐廳資料填入下拉選單
@@ -64,7 +67,7 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
             string mySeatEndDate = MyOrderBLL.GetOpenSeatEndDate();
             ViewBag.OpenSeatEndDate = mySeatEndDate;
 
-            //取得用餐人數最大值
+            //取得用餐人數最大值(單筆訂單的限制 非計算該時段是否超過總訂單人數)
             string myMaxReservationNumber = MyOrderBLL.GetReservationNumber();
             ViewBag.MaxReservationNumber = myMaxReservationNumber;
 
@@ -73,7 +76,7 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
 
         }
 
-        //新增訂單資料 送出資料
+        //頁面:新增訂單資料 動作:送出資料
         [HttpPost]
         public JsonResult AddModel(OrderModel model)
         {
@@ -85,16 +88,7 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
 
                 OrderBLL _BLL = new OrderBLL();
                 OrderModel OrderModel = new OrderModel();
-                //UserModel.User_Account = model.User_Account;
-                //UserModel.User_Name = model.User_Name;
-                //UserModel.IS_CHANGEPWD = model.IS_CHANGEPWD;
-                //UserModel.User_Tel = model.User_Tel;
-                //UserModel.User_Email = model.User_Email;
-                //UserModel.IS_VALID = 1;
-                //UserModel.User_PWD = model.User_PWD.ToMD5();//密码加密
-                //UserModel.CREATE_BY = this.LoginedUserID;
-                //UserModel.CREATE_DATE = System.DateTime.Now;
-                //UserModel.Customer_ID = model.Customer_ID;
+                OrderModel.ORDERM_ID = _BLL.GetOrderSingleNumber();
 
 
                 _BLL.AddOrder(OrderModel);
@@ -107,10 +101,12 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        //========================================編輯==============================//
+        //======================================================================//
+        //                                  編輯
+        //======================================================================//
 
 
-        // 取得要編輯的訂單資料
+        // 頁面:編輯訂單資料 動作:取得資料
         public ActionResult Edit(string id)
         {
             OrderBLL MyOrderBLL = new OrderBLL();
@@ -122,7 +118,7 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
             return View(myUserModel);
         }
 
-        //編輯訂單資料 送出
+        //頁面:編輯訂單資料 動作:送出
         [HttpPost]
         public JsonResult EditModel(OrderModel model)
         {
@@ -145,7 +141,9 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        //=====================Ajax 取得資料===============//
+        //======================================================================//
+        //                                  Ajax 取得資料
+        //======================================================================//
 
 
         //取得用餐時段資料
@@ -165,7 +163,7 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
                                          into PeriodGroup
                                            select new { Type = PeriodGroup.Key, Period = PeriodGroup.ToList() };
 
-                    //串dropDownList語法
+                    //串dropDownList語法(外層迴圈 將select option分組 內層迴圈 傳入option的list)
                     foreach (var type in TimeByPeriod)
                     {
                         sb.AppendFormat("<optgroup label=\"{0}\">",
@@ -182,18 +180,6 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
 
                         sb.AppendFormat("</optgroup>");
                     }
-                    ///////////////
-                    //var counties = this.MyOrderBLL.AjaxGetDailyPeriodId(RestaurantId, BookingDate);
-
-                    //foreach (var item in counties)
-                    //{
-
-                    //    sb.AppendFormat("<option value=\"{0}\">{1}({2})</option>",
-                    //        item[0].ToString(),
-                    //        item[2].ToString(),
-                    //        item[1].ToString()
-                    //    );
-                    //}
 
                 }
 
@@ -203,8 +189,20 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
                 throw e;
             }
 
-        } 
+        }
 
+        //判斷訂位人數是否大於時段上限
+        [HttpPost]
+        public bool AjaxCheck_If_Exceed_Max_Period_Number(string DAILY_PERIOD_ID, string RESERVATION_NUMBER)
+        {
+            try
+            {
+                return this.MyOrderBLL.Check_If_Exceed_Max_Period_Number(DAILY_PERIOD_ID, RESERVATION_NUMBER);
+            }
+            catch (Exception e) {
+                throw e;
+            }
+        }
 
     }
 }

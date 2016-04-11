@@ -37,6 +37,10 @@
     <Reference Include="Application.Framework.Data">
       <HintPath>..\..\..\RefDLL\Application.Framework.Data.dll</HintPath>
     </Reference>
+    <Reference Include="Oracle.DataAccess, Version=10.2.0.100, Culture=neutral, PublicKeyToken=89b483f429c47342">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\RefDLL\Oracle.DataAccess.dll</HintPath>
+    </Reference>
     <Reference Include="RSL.MSP.MVC.DAO.Common">
       <HintPath>..\..\..\RefDLL\RSL.MSP.MVC.DAO.Common.dll</HintPath>
     </Reference>
@@ -51,6 +55,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />

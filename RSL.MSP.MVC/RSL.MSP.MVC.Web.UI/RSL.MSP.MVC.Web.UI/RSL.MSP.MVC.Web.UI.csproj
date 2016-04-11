@@ -508,8 +508,10 @@
     <Content Include="Content\template\Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Content\template\Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Content\template\Scripts\json2.js" />
+    <Content Include="Content\template\Scripts\messages_zh_TW.js" />
     <Content Include="Content\template\Scripts\modernizr-2.6.2.js" />
     <None Include="Content\template\Scripts\_references.js" />
+    <Content Include="Content\template\Scripts\validator.js" />
     <Content Include="Content\tool\ueditor\dialogs\anchor\anchor.html" />
     <Content Include="Content\tool\ueditor\dialogs\attachment\attachment.css" />
     <Content Include="Content\tool\ueditor\dialogs\attachment\attachment.html" />
@@ -904,7 +906,9 @@
     <Content Include="Configuration\DBSiteList\DBSite.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Configuration\enterprise.config" />
+    <Content Include="Configuration\enterprise.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Configuration\ExceptionTemplate.config" />
   </ItemGroup>
   <ItemGroup>
