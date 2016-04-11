@@ -275,7 +275,7 @@
         //$("#validateList").validation({
         //    icon: false, reqmark: false
         //});
-      //  $("#btnSave").click(saveData);
+        //  $("#btnSave").click(saveData);
         $("#btnBack").click(function () {
             XPage.GoTo("@Url.Action("Index")");
         });
@@ -284,9 +284,14 @@
             BindDaily_Period();
         });
 
+        //判斷用餐人數是否大於該時段上限
+        $('#DAILY_PERIOD_ID,#RESERVATION_NUMBER').change(function () {
+            Check_If_Exceed_Max_Period_Number();
+        });
+
         //表單驗證
         $("#OrderForm").validate({
-            
+
             errorPlacement:function(error, element){
                 //指定錯誤訊息的放置位置
                 error.insertAfter(element.parent());
@@ -353,16 +358,42 @@
 
     }
     //=================自動修改為正確的用餐人數==============//
-    $("#RESERVATION_NUMBER").change(function () {
-        var max = parseInt($(this).attr('max'));
-        var min = parseInt($(this).attr('min'));
-        if ($(this).val() > max) {
-            $(this).val(max);
+    //$("#RESERVATION_NUMBER").change(function () {
+    //    var max = parseInt($(this).attr('max'));
+    //    var min = parseInt($(this).attr('min'));
+    //    if ($(this).val() > max) {
+    //        $(this).val(max);
+    //    }
+    //    else if ($(this).val() < min) {
+    //        $(this).val(min);
+    //    }
+    //});
+        //===================判斷用餐人數是否大於該時段上限
+    function Check_If_Exceed_Max_Period_Number() {
+        var strDAILY_PERIOD_ID = $.trim($('#DAILY_PERIOD_ID option:selected').val());
+        var strRESERVATION_NUMBER=$('#RESERVATION_NUMBER').val();
+        console.log("DAILY_PERIOD_ID.length="+strDAILY_PERIOD_ID.length+"RESERVATION_NUMBER="+parseInt(strRESERVATION_NUMBER)+"最大值="+@(ViewBag.MaxReservationNumber));
+        if (strDAILY_PERIOD_ID.length != 0  && parseInt(strRESERVATION_NUMBER) > 0 && parseInt(strRESERVATION_NUMBER)<parseInt(@(ViewBag.MaxReservationNumber))) {
+                $.ajax(
+                {
+            url: "@Url.Action("AjaxCheck_If_Exceed_Max_Period_Number", "Order")",
+            data: { DAILY_PERIOD_ID: strDAILY_PERIOD_ID, RESERVATION_NUMBER: strRESERVATION_NUMBER },
+            type: 'post',
+            cache: false,
+            async: false,
+            dataType: 'html',
+            success: function (data) {
+                if (data.length > 0) {
+        //如果未超過會回傳false 如果已超過會回傳True
+                        alert(data);
         }
-        else if ($(this).val() < min) {
-            $(this).val(min);
+        },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest+"  "+textStatus+"  "+errorThrown);
         }
-    });
+        });
+    }
+    }
 
     </script>
 }
