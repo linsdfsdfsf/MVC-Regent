@@ -135,7 +135,6 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
                 jo.Add("msg", "新增失敗");
             }
             return Content(JsonConvert.SerializeObject(jo), "application/json");
-          //  return Json(result);
         }
 
         private void AjaxCheck_If_Exceed_Max_Period_Number()
@@ -176,25 +175,54 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
 
         //頁面:編輯訂單資料 動作:送出
         [HttpPost]
-        public JsonResult EditModel(OrderModel model)
+        public ActionResult EditModel(OrderModel model)
         {
+            JObject jo = new JObject();
             var result = new Result<string>();
             try
             {
                 if (model == null)
                     throw new ArgumentException("參數錯誤");
 
-                OrderBLL myOrderBLL = new OrderBLL();
+                OrderBLL _BLL = new OrderBLL();
+
+                //填入修改者名稱
                 model.CUSER = Session["LoginedUserID"] == null ? "" : Session["LoginedUserID"].ToString();
-                model.CTIME = null;
-                myOrderBLL.UpdateOrder(model);
-                result.flag = true;
+
+                //驗證時段是否正確
+                var res = this.MyOrderBLL.AjaxGetDailyPeriodId(model.RESTAURANT_ID, model.BOOKING_DATE);
+                var resultBool = res.Any(row => row["DAILY_PERIOD_ID"].Equals(model.DAILY_PERIOD_ID));
+                if (!resultBool)
+                {
+                    throw new ArgumentException("找不到此時段");
+                }
+
+                //驗證用餐人數是否正確
+                bool NumberCheck = false;
+                string myMaxReservationNumber = MyOrderBLL.GetReservationNumber(); //取單筆用餐人數最大值
+                //判斷用餐人數是否超過該時段上限 如果未超過會回傳false 如果已超過會回傳True
+                NumberCheck = AjaxCheck_If_Exceed_Max_Period_Number(model.DAILY_PERIOD_ID, model.RESERVATION_NUMBER);
+                if (Convert.ToInt32(model.RESERVATION_NUMBER) > Convert.ToInt32(myMaxReservationNumber) || NumberCheck)
+                {
+                    throw new ArgumentException("用餐人數超過限制");
+                }
+
+
+                _BLL.UpdateOrder(model);
+                jo.Add("result", true);
+
+                jo.Add("msg", "修改成功");
+
+
             }
             catch (Exception ex)
             {
-                result.msg = ex.Message;
+                // result.msg = ex.Message;
+                jo.Add("result", false);
+
+                jo.Add("msg", "修改失敗");
             }
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Content(JsonConvert.SerializeObject(jo), "application/json");
         }
 
         //======================================================================//

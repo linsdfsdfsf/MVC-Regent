@@ -16,6 +16,8 @@ namespace RSL.MSP.MVC.BLL.Regent
     {
         private OrderDAO m_orderDAL = new OrderDAO();
 
+        //=============================修改====================/
+
         //取得"訂單統計表"的資料
         public ResultDto<OrderModel> GetOrderListByPage(SearchModel<OrderModel> queryModel, bool page = true)
         {

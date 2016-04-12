@@ -99,7 +99,7 @@
                 <div class="col-md-4 inputGroupContainer">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-stats"></i></span>
-                        <select name="BOOKING_STATUS" id="BOOKING_STATUS" class="form-control" maxlength="50" selected="true" value="@Model.BOOKING_STATUS" required>
+                        <select name="BOOKING_STATUS" id="BOOKING_STATUS" class="form-control disabled" maxlength="50" disabled="disabled"  selected="true" value="@Model.BOOKING_STATUS" required>
                             <option value="">訂位狀態</option>
                             <option value="0">尚未驗證</option>
                             <option value="1">完成訂位</option>
@@ -205,8 +205,9 @@
                     }
                 </div>*@
             <div class="modal-footer">
+                <button id="btnCancel" type="button" class="btn btn-danger">取消訂單</button>
                 <input id="btnSave" class="btn btn-primary submit" type="submit" value="保存內容">
-                <button id="btnback" type="button" class="btn btn-danger">返回</button>
+                <button id="btnback" type="button" class="btn btn-info">返回</button>
             </div>
         </fieldset>
     </form>
@@ -249,9 +250,11 @@
             },
             submitHandler: function (form) {
                 //如果通過驗證則提交表單
+                $('#OrderForm').find(':disabled').removeAttr('disabled');
                 var postData = $('#OrderForm').serialize();
+                console.log(postData);
                 $.ajax({
-                    url: '@Url.Action("AddModel", "Order")',
+                    url: '@Url.Action("EditModel", "Order")',
                     type: "POST",
                     dataType: "json",
                     // contentType: "application/json; charset=utf-8",
@@ -276,7 +279,6 @@
         //自動勾選dropdownList的值
         $("select").each(function () {
             if($(this).attr("selected")){
-                console.log("下拉選單的id"+this.id);
                 $(this).find("option[value="+$(this).attr("value")+"]").attr('selected', true);
             }
         });

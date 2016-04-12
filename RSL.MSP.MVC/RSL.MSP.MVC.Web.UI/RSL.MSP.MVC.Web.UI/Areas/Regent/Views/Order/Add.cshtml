@@ -99,10 +99,10 @@
                 <div class="col-md-4 inputGroupContainer">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-stats"></i></span>
-                        <select name="BOOKING_STATUS" id="BOOKING_STATUS" class="form-control" maxlength="50" required>
+                        <select name="BOOKING_STATUS" id="BOOKING_STATUS" class="form-control disabled" maxlength="50" required disabled="disabled">
                             <option value="">訂位狀態</option>
                             <option value="0">尚未驗證</option>
-                            <option value="1">完成訂位</option>
+                            <option selected="selected" value="1">完成訂位</option>
                             <option value="2">取消訂位</option>
                         </select>
                     </div>
@@ -180,16 +180,6 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="col-md-4 control-label">入場時間</label>
-                <div class="col-md-4 inputGroupContainer  input-daterange">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon glyphicon-time"></i></span>
-                        <input name="ORDER_OK_DATE" placeholder="入場時間" id="ORDER_OK_DATE" class="form-control" maxlength="50" type="text">
-                    </div>
-                </div>
-            </div>
-
             @*<div class="form-group">
                     <label>用戶姓名</label>
                     @{
@@ -206,7 +196,7 @@
                 </div>*@
             <div class="modal-footer">
                 <input id="btnSave" class="btn btn-primary submit" type="submit" value="保存內容">
-                <button id="btnback" type="button" class="btn btn-danger">返回</button>
+                <button id="btnback" type="button" class="btn btn-info">返回</button>
             </div>
         </fieldset>
     </form>
