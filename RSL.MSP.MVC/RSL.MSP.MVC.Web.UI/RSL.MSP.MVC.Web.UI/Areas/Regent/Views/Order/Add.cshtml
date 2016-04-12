@@ -206,7 +206,7 @@
                 </div>*@
             <div class="modal-footer">
                 <input id="btnSave" class="btn btn-primary submit" type="submit" value="保存內容">
-                <button id=" btnback" type="button" class="btn btn-danger">返回</button>
+                <button id="btnback" type="button" class="btn btn-danger">返回</button>
             </div>
         </fieldset>
     </form>
@@ -263,7 +263,7 @@
         //    icon: false, reqmark: false
         //});
         //  $("#btnSave").click(saveData);
-        $("#btnBack").click(function () {
+        $("#btnback").click(function () {
             // XPage.GoTo("@Url.Action("Index")");
             window.location.href = '@Url.Action("Index", "Order")';
         });
@@ -293,22 +293,15 @@
                     type: "POST",
                     dataType: "json",
                     // contentType: "application/json; charset=utf-8",
-                    data: $(form).serialize(),
-                    traditional: true,
-                    success: function (data) {
-                        if(data)
-                        {
-                            if(data.flag)
-                                alert(data.msg);
-                            else
-                                alert(data.msg);
-                        }
-                    },
-                    error: function (data) {
-                    }
+                    data: $(form).serialize()
                 }).done(function(response) {
-                    if(response.flag)
+                    if(response.result){
+                        alert(response.msg);
                         window.location.href = "@Url.Action("Index")";
+                    }
+                    else{
+                        alert(response.msg);
+                    }
                 });
                 return false;
             }
