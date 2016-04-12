@@ -12,6 +12,8 @@ using RSL.MSP.MVC.DAO.Common;
 using System.Data;
 using Oracle.DataAccess.Client;
 using RSL.MSP.MVC.DAO.Common.Data;
+using System.Web;
+using System.Web.Mvc;
 //using System.Data.OracleClient;
 //using System.Data;
 
@@ -92,17 +94,29 @@ namespace RSL.MSP.MVC.DAO.RegentDAO
         //新增訂單資料 送出訂單資料
         public void AddOrder(OrderModel order)
         {
-            DataCommand command = DataCommandManager.GetDataCommand("AddOrder");
-            command.SetParameterValue(":User_Account", order.ORDERM_ID);
-            //command.SetParameterValue("@User_pwd", order.User_PWD);
-            //command.SetParameterValue("@User_Name", order.User_Name);
-            //command.SetParameterValue("@Customer_ID", order.Customer_ID);
-            //command.SetParameterValue("@User_Email", order.User_Email);
-            //command.SetParameterValue("@User_Tel", order.User_Tel);
-            //command.SetParameterValue("@Is_Valid", order.IS_VALID);
-            //command.SetParameterValue("@LAST_MODIFIED_BY", order.LAST_MODIFIED_BY);
-            command.ExecuteNonQuery();
-
+            try
+            {
+                DataCommand command = DataCommandManager.GetDataCommand("AddOrder");
+                command.SetParameterValue(":ORDERM_ID", order.ORDERM_ID);
+                command.SetParameterValue(":BOOKING_TYPE", order.BOOKING_TYPE);
+                command.SetParameterValue(":RESTAURANT_ID", order.RESTAURANT_ID);
+                command.SetParameterValue(":DAILY_PERIOD_ID", order.DAILY_PERIOD_ID);
+                command.SetParameterValue(":BOOKING_DATE", order.BOOKING_DATE);
+                command.SetParameterValue(":RESERVATION_NUMBER", order.RESERVATION_NUMBER);
+                command.SetParameterValue(":BOOKING_STATUS", order.BOOKING_STATUS);
+                command.SetParameterValue(":CUS_NAME", order.CUS_NAME);
+                command.SetParameterValue(":CUS_GENDER", order.CUS_GENDER);
+                command.SetParameterValue(":CUS_EMAIL", order.CUS_EMAIL);
+                command.SetParameterValue(":CUS_TEL", order.CUS_TEL);
+                command.SetParameterValue(":PURPOSE", order.PURPOSE);
+                command.SetParameterValue(":CUS_NOTE", order.CUS_NOTE);
+                command.SetParameterValue(":BUSER", order.BUSER);
+                command.ExecuteNonQuery();
+            }
+            catch(Exception e){
+                throw e;
+                }
+            
         }
         
         //========================取得下拉選單資料====================//

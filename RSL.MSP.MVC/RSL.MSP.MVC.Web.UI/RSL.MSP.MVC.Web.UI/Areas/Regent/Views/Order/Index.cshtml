@@ -2,7 +2,18 @@
     ViewBag.Title = "訂單管理";
     Layout = "~/Views/Shared/_Layout_blank_WithoutIframe.cshtml";
 }
+@if (TempData["message"] != null)
+{
 
+    <script type="text/javascript">
+
+        var message = @Html.Raw(Json.Encode(TempData["message"]));
+
+        alert(message);
+
+    </script>
+
+}
 
 <div class="form-group">
     @*@foreach (RSL.MSP.MVC.Model.Framework.OperateModel item in ViewBag.Buttonlist)
@@ -134,7 +145,7 @@
                 search: false,
                 id: "jqGridListOrder",
                 pagerId: "jqGridPagerOrder",
-                colNames: ['編輯','訂單編號', '訂位方式', '餐廳名稱', '時段名稱', '用餐人數', '訂位狀態', '手機號碼', "顧客姓名", "顧客性別", "顧客Email", "顧客連絡電話", '特殊需求', '完成訂位時間', '取消訂位時間','取消訂位原因','訂單狀態','入場時間'],
+                colNames: ['編輯','訂單編號', '餐廳名稱', '時段名稱', '用餐人數', "顧客姓名", "顧客連絡電話", '訂位狀態','訂單狀態'],
                 colModel: [
                                         {
                                             name: 'ORDERM_ID',
@@ -144,26 +155,48 @@
                                                 //object轉字串
                                                 var orderid = JSON.stringify(rowObject.ORDERM_ID);
                                                 //return cellValue == "0" ? "" : "<button id=\"btnbranchset\" type=\"button\" class=\"btn btn-info \" onclick=\"ViewDetail('" + orderid + "')\"><i class=\"fa fa-paste\"></i> 訂單明細</button>"
-                                                return cellValue == "" ? "" : "<button id='btnbranchset' type='button' class='btn btn-info ' onclick='OrderViewDetail(" + orderid + ")'><i class='fa fa-pencil-square-o'></i> 明細</button>"
+                                                return cellValue == "" ? "" : "<button id='btnbranchset' type='button' class='btn btn-info ' onclick='OrderViewDetail(" + orderid + ")'><i class='fa fa-pencil-square-o'></i> 編輯</button>"
                                             }
                                         },
-                    { name: 'ORDERM_ID', index: 'ORDERM_ID', key: true, width: "90px" },//訂單編號
-                    { name: 'BOOKING_TYPE', index: 'BOOKING_TYPE', width: "100px" },//訂位方式
-                    { name: 'RESTAURANT_NAME', index: 'RESTAURANT_NAME', width: "100px" },//餐廳名稱
-                    { name: 'PERIOD_NAME', index: 'PERIOD_NAME', width: "100px" },//時段名稱
-                    { name: 'RESERVATION_NUMBER', index: 'RESERVATION_NUMBER', width: "100px" },//用餐人數
-                    { name: 'BOOKING_STATUS', index: 'BOOKING_STATUS', width: "100px" },//訂位狀態
-                    { name: 'VERIFICATION_MOBILE', index: 'VERIFICATION_MOBILE', width: "100px" },//手機號碼
-                    { name: 'CUS_NAME', index: 'CUS_NAME', width: "100px" },//顧客姓名
-                    { name: 'CUS_GENDER', index: 'CUS_GENDER', width: "100px" },//顧客性別
-                    { name: 'CUS_EMAIL', index: 'CUS_EMAIL', width: "100px" },//顧客Email
+                    { name: 'ORDERM_ID', index: 'ORDERM_ID', key: true, width: "120px" },//訂單編號
+                   // { name: 'BOOKING_TYPE', index: 'BOOKING_TYPE', width: "100px" },//訂位方式
+                    { name: 'RESTAURANT_NAME', index: 'RESTAURANT_NAME', width: "80px" },//餐廳名稱
+                    { name: 'PERIOD_NAME', index: 'PERIOD_NAME', width: "80px" },//時段名稱
+                    { name: 'RESERVATION_NUMBER', index: 'RESERVATION_NUMBER', width: "60px" },//用餐人數
+                     { name: 'CUS_NAME', index: 'CUS_NAME', width: "100px" },//顧客姓名
+
+                   // { name: 'VERIFICATION_MOBILE', index: 'VERIFICATION_MOBILE', width: "100px" },//手機號碼
+                   
+                   // { name: 'CUS_GENDER', index: 'CUS_GENDER', width: "100px" },//顧客性別
+                   // { name: 'CUS_EMAIL', index: 'CUS_EMAIL', width: "100px" },//顧客Email
                     { name: 'CUS_TEL', index: 'CUS_TEL', width: "100px" },//顧客連絡電話
-                    { name: 'CUS_NOTE', index: 'CUS_NOTE', width: "100px" },//特殊需求
-                    { name: 'BOOKING_OK_DATE', index: 'BOOKING_OK_DATE', width: "100px" },//完成訂位時間
-                    { name: 'BOOKING_CANCEL_DATE', index: 'BOOKING_CANCEL_DATE', width: "100px" },//取消訂位時間
-                    { name: 'BOOKING_CANCEL_NOTE', index: 'BOOKING_CANCEL_NOTE', width: "100px" },//取消訂位原因
-                    { name: 'ORDER_STATUS', index: 'ORDER_STATUS', width: "100px" },//訂單狀態
-                    { name: 'ORDER_OK_DATE', index: 'ORDER_OK_DATE', width: "100px" }//入場時間
+                   // { name: 'CUS_NOTE', index: 'CUS_NOTE', width: "100px" },//特殊需求
+                    //{ name: 'BOOKING_OK_DATE', index: 'BOOKING_OK_DATE', width: "100px" },//完成訂位時間
+                   // { name: 'BOOKING_CANCEL_DATE', index: 'BOOKING_CANCEL_DATE', width: "100px" },//取消訂位時間
+                   // { name: 'BOOKING_CANCEL_NOTE', index: 'BOOKING_CANCEL_NOTE', width: "100px" },//取消訂位原因
+                    { name: 'BOOKING_STATUS', index: 'BOOKING_STATUS', width: "100px" ,
+                    formatter: function (cellValue, options, rowObject) {
+                        switch (cellValue.toUpperCase()) {
+                            case "0":
+                                return "尚未驗證";
+                            case "1":
+                                return "完成訂位";
+                            case "2":
+                                return "取消訂位";
+                        }
+                    }
+                    },//訂位狀態
+                    { name: 'ORDER_STATUS', index: 'ORDER_STATUS', width: "100px",
+                    formatter: function (cellValue, options, rowObject) {
+                        switch (cellValue.toUpperCase()) {
+                            case "0":
+                                return "未入場";
+                            case "1":
+                                return "已入場";
+                        }
+                    }
+                    }//訂單狀態
+                  //  { name: 'ORDER_OK_DATE', index: 'ORDER_OK_DATE', width: "100px" }//入場時間
 
                 ]
             };

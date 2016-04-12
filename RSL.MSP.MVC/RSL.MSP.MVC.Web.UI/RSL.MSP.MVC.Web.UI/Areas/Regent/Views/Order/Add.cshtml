@@ -286,8 +286,6 @@
             submitHandler: function (form) {
                 //如果通過驗證則提交表單
                 var postData = $('#OrderForm').serialize();
-                console.log("postData="+postData);
-                console.log("form="+$(form).serialize());
                 $.ajax({
                     url: '@Url.Action("AddModel", "Order")',
                     type: "POST",
@@ -302,6 +300,8 @@
                     else{
                         alert(response.msg);
                     }
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    alert("伺服器錯誤 無法新增");
                 });
                 return false;
             }
@@ -377,7 +377,6 @@
     function Check_If_Exceed_Max_Period_Number() {
         var strDAILY_PERIOD_ID = $.trim($('#DAILY_PERIOD_ID option:selected').val());
         var strRESERVATION_NUMBER=$('#RESERVATION_NUMBER').val();
-        console.log("DAILY_PERIOD_ID.length="+strDAILY_PERIOD_ID.length+"RESERVATION_NUMBER="+parseInt(strRESERVATION_NUMBER)+"最大值="+@(ViewBag.MaxReservationNumber));
         if (strDAILY_PERIOD_ID.length != 0  && parseInt(strRESERVATION_NUMBER) > 0 && parseInt(strRESERVATION_NUMBER)<parseInt(@(ViewBag.MaxReservationNumber)))
         {
             $.ajax(

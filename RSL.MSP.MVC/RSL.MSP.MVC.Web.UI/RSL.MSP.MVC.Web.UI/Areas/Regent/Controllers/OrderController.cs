@@ -57,24 +57,30 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
         /// 頁面:新增訂單資料 動作:取得資料
         public ActionResult Add()
         {
-            //取得餐廳資料填入下拉選單
-            List<RestaurantModel> myRestaurantList = MyOrderBLL.GetRestaurant();
-            ViewBag.RestaurantList = myRestaurantList;
+            try
+            {
+                //取得餐廳資料填入下拉選單
+                List<RestaurantModel> myRestaurantList = MyOrderBLL.GetRestaurant();
+                ViewBag.RestaurantList = myRestaurantList;
 
-            //取得訂餐目的資料填入下拉選單
-            List<DataRow> myPurpost = MyOrderBLL.GetPurpose();
-            ViewBag.PurposeList = myPurpost;
+                //取得訂餐目的資料填入下拉選單
+                List<DataRow> myPurpost = MyOrderBLL.GetPurpose();
+                ViewBag.PurposeList = myPurpost;
 
-            //取得開放訂位最後期限
-            string mySeatEndDate = MyOrderBLL.GetOpenSeatEndDate();
-            ViewBag.OpenSeatEndDate = mySeatEndDate;
+                //取得開放訂位最後期限
+                string mySeatEndDate = MyOrderBLL.GetOpenSeatEndDate();
+                ViewBag.OpenSeatEndDate = mySeatEndDate;
 
-            //取得用餐人數最大值(單筆訂單的限制 非計算該時段是否超過總訂單人數)
-            string myMaxReservationNumber = MyOrderBLL.GetReservationNumber();
-            ViewBag.MaxReservationNumber = myMaxReservationNumber;
+                //取得用餐人數最大值(單筆訂單的限制 非計算該時段是否超過總訂單人數)
+                string myMaxReservationNumber = MyOrderBLL.GetReservationNumber();
+                ViewBag.MaxReservationNumber = myMaxReservationNumber;
 
-           // ViewBag.CustomerList = new OrderBLL().GetCustomerList().Select(item => new SelectListItem { Value = item.CUSTOMER_ID.ToString(), Text = item.CUSTOMER_NAME });
-            return View();
+                // ViewBag.CustomerList = new OrderBLL().GetCustomerList().Select(item => new SelectListItem { Value = item.CUSTOMER_ID.ToString(), Text = item.CUSTOMER_NAME });
+                return View();
+            }
+            catch (Exception e) {
+                throw e;
+            }
 
         }
 
@@ -90,8 +96,28 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
                     throw new ArgumentException("參數錯誤");
 
                 OrderBLL _BLL = new OrderBLL();
+
+                //填入訂單編號和新增者名稱
                 model.ORDERM_ID = model.DAILY_PERIOD_ID+_BLL.GetOrderSingleNumber();
                 model.BUSER = Session["LoginedUserID"] == null ? "" : Session["LoginedUserID"].ToString();
+                
+                //驗證時段是否正確
+                var res = this.MyOrderBLL.AjaxGetDailyPeriodId(model.RESTAURANT_ID, model.BOOKING_DATE);
+                var resultBool = res.Any(row => row["DAILY_PERIOD_ID"].Equals(model.DAILY_PERIOD_ID));
+                if (!resultBool)
+                {
+                    throw new ArgumentException("找不到此時段");
+                }
+
+                //驗證用餐人數是否正確
+                bool NumberCheck = false;
+                string myMaxReservationNumber = MyOrderBLL.GetReservationNumber(); //取單筆用餐人數最大值
+                //判斷用餐人數是否超過該時段上限 如果未超過會回傳false 如果已超過會回傳True
+                 NumberCheck= AjaxCheck_If_Exceed_Max_Period_Number(model.DAILY_PERIOD_ID, model.RESERVATION_NUMBER);
+                 if (Convert.ToInt32(model.RESERVATION_NUMBER) > Convert.ToInt32(myMaxReservationNumber) || NumberCheck)
+                 {
+                     throw new ArgumentException("用餐人數超過限制");
+                 }
 
                 _BLL.AddOrder(model);
                 jo.Add("result", true);
@@ -109,6 +135,11 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
             }
             return Content(JsonConvert.SerializeObject(jo), "application/json");
           //  return Json(result);
+        }
+
+        private void AjaxCheck_If_Exceed_Max_Period_Number()
+        {
+            throw new NotImplementedException();
         }
 
         //======================================================================//
