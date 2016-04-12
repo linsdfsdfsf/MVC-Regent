@@ -151,11 +151,25 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
         // 頁面:編輯訂單資料 動作:取得資料
         public ActionResult Edit(string id)
         {
+            //取得此訂單編號的資料
             OrderBLL MyOrderBLL = new OrderBLL();
             OrderModel myUserModel = MyOrderBLL.GetOrderByOrdermId(id);
 
-           // ViewBag.CustomerList = new UserBLL().GetCustomerList().Select(item => new SelectListItem { Value = item.CUSTOMER_ID.ToString(), Text = item.CUSTOMER_NAME, Selected = (myUserModel.Customer_ID == item.CUSTOMER_ID.ToString()) });
+            //取得餐廳資料填入下拉選單
+            List<RestaurantModel> myRestaurantList = MyOrderBLL.GetRestaurant();
+            ViewBag.RestaurantList = myRestaurantList;
 
+            //取得訂餐目的資料填入下拉選單
+            List<DataRow> myPurpost = MyOrderBLL.GetPurpose();
+            ViewBag.PurposeList = myPurpost;
+
+            //取得開放訂位最後期限
+            string mySeatEndDate = MyOrderBLL.GetOpenSeatEndDate();
+            ViewBag.OpenSeatEndDate = mySeatEndDate;
+
+            //取得用餐人數最大值(單筆訂單的限制 非計算該時段是否超過總訂單人數)
+            string myMaxReservationNumber = MyOrderBLL.GetReservationNumber();
+            ViewBag.MaxReservationNumber = myMaxReservationNumber;
 
             return View(myUserModel);
         }

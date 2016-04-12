@@ -1,235 +1,378 @@
 ﻿@{
     ViewBag.Title = "編輯 - 訂單管理";
     Layout = "~/Views/Shared/_Layout_blank.cshtml";
+    List<RSL.MSP.MVC.Model.RegentModel.RestaurantModel> RestaurantModel = ViewBag.RestaurantList;
+    List<System.Data.DataRow> myPurpose = ViewBag.PurposeList;
+}
+@if (TempData["message"] != null)
+{
+
+    <script type="text/javascript">
+
+        var message = @Html.Raw(Json.Encode(TempData["message"]));
+
+        alert(message);
+
+    </script>
+
 }
 
-
 <div id="validateList" class="modal-body well form-horizontal">
-    <form role="form" data-toggle="validator" id="OrderForm">
-
-        <div class="form-group" method="post" id="contact_form">
-            <label class="col-md-4 control-label">訂單編號</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <input name="txtORDERM_ID" placeholder="訂單編號" id="txtORDERM_ID" check-type="required"  class="form-control disabled" maxlength="50" type="text" value="@Model.ORDERM_ID" disabled="disabled" required>
+    <form id="OrderForm" action="@Url.Action("AddModel", "Order")">
+        <fieldset>
+            <div class="form-group" id="contact_form">
+                <label class="col-md-4 control-label">訂單編號</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input name="ORDERM_ID" id="ORDERM_ID" class="form-control disabled" maxlength="50" type="text" disabled="disabled" value="@Model.ORDERM_ID">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label class="col-md-4 control-label">訂位方式</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
-                    <input name="txtBOOKING_TYPE" placeholder="訂位方式" id="txtBOOKING_TYPE" check-type="required"  class="form-control" maxlength="50" type="text" value="@Model.BOOKING_TYPE" required>
+            <div class="form-group">
+                <label class="col-md-4 control-label">訂位方式</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                        <!--<input name="txtBOOKING_TYPE" placeholder="訂位方式" id="txtBOOKING_TYPE" check-type="required" class="form-control" maxlength="50" type="text"  required>-->
+                        <select name="BOOKING_TYPE" id="BOOKING_TYPE" class="form-control" maxlength="50" type="text" selected="true" value="@Model.BOOKING_TYPE" required>
+                            <option value="">訂位方式</option>
+                            <option value="A">網頁</option>
+                            <option value="B">電話</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label class="col-md-4 control-label">餐廳編號(*改成下拉+餐廳名稱)</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
-                    <input name="txtRESTAURANT_ID" placeholder="餐廳編號" id="txtRESTAURANT_ID" class="form-control" maxlength="50" type="text" value="@Model.RESTAURANT_ID" required>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-4 control-label">每日時段編號(*改成下拉+時段名稱)</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
-                    <input name="first_name" placeholder="餐廳編號" id="txtDAILY_PERIOD_ID" class="form-control" maxlength="50" type="text" value="@Model.DAILY_PERIOD_ID" required>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-4 control-label">用餐日期</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon glyphicon glyphicon-calendar"></i></span>
-                    <input name="first_name" placeholder="用餐日期" id="txtBOOKING_DATE" class="form-control" maxlength="50" type="text" value="@Model.BOOKING_DATE" required>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-4 control-label">用餐人數</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-chevron-down"></i></span>
-                    <input name="first_name" placeholder="用餐人數" id="txtRESERVATION_NUMBER" class="form-control" maxlength="50" type="text" value="@Model.RESERVATION_NUMBER" required>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-4 control-label">訂位狀態</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-stats"></i></span>
-                    <input name="first_name" placeholder="訂位狀態" id="txtBOOKING_STATUS" class="form-control" maxlength="50" type="text" value="@Model.BOOKING_STATUS" required>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-4 control-label">手機號碼</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-                    <input name="first_name" placeholder="手機號碼" id="txtVERIFICATION_MOBILE" class="form-control" maxlength="50" type="text" value="@Model.VERIFICATION_MOBILE" required>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-4 control-label">顧客姓名</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-sunglasses"></i></span>
-                    <input name="first_name" placeholder="顧客姓名" id="txtCUS_NAME" class="form-control" maxlength="50" type="text" value="@Model.CUS_NAME">
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-4 control-label">顧客性別</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-king"></i></span>
-                    <input name="first_name" placeholder="顧客性別" id="txtCUS_GENDER" class="form-control" maxlength="50" type="text" value="@Model.CUS_GENDER">
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-4 control-label">顧客Email</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-                    <input name="first_name" placeholder="顧客Email" type="email"  id="txtCUS_EMAIL" class="form-control" maxlength="50" type="text" value="@Model.CUS_EMAIL">
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-4 control-label">顧客連絡電話</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-phone-alt"></i></span>
-                    <input name="first_name" placeholder="顧客連絡電話" id="txtCUS_TEL" class="form-control" maxlength="50" type="text" value="@Model.CUS_TEL">
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-4 control-label">用餐目的</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-cutlery"></i></span>
-                    <input name="first_name" placeholder="用餐目的" id="txtPURPOSE" class="form-control" maxlength="50" type="text" value="@Model.PURPOSE">
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-4 control-label">特殊需求</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-comment"></i></span>
-                    <input name="first_name" placeholder="特殊需求" id="txtCUS_NOTE" class="form-control" maxlength="50" type="text" value="@Model.CUS_NOTE">
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-4 control-label">訂單狀態</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-stats"></i></span>
-                    <input name="first_name" placeholder="訂單狀態" id="txtORDER_STATUS" class="form-control" maxlength="50" type="text" value="@Model.ORDER_STATUS" required>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-md-4 control-label">入場時間</label>
-            <div class="col-md-4 inputGroupContainer">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon glyphicon-time"></i></span>
-                    <input name="first_name" placeholder="入場時間" id="txtORDER_OK_DATE" class="form-control" maxlength="50" type="text" value="@Model.ORDER_OK_DATE">
-                </div>
-            </div>
-        </div>
-
-        @*<div class="form-group">
-                <label>用戶姓名</label>
-                @{
-                    if (ViewBag.CustomerList != null)
-                    {
-                        <select id="Customer_ID" class="chosen-select form-control">
-                            @foreach (var item in @ViewBag.CustomerList)
+            <div class="form-group">
+                <label class="col-md-4 control-label">餐廳編號</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-home"></i></span>
+                        <select id="RESTAURANT_ID" name="RESTAURANT_ID" data-placeholder="請選擇一個按鈕" class="chosen-select form-control" selected="true" value="@Model.RESTAURANT_ID" tabindex="4" required>
+                            <option value="">請選擇一家餐廳</option>
+                            @foreach (var item in RestaurantModel)
                             {
-                                <option value="@item.Value" selected=@item.Selected>@item.Text</option>
+                                <option value="@item.RESTAURANT_ID">@item.RESTAURANT_NAME</option>
                             }
                         </select>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">用餐日期</label>
+                <div class="col-md-4 inputGroupContainer input-daterange">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon glyphicon glyphicon-calendar"></i></span>
+                        <input name="BOOKING_DATE" placeholder="用餐日期" id="BOOKING_DATE" class="form-control" onkeydown="return false" maxlength="50" value="@Model.BOOKING_DATE" type="text" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">每日時段編號</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                        <select name="DAILY_PERIOD_ID" placeholder="每日時段編號" id="DAILY_PERIOD_ID" class="chosen-select form-control" selected="true" value="@Model.DAILY_PERIOD_ID" maxlength="50" required>
+                            <option  value="">請選擇時段</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">用餐人數</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-chevron-down"></i></span>
+                        <input name="RESERVATION_NUMBER" placeholder="用餐人數" id="RESERVATION_NUMBER" class="form-control" type="number" min="1" max="@(ViewBag.MaxReservationNumber)" step="1" value="@Model.RESERVATION_NUMBER"required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">訂位狀態</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-stats"></i></span>
+                        <select name="BOOKING_STATUS" id="BOOKING_STATUS" class="form-control" maxlength="50" selected="true" value="@Model.BOOKING_STATUS" required>
+                            <option value="">訂位狀態</option>
+                            <option value="0">尚未驗證</option>
+                            <option value="1">完成訂位</option>
+                            <option value="2">取消訂位</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">顧客姓名</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-sunglasses"></i></span>
+                        <input name="CUS_NAME" placeholder="顧客姓名" id="CUS_NAME" class="form-control" maxlength="50" type="text" value="@Model.CUS_NAME" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">顧客性別</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-king"></i></span>
+                        <select name="CUS_GENDER" id="CUS_GENDER" class="form-control" maxlength="50" selected="true" value="@Model.CUS_GENDER">
+                            <option value="">顧客性別</option>
+                            <option value="M">男</option>
+                            <option value="F">女</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">顧客Email</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                        <input name="CUS_EMAIL" placeholder="顧客Email" type="email" id="CUS_EMAIL" class="form-control" value="@Model.CUS_EMAIL" maxlength="50">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">顧客連絡電話</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-phone-alt"></i></span>
+                        <input name="CUS_TEL" placeholder="顧客連絡電話" id="CUS_TEL" class="form-control" value="@Model.CUS_TEL" maxlength="50" type="text" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">用餐目的</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-cutlery"></i></span>
+                        <select name="PURPOSE" placeholder="用餐目的" id="PURPOSE" class="form-control" selected="true" value="@Model.PURPOSE" form-control" maxlength="50">
+                            <option value="">請選擇用餐目的</option>
+                            @foreach (var item in myPurpose)
+                            {
+                                <option value="@item[0].ToString()">@item[1].ToString()</option>
+                            }
+                        </select>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">特殊需求</label>
+                <div class="col-md-4 inputGroupContainer">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-comment"></i></span>
+                        <textarea name="CUS_NOTE" placeholder="特殊需求" id="CUS_NOTE" class="form-control"  rows="4" cols="50">@Model.CUS_NOTE</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label">入場時間</label>
+                <div class="col-md-4 inputGroupContainer  input-daterange">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon glyphicon-time"></i></span>
+                        <input name="ORDER_OK_DATE" placeholder="入場時間" id="ORDER_OK_DATE" value="@Model.ORDER_OK_DATE" class="form-control" maxlength="50" type="text">
+                    </div>
+                </div>
+            </div>
+
+            @*<div class="form-group">
+                    <label>用戶姓名</label>
+                    @{
+                        if (ViewBag.CustomerList != null)
+                        {
+                            <select id="Customer_ID" class="chosen-select form-control">
+                                @foreach (var item in @ViewBag.CustomerList)
+                                {
+                                    <option value="@item.Value" selected=@item.Selected>@item.Text</option>
+                                }
+                            </select>
+                        }
                     }
-                }
-            </div>*@
+                </div>*@
+            <div class="modal-footer">
+                <input id="btnSave" class="btn btn-primary submit" type="submit" value="保存內容">
+                <button id="btnback" type="button" class="btn btn-danger">返回</button>
+            </div>
+        </fieldset>
     </form>
 </div>
 
-<div class="modal-footer">
-    <button id="btnSave" type="button" class="btn btn-primary">保存內容</button>
-    <button id="btnBack" type="button" class="btn btn-danger">返回</button>
-</div>
 
+
+@section Styles {
+    @Styles.Render("~/css/rwd-table", "~/css/checkbox-radio", "~/css/bootstrap-datepicker")
+}
 @section Script{
-    <!-- Validate JavaScript -->
-    @Scripts.Render("~/js/adm/validate", "~/js/adm/base", "~/js/adm/blank")
+    @Scripts.Render("~/js/rwd-table", "~/js/pagination", "~/js/dialogs", "~/js/bootstrap-datepicker", "~/js/adm/validate", "~/js/adm/base", "~/js/adm/json")
+    @Scripts.Render("~/Scripts/messages_zh_TW.js")
 }
 @section PageScript {
     <script>
-        function saveData() {
-            var postData = {
-                Id: '@ViewContext.RouteData.Values["id"]',
-                User_Account: $("#txtUser_Account").val(),
-                User_PWD: $("#txtUser_PWD").val(),
-                User_Name: $("#txtUser_Name").val(),
-                Customer_ID: $("#Customer_ID").val(),
-                User_Email: $("#txtUser_Email").val(),
-                User_Tel: $("#txtUser_Tel").val()
-            };
-            var url = "@Url.Action("EditModel")";
-            //XPage.SaveData(url, postData);
-            if ($("#validateList").valid()) {
-                var btn = $("#btnSave");
-                btn.button('loading');
-                $.post(url, postData, function (res, status, jqXHR) {
-                    if (res.flag) {
-                        alert("操作成功");
-                        XPage.GoTo("@Url.Action("Index")");
-                    } else {
-                        alert("操作失敗：" + res.msg);
-                    }
-                }).error(function () {
-                    alert("Server Error");
-                }).complete(function () {
-                    btn.button('reset');
-                });
-            }
-        }
-        $(document).ready(function () {
-            //$("#validateList").validation({ icon: false });
-            $("#btnSave").click(saveData);
-            $("#btnBack").click(function () {
-                XPage.GoTo("@Url.Action("Index")");
-            });
+    //=============
+    //網頁剛load完
+    //============
+    $(document).ready(function () {
+        $("#btnback").click(function () {
+            // XPage.GoTo("@Url.Action("Index")");
+            window.location.href = '@Url.Action("Index", "Order")';
         });
+        //連動式下拉選單
+        $('#BOOKING_DATE,#RESTAURANT_ID').change(function () {
+            BindDaily_Period();
+        });
+
+        //判斷用餐人數是否大於該時段上限
+        $('#DAILY_PERIOD_ID,#RESERVATION_NUMBER').change(function () {
+            Check_If_Exceed_Max_Period_Number();
+        });
+
+        //表單驗證
+        $("#OrderForm").validate({
+            errorPlacement:function(error, element){
+                //指定錯誤訊息的放置位置
+                error.insertAfter(element.parent());
+            },
+            submitHandler: function (form) {
+                //如果通過驗證則提交表單
+                var postData = $('#OrderForm').serialize();
+                $.ajax({
+                    url: '@Url.Action("AddModel", "Order")',
+                    type: "POST",
+                    dataType: "json",
+                    // contentType: "application/json; charset=utf-8",
+                    data: $(form).serialize()
+                }).done(function(response) {
+                    if(response.result){
+                        alert(response.msg);
+                        window.location.href = "@Url.Action("Index")";
+                    }
+                    else{
+                        alert(response.msg);
+                    }
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    alert("伺服器錯誤 無法新增");
+                });
+                return false;
+            }
+        });
+        //取得時段下拉選單的資料
+        BindDaily_Period();
+
+        //自動勾選dropdownList的值
+        $("select").each(function () {
+            if($(this).attr("selected")){
+                console.log("下拉選單的id"+this.id);
+                $(this).find("option[value="+$(this).attr("value")+"]").attr('selected', true);
+            }
+        });
+    });
+    //=============
+    //日期選單
+    //============
+
+    //取得開放訂位期限
+    var OpenSeatEndDate = '@(ViewBag.OpenSeatEndDate)';
+
+    $('.input-daterange').datepicker({
+        format: "yyyy/mm/dd",
+        keyboardNavigation: false,
+        forceParse: false,
+        autoclose: true,
+        startDate: '+0d',
+        endDate: "+" + OpenSeatEndDate + "m"
+    }).removeClass("input-daterange");
+
+
+    //=======Ajax動態改變'時段'下拉選單=======//
+    function BindDaily_Period() {
+        var selectedRestaurantId = $('#RESTAURANT_ID option:selected').val().length>0 ? $.trim($('#RESTAURANT_ID option:selected').val()):'@Model.RESTAURANT_ID' ;
+        var selectdedBookingDate = $('#BOOKING_DATE').val().length>0 ? $.trim($('#BOOKING_DATE').val()):'@Model.BOOKING_DATE';
+            if (selectedRestaurantId.length == 0 || selectdedBookingDate.length == 0) {
+                SetDaily_PeriodEmpty()
+            }
+            else {
+                $.ajax(
+                {
+                    url: "@Url.Action("AjaxGetDailyPeriodId", "Order")",
+                data: { RestaurantId: selectedRestaurantId, BookingDate: selectdedBookingDate },
+                type: 'post',
+                cache: false,
+                async: false,
+                dataType: 'html',
+                success: function (data) {
+                    if (data.length > 0) {
+                        SetDaily_PeriodEmpty();
+                        $('#DAILY_PERIOD_ID').append(data);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $('#DAILY_PERIOD_ID').empty();
+                    $('#DAILY_PERIOD_ID').append($('<option></option>').val('').text('查無此餐廳和訂位日期下的時段'));
+                }
+            });
+        }
+    }
+    //=======將'時段'下拉選單的內容設為空========//
+    function SetDaily_PeriodEmpty() {
+
+        $('#DAILY_PERIOD_ID').empty();
+
+        $('#DAILY_PERIOD_ID').append($('<option></option>').val('').text('請選擇時段'));
+
+    }
+    //=================自動修改為正確的用餐人數==============//
+    //$("#RESERVATION_NUMBER").change(function () {
+    //    var max = parseInt($(this).attr('max'));
+    //    var min = parseInt($(this).attr('min'));
+    //    if ($(this).val() > max) {
+    //        $(this).val(max);
+    //    }
+    //    else if ($(this).val() < min) {
+    //        $(this).val(min);
+    //    }
+    //});
+    //===================判斷用餐人數是否大於該時段上限
+    function Check_If_Exceed_Max_Period_Number() {
+        var strDAILY_PERIOD_ID = $.trim($('#DAILY_PERIOD_ID option:selected').val());
+        var strRESERVATION_NUMBER=$('#RESERVATION_NUMBER').val();
+        if (strDAILY_PERIOD_ID.length != 0  && parseInt(strRESERVATION_NUMBER) > 0 && parseInt(strRESERVATION_NUMBER)<parseInt(@(ViewBag.MaxReservationNumber)))
+        {
+            $.ajax(
+                    {
+                        url: "@Url.Action("AjaxCheck_If_Exceed_Max_Period_Number", "Order")",
+                        data: { DAILY_PERIOD_ID: strDAILY_PERIOD_ID, RESERVATION_NUMBER: strRESERVATION_NUMBER },
+                        type: 'post',
+                        cache: false,
+                        async: false,
+                        dataType: 'html',
+                        success: function (data) {
+                            if (data.toString().toUpperCase()=="TRUE") {
+                                //如果未超過會回傳false 如果已超過會回傳True
+                                alert("訂位人數已超過此時段上限!!");
+                                $('#RESERVATION_NUMBER').val("");
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                        }
+                    });
+
+        }
+    }
     </script>
 }

@@ -109,6 +109,7 @@ namespace RSL.MSP.MVC.DAO.RegentDAO
                 command.SetParameterValue(":CUS_EMAIL", order.CUS_EMAIL);
                 command.SetParameterValue(":CUS_TEL", order.CUS_TEL);
                 command.SetParameterValue(":PURPOSE", order.PURPOSE);
+                command.SetParameterValue(":ORDER_OK_DATE", order.ORDER_OK_DATE);
                 command.SetParameterValue(":CUS_NOTE", order.CUS_NOTE);
                 command.SetParameterValue(":BUSER", order.BUSER);
                 command.ExecuteNonQuery();
