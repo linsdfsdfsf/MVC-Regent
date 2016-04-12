@@ -300,7 +300,7 @@
                         {
                             if(data.flag){
                                 alert(data.msg);
-                                window.location.href = "@Url.Action("Index")";
+
                             }
                             else{
                                 alert(data.msg);
@@ -310,6 +310,10 @@
                     error: function (data) {
 
                     }
+                }).done(function() {
+                    //callback which can be used to show a thank you message
+                    //and reset the form
+                    window.location.href = "@Url.Action("Index")";
                 });
                 return false;
             }
