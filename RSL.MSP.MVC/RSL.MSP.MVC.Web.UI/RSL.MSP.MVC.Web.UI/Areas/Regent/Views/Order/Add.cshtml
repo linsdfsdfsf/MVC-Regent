@@ -264,7 +264,8 @@
         //});
         //  $("#btnSave").click(saveData);
         $("#btnBack").click(function () {
-            XPage.GoTo("@Url.Action("Index")");
+            // XPage.GoTo("@Url.Action("Index")");
+            window.location.href = '@Url.Action("Index", "Order")';
         });
         //連動式下拉選單
         $('#BOOKING_DATE,#RESTAURANT_ID').change(function () {
@@ -283,36 +284,34 @@
                 error.insertAfter(element.parent());
             },
             submitHandler: function (form) {
-                alert("呼叫ajax");
                 //如果通過驗證則提交表單
-                var form = $('#OrderForm');
                 var postData = $('#OrderForm').serialize();
                 console.log("postData="+postData);
                 console.log("form="+$(form).serialize());
                 $.ajax({
-                    url: $(form).attr("action"),
-                        type: "POST",
-                        dataType: "json",
-                        contentType: "application/json; charset=utf-8",
-                        data: $(form).serialize(),
-                        traditional: true,
-                        success: function (data) {
-                            if(data)
-                            {
-                                if(data.flag){
-                                    alert(data.msg);
-                                    console.log($(from).serialize());
-                                }
-                                else{
-                                    alert(data.msg);
-                                    console.log($(from).serialize());
-                                }
+                    url: '@Url.Action("AddModel", "Order")',
+                    type: "POST",
+                    dataType: "json",
+                    // contentType: "application/json; charset=utf-8",
+                    data: $(form).serialize(),
+                    traditional: true,
+                    success: function (data) {
+                        if(data)
+                        {
+                            if(data.flag){
+                                alert(data.msg);
+                                window.location.href = "@Url.Action("Index")";
                             }
-                        },
-                        error: function (data) {
-
+                            else{
+                                alert(data.msg);
+                            }
                         }
+                    },
+                    error: function (data) {
+
+                    }
                 });
+                return false;
             }
         });
 
@@ -412,5 +411,5 @@
         }
     }
 
-    </script>
+</script>
 }

@@ -11,6 +11,8 @@ using System.Net;
 using RSL.MSP.MVC.Model.Base;
 using RSL.MSP.MVC.Common;
 using System.Text;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 
 namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
@@ -78,27 +80,35 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
 
         //頁面:新增訂單資料 動作:送出資料
         [HttpPost]
-        public JsonResult AddModel(OrderModel model)
+        public ActionResult AddModel(OrderModel model)
         {
+            JObject jo = new JObject();
             var result = new Result<string>();
             try
             {
                 if (model == null)
-                    throw new ArgumentException("参数错误");
+                    throw new ArgumentException("參數錯誤");
 
                 OrderBLL _BLL = new OrderBLL();
-                OrderModel OrderModel = new OrderModel();
-                OrderModel.ORDERM_ID = _BLL.GetOrderSingleNumber();
+                model.ORDERM_ID = model.DAILY_PERIOD_ID+_BLL.GetOrderSingleNumber();
+                model.BUSER = Session["LoginedUserID"] == null ? "" : Session["LoginedUserID"].ToString();
 
+                _BLL.AddOrder(model);
+                jo.Add("result", true);
 
-                _BLL.AddOrder(OrderModel);
+                jo.Add("msg", "新增成功");
+
 
             }
             catch (Exception ex)
             {
-                result.msg = ex.Message;
+               // result.msg = ex.Message;
+                jo.Add("result", false);
+
+                jo.Add("msg", "新增失敗");
             }
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Content(JsonConvert.SerializeObject(jo), "application/json");
+          //  return Json(result);
         }
 
         //======================================================================//
