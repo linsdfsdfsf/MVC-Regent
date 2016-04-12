@@ -119,6 +119,7 @@ namespace RSL.MSP.MVC.Web.UI.Areas.Regent.Controllers
                      throw new ArgumentException("用餐人數超過限制");
                  }
 
+
                 _BLL.AddOrder(model);
                 jo.Add("result", true);
 
